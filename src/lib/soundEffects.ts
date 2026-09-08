@@ -1,7 +1,7 @@
 /**
  * Generates an elegant subtle harmonic chime using Web Audio API
  */
-export function playChime(type: 'success' | 'bell' | 'notification' = 'notification') {
+export function playChime(type: 'success' | 'bell' | 'notification' | 'tap' = 'notification') {
   if (typeof window === 'undefined') return;
 
   try {
@@ -24,6 +24,9 @@ export function playChime(type: 'success' | 'bell' | 'notification' = 'notificat
     } else if (type === 'bell') {
       osc1.frequency.setValueAtTime(880, ctx.currentTime); // A5
       osc1.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.6);
+    } else if (type === 'tap') {
+      osc1.frequency.setValueAtTime(440, ctx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.08);
     } else {
       osc1.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
       osc1.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.2); // A5

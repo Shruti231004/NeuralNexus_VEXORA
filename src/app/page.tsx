@@ -19,6 +19,8 @@ import {
   LogIn,
   KeyRound,
   UserCheck,
+  Lock,
+  TrendingUp,
 } from 'lucide-react';
 import { INITIAL_SERVICES, INITIAL_STYLISTS } from '@/lib/mockData';
 import { formatINR } from '@/lib/queueEngine';
