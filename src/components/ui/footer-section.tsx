@@ -70,24 +70,24 @@ export function Footer() {
 					{/* Brand Column */}
 					<AnimatedContainer className="space-y-4">
 						<div className="flex items-center gap-3">
-							<div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#C1785A] to-[#8C462C] flex items-center justify-center text-[#FAF6F0] shadow-md border border-[#E8D8CE]/20">
+							<div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#C1785A] to-[#8C462C] flex items-center justify-center text-white shadow-md border border-[#E8D8CE]/30">
 								<Scissors className="w-5 h-5" />
 							</div>
 							<div>
-								<h2 className="font-serif text-2xl font-bold tracking-tight text-[#FAF6F0]">
+								<h2 className="font-serif text-3xl font-bold tracking-tight text-white drop-shadow-sm">
 									ROSE &amp; ROGUE
 								</h2>
-								<span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#C1785A]">
+								<span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#E5A88E] font-bold">
 									Haute Coiffure • Paris
 								</span>
 							</div>
 						</div>
 
-						<p className="text-[#B5A99F] text-xs md:text-sm leading-relaxed max-w-sm">
+						<p className="text-[#E0D5CC] text-sm leading-relaxed max-w-sm font-normal">
 							Luxury Parisian salon artistry with AI-powered smart queue management and automated WhatsApp priority passes.
 						</p>
 
-						<p className="text-[#8C7E76] text-xs pt-4 font-mono">
+						<p className="text-[#B5A89E] text-xs pt-4 font-mono">
 							© {new Date().getFullYear()} Rose &amp; Rogue Coiffure. All rights reserved.
 						</p>
 					</AnimatedContainer>
@@ -96,18 +96,18 @@ export function Footer() {
 					<div className="grid grid-cols-2 gap-8 md:grid-cols-4 xl:col-span-2">
 						{footerLinks.map((section, index) => (
 							<AnimatedContainer key={section.label} delay={0.1 + index * 0.1}>
-								<div className="space-y-3">
-									<h3 className="text-xs uppercase font-extrabold tracking-[0.2em] text-[#C1785A]">
+								<div className="space-y-3.5">
+									<h3 className="text-xs uppercase font-extrabold tracking-[0.22em] text-[#E5A88E] drop-shadow-sm">
 										{section.label}
 									</h3>
-									<ul className="space-y-2.5 text-xs text-[#B5A99F]">
+									<ul className="space-y-3 text-sm">
 										{section.links.map((link) => (
 											<li key={link.title}>
 												<Link
 													href={link.href}
-													className="hover:text-[#FAF6F0] hover:translate-x-1 inline-flex items-center gap-1.5 transition-all duration-300"
+													className="text-[#EAE3DA] hover:text-white hover:translate-x-1 inline-flex items-center gap-2 font-medium transition-all duration-300"
 												>
-													{link.icon && <link.icon className="w-3.5 h-3.5 text-[#C1785A]" />}
+													{link.icon && <link.icon className="w-4 h-4 text-[#E5A88E] flex-shrink-0" />}
 													<span>{link.title}</span>
 												</Link>
 											</li>
