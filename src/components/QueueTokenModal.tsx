@@ -188,29 +188,32 @@ export const QueueTokenModal: React.FC<QueueTokenModalProps> = ({
               </div>
             </div>
 
-            {/* Automated WhatsApp Confirmation Pill */}
+            {/* WhatsApp Confirmation Action Card */}
             {appointment.customer_phone && (
-              <div className="flex items-center justify-between p-3 rounded-2xl bg-emerald-50/90 border border-emerald-200/80 shadow-sm">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-xl bg-[#25D366] flex items-center justify-center text-white shadow-sm flex-shrink-0">
-                    <MessageCircle className="w-4 h-4 fill-white" />
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                  <div className="w-9 h-9 rounded-xl bg-[#25D366] flex items-center justify-center text-white shadow-md flex-shrink-0">
+                    <MessageCircle className="w-5 h-5 fill-white" />
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-emerald-950">WhatsApp Confirmation</span>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 fill-emerald-100" />
+                      <span className="text-xs font-bold text-emerald-950">
+                        WhatsApp Booking Pass Ready
+                      </span>
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
                     </div>
-                    <p className="text-[10px] text-emerald-700 font-mono">
-                      Sent to {appointment.customer_phone}
+                    <p className="text-[11px] text-emerald-700 font-mono">
+                      Recipient: {appointment.customer_phone}
                     </p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={shareWhatsApp}
-                  className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 hover:bg-emerald-200 rounded-lg transition-colors"
+                  className="w-full sm:w-auto px-4 py-2 text-xs font-bold uppercase tracking-wider text-white bg-[#25D366] hover:bg-[#1EBE5D] rounded-xl shadow-md transition-all flex items-center justify-center gap-2 transform hover:scale-[1.02]"
                 >
-                  Open Pass
+                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <span>Open in WhatsApp</span>
                 </button>
               </div>
             )}

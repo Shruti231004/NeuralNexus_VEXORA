@@ -21,6 +21,7 @@ import {
   Award,
   Heart,
   Ticket,
+  MessageCircle,
 } from 'lucide-react';
 import { Appointment } from '@/lib/types';
 import { subscribeToAppointments } from '@/lib/supabaseClient';
@@ -28,6 +29,7 @@ import { QueueProgressTracker } from '@/components/QueueProgressTracker';
 import { StatusBadge } from '@/components/StatusBadge';
 import { StylistRatingModal } from '@/components/StylistRatingModal';
 import { QueueTokenModal } from '@/components/QueueTokenModal';
+import { getWhatsAppDirectLink } from '@/lib/whatsappService';
 import {
   formatINR,
   getQueuePosition,
@@ -204,6 +206,17 @@ export default function QueueTrackerPage() {
                   <Ticket className="w-4 h-4 text-[#C1785A]" />
                   <span>View Pass</span>
                 </button>
+                <button
+                  onClick={() => {
+                    const waUrl = getWhatsAppDirectLink(appointment, position, waitMinutes);
+                    window.open(waUrl, '_blank');
+                  }}
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#E7F8EE] hover:bg-[#D4F4E2] border border-emerald-300 text-emerald-900 text-xs font-bold uppercase tracking-wider transition-all shadow-sm"
+                  title="Open in WhatsApp"
+                >
+                  <MessageCircle className="w-4 h-4 text-[#25D366] fill-[#25D366]" />
+                  <span>WhatsApp Pass</span>
+                </button>
               </div>
               <span className="text-xs text-[#6E6663] font-mono font-medium">
                 Advance Deposit: ₹99 Paid ({appointment.razorpay_payment_id || 'Rzp_Verified'})
@@ -211,7 +224,7 @@ export default function QueueTrackerPage() {
             </div>
           </div>
 
-          {/* Dynamic Position & Estimated Arrival Counter */}
+          {/* Live Position & Estimated Arrival Counter */}
           <div className="p-8 sm:p-10 border-b border-[#EAE3DA] bg-[#FAF6F0]/60">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left">
               {/* Position in line */}
@@ -240,10 +253,10 @@ export default function QueueTrackerPage() {
                 </p>
               </div>
 
-              {/* Estimated wait */}
+              {/* Estimated Wait */}
               <div className="p-6 rounded-3xl bg-[#F3ECE3] border border-[#EAE3DA] shadow-sm">
                 <span className="text-xs uppercase tracking-[0.2em] font-bold text-[#6E6663] block">
-                  Estimated Chair Time
+                  Estimated Wait
                 </span>
                 <div className="mt-2 flex items-baseline justify-center sm:justify-start gap-1.5">
                   <span className="font-serif text-4xl sm:text-5xl font-extrabold text-[#2C2725]">
@@ -259,7 +272,7 @@ export default function QueueTrackerPage() {
                 </div>
                 <p className="text-xs text-[#6E6663] mt-1 font-medium">
                   {appointment.status === 'waiting'
-                    ? 'Dynamic calculation based on station speed'
+                    ? 'Live calculation based on active chair pace'
                     : 'Currently in progress'}
                 </p>
               </div>

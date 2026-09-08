@@ -28,9 +28,9 @@ export function getQueuePosition(appointmentId: string, appointments: Appointmen
 }
 
 /**
- * Calculate dynamic estimated wait time in minutes based on active chairs and queue length.
+ * Calculate estimated wait time in minutes based on active chairs and queue length.
  */
-export function calculateDynamicWaitMinutes(
+export function calculateWaitMinutes(
   appointment: Appointment,
   allAppointments: Appointment[]
 ): number {
@@ -55,6 +55,8 @@ export function calculateDynamicWaitMinutes(
 
   return Math.max(5, estimatedWait);
 }
+
+export const calculateDynamicWaitMinutes = calculateWaitMinutes;
 
 /**
  * Detect Smart Quick Cut Overlap opportunities.

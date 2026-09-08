@@ -20,7 +20,7 @@ export const QueueProgressTracker: React.FC<QueueProgressTrackerProps> = ({
   const steps = [
     {
       id: 'confirmed',
-      title: 'Slot Confirmed',
+      title: 'Visit Confirmed',
       subtitle: '₹99 Deposit Verified',
       icon: CheckCircle2,
       isDone: true,

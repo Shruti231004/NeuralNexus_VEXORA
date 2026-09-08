@@ -25,7 +25,7 @@ export function formatWhatsAppMessage(
   const serviceDuration = appointment.service?.duration_minutes || 30;
   const isHomeService = appointment.notes?.includes('[DOORSTEP AT-HOME SERVICE]') || appointment.queue_number?.startsWith('HOME');
 
-  // Calculate Allotted Start & End Time Slot
+  // Calculate Estimated Arrival Window
   const startTime = appointment.estimated_start_time
     ? new Date(appointment.estimated_start_time)
     : new Date(Date.now() + estimatedWaitMinutes * 60000);
@@ -34,7 +34,7 @@ export function formatWhatsAppMessage(
 
   const formattedStartTime = startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const formattedEndTime = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const timeSlot = `${formattedStartTime} – ${formattedEndTime}`;
+  const visitWindow = `${formattedStartTime} – ${formattedEndTime}`;
 
   const dateStr = startTime.toLocaleDateString('en-IN', {
     day: 'numeric',
@@ -51,7 +51,7 @@ Hello *${appointment.customer_name}*,
 Our certified master stylist is scheduled to visit your residence:
 
 📅 *Date:* ${dateStr}
-⏰ *Scheduled Window:* *${timeSlot}*
+⏰ *Scheduled Window:* *${visitWindow}*
 🎟️ *Concierge Pass ID:* *#${tokenCode}*
 ✂️ *Service:* ${appointment.service?.name || 'Hair Artistry'} (${serviceDuration} mins)
 💈 *Assigned Master Stylist:* ${stylistName}
@@ -72,9 +72,9 @@ _Our artisan will contact you prior to arrival. Please ensure security gate entr
 🎉 *Welcome to Rose & Rogue. Your appointment has been booked!*
 
 Hello *${appointment.customer_name}*,
-Your appointment has been confirmed for your allotted time slot:
+Your appointment has been confirmed for your visit:
 
-⏰ *Allotted Time Slot:* *${timeSlot}*
+⏰ *Estimated Window:* *${visitWindow}*
 📅 *Date:* ${dateStr}
 🎟️ *Token Number:* *#${tokenCode}*
 ✂️ *Service:* ${appointment.service?.name || 'Hair Artistry'} (${serviceDuration} mins)
@@ -86,8 +86,16 @@ Your appointment has been confirmed for your allotted time slot:
 📲 *Live Queue Tracker & Digital Pass:*
 ${trackingUrl}
 
-_Please arrive at your allotted time slot. You will be alerted when Station #${chairNumber} is ready._
+_Please arrive around your estimated time. You will be alerted when Station #${chairNumber} is ready._
 *Rose & Rogue Luxury Salon*`;
+}
+
+export function formatPhoneNumber(phone: string): string {
+  let clean = phone.replace(/\D/g, '');
+  if (clean.length === 10) {
+    clean = `91${clean}`;
+  }
+  return clean;
 }
 
 /**
@@ -99,7 +107,7 @@ export function getWhatsAppDirectLink(
   estimatedWaitMinutes: number = 15,
   originUrl?: string
 ): string {
-  const cleanPhone = appointment.customer_phone.replace(/\D/g, '');
+  const cleanPhone = formatPhoneNumber(appointment.customer_phone);
   const message = formatWhatsAppMessage(appointment, queuePosition, estimatedWaitMinutes, originUrl);
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
 }
@@ -116,7 +124,7 @@ export function sendWhatsAppAppointmentMessage(
   originUrl?: string
 ): WhatsAppNotificationResult {
   const message = formatWhatsAppMessage(appointment, queuePosition, estimatedWaitMinutes, originUrl);
-  const cleanPhone = recipientPhone.replace(/\D/g, '');
+  const cleanPhone = formatPhoneNumber(recipientPhone);
   const directWaLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
 
   // Also trigger background POST if in browser

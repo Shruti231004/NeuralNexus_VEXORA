@@ -64,7 +64,7 @@ export default function LandingPage() {
             </h1>
 
             <p className="text-base sm:text-lg text-[#6E6663] leading-relaxed max-w-xl">
-              Immerse yourself in precision hair artistry. Lock in your slot for ₹99, track your live chair queue in real-time, and arrive precisely when your stylist is ready.
+              Immerse yourself in precision hair artistry. Reserve your priority entry for ₹99, track your live chair queue in real-time, and arrive precisely when your stylist is ready.
             </p>
 
             {/* CTA Group */}
@@ -73,7 +73,7 @@ export default function LandingPage() {
                 href="/book"
                 className="flex items-center gap-2.5 px-8 py-4 rounded-full bg-[#C1785A] hover:bg-[#A86347] text-[#FAF6F0] text-sm font-bold uppercase tracking-[0.18em] shadow-warm hover:shadow-warm-lg transition-all duration-300 transform hover:-translate-y-0.5"
               >
-                <span>Book Slot (₹99 Deposit)</span>
+                <span>Join Queue (₹99 Deposit)</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
 

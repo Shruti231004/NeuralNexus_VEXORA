@@ -291,14 +291,14 @@ function BookPageContent() {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F5E6DF] border border-[#E8D8CE] text-[#8C462C]">
             <Sparkles className="w-4 h-4 text-[#C1785A]" />
             <span className="text-xs uppercase font-extrabold tracking-[0.25em]">
-              Bespoke Time-Slot Reservation
+              Bespoke Priority Reservation
             </span>
           </div>
           <h1 className="font-serif text-3xl sm:text-5xl font-extrabold text-[#2C2725]">
             Reserve Your Styling Session
           </h1>
           <p className="text-sm sm:text-base text-[#6E6663] max-w-xl mx-auto">
-            Book appointments by exact time slot with real-time available master artisans, or use our instant QR scanner.
+            Book appointments by preferred arrival time with real-time available master artisans, or use our instant QR scanner.
           </p>
 
           {/* Quick-Switch Booking Modes */}
@@ -509,7 +509,7 @@ function BookPageContent() {
                 onClick={() => setBookingMode('standard')}
                 className="w-full py-2 text-center text-xs font-bold text-[#6E6663] hover:text-[#2C2725]"
               >
-                Switch to Standard Time-Slot Reservation Form
+                Switch to Standard Reservation Form
               </button>
             </div>
           </div>
@@ -857,7 +857,7 @@ function BookPageContent() {
 
               {availableStylists.length === 0 && (
                 <div className="p-4 rounded-2xl bg-[#F5E6DF] border border-[#E8D0C5] text-center text-xs text-[#8C462C] font-medium">
-                  All artisans are currently booked for {selectedTimeSlot}. Please select an adjacent time slot above.
+                  All artisans are currently booked for {selectedTimeSlot}. Please select an adjacent time above.
                 </div>
               )}
             </div>
@@ -871,7 +871,7 @@ function BookPageContent() {
                   </span>
                   <h2 className="font-serif text-2xl font-bold text-[#2C2725] mt-0.5">Guest &amp; Notification Details</h2>
                   <p className="text-xs text-[#6E6663] mt-0.5">
-                    We dispatch automated WhatsApp confirmations and SMS reminders before your slot.
+                    We dispatch automated WhatsApp confirmations and SMS reminders before your appointment.
                   </p>
                 </div>
 
