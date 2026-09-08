@@ -1,15 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { formatWhatsAppMessage } from '@/lib/whatsappService';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import { spawn } from 'child_process';
 
-const execAsync = promisify(exec);
+function sendViaCurl(phoneId: string, token: string, payload: any): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const curl = spawn('curl.exe', [
+      '-s',
+      '-X', 'POST',
+      `https://graph.facebook.com/v21.0/${phoneId}/messages`,
+      '-H', `Authorization: Bearer ${token}`,
+      '-H', 'Content-Type: application/json',
+      '-d', '@-',
+    ]);
 
-async function sendViaCurl(phoneId: string, token: string, payload: any): Promise<any> {
-  const jsonStr = JSON.stringify(payload).replace(/"/g, '\\"');
-  const curlCmd = `curl.exe -s -X POST "https://graph.facebook.com/v21.0/${phoneId}/messages" -H "Authorization: Bearer ${token}" -H "Content-Type: application/json" -d "${jsonStr}"`;
-  const { stdout } = await execAsync(curlCmd);
-  return JSON.parse(stdout);
+    let stdout = '';
+    let stderr = '';
+
+    curl.stdout.on('data', (d) => { stdout += d; });
+    curl.stderr.on('data', (d) => { stderr += d; });
+
+    curl.on('close', (code) => {
+      try {
+        resolve(JSON.parse(stdout));
+      } catch (e) {
+        reject(new Error(`Curl parse error: ${stdout || stderr}`));
+      }
+    });
+
+    curl.stdin.write(JSON.stringify(payload));
+    curl.stdin.end();
+  });
 }
 
 export async function POST(req: NextRequest) {
@@ -60,7 +80,7 @@ export async function POST(req: NextRequest) {
         console.log('WhatsApp custom message response:', curlResult);
 
         // 2. If text fails due to 24h window restriction, fallback to template
-        if (!curlResult.messages?.[0]?.id) {
+        if (!curlResult?.messages?.[0]?.id) {
           console.warn('Text restricted outside 24h window, sending template fallback...');
           const templatePayload = {
             messaging_product: 'whatsapp',
@@ -74,7 +94,7 @@ export async function POST(req: NextRequest) {
           curlResult = await sendViaCurl(phoneNumberId, metaToken, templatePayload);
         }
 
-        if (curlResult.messages?.[0]?.id) {
+        if (curlResult?.messages?.[0]?.id) {
           return NextResponse.json({
             success: true,
             method: 'meta_cloud_api_curl',
