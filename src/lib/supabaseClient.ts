@@ -19,8 +19,8 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured
 // ==============================================================================
 // REALTIME SYNC ENGINE (SUPABASE REALTIME + BROADCAST CHANNEL + STORAGE EVENT)
 // ==============================================================================
-const STORAGE_KEY_APPOINTMENTS = 'styliq_appointments_v1';
-const BROADCAST_CHANNEL_NAME = 'styliq_realtime_queue_sync';
+const STORAGE_KEY_APPOINTMENTS = 'rose_rogue_appointments_v3';
+const BROADCAST_CHANNEL_NAME = 'rose_rogue_realtime_queue_sync';
 
 type RealtimeCallback = (appointments: Appointment[]) => void;
 const subscribers = new Set<RealtimeCallback>();
@@ -51,12 +51,24 @@ if (typeof window !== 'undefined') {
 export function getLocalAppointments(): Appointment[] {
   if (typeof window === 'undefined') return INITIAL_APPOINTMENTS;
   try {
+    // Clear legacy inflated keys if present
+    if (localStorage.getItem('styliq_appointments_v1')) {
+      localStorage.removeItem('styliq_appointments_v1');
+    }
+
     const saved = localStorage.getItem(STORAGE_KEY_APPOINTMENTS);
     if (!saved) {
       localStorage.setItem(STORAGE_KEY_APPOINTMENTS, JSON.stringify(INITIAL_APPOINTMENTS));
       return INITIAL_APPOINTMENTS;
     }
-    return JSON.parse(saved);
+    const parsed: Appointment[] = JSON.parse(saved);
+    // Sanity check: if parsed list contains an excessive number of waiting appointments (> 6) from test spam, reset to clean luxury default
+    const waitingCount = parsed.filter((a) => a.status === 'waiting').length;
+    if (waitingCount > 6 || parsed.length > 20) {
+      localStorage.setItem(STORAGE_KEY_APPOINTMENTS, JSON.stringify(INITIAL_APPOINTMENTS));
+      return INITIAL_APPOINTMENTS;
+    }
+    return parsed;
   } catch (e) {
     return INITIAL_APPOINTMENTS;
   }
