@@ -22,6 +22,7 @@ import { Service, Stylist, formatINR, Appointment } from '@/lib/types';
 import { sendWhatsAppAppointmentMessage } from '@/lib/whatsappService';
 import { createAppointment } from '@/lib/supabaseClient';
 import { useAuth } from '@/lib/authContext';
+import { getAvailableStylistsForSlot, getTodayDateString } from '@/lib/stylistAvailability';
 
 interface AtHomeServiceModalProps {
   isOpen: boolean;
@@ -37,7 +38,6 @@ export const AtHomeServiceModal: React.FC<AtHomeServiceModalProps> = ({
   const { user } = useAuth();
 
   const [selectedService, setSelectedService] = useState<Service>(INITIAL_SERVICES[0]);
-  const [selectedStylist, setSelectedStylist] = useState<Stylist | null>(INITIAL_STYLISTS[0]);
   const [customerName, setCustomerName] = useState(user?.full_name || 'Natasha Kapoor');
   const [customerPhone, setCustomerPhone] = useState(user?.phone || '+91 98200 88888');
   
@@ -49,13 +49,14 @@ export const AtHomeServiceModal: React.FC<AtHomeServiceModalProps> = ({
   const [gateNotes, setGateNotes] = useState('Please announce at security gate as Rose & Rogue Concierge');
 
   // Time & Equipment
-  const [timeSlot, setTimeSlot] = useState('11:00 AM – 01:00 PM (Morning Glow)');
-  const [selectedDate, setSelectedDate] = useState(() => {
-    const d = new Date();
-    return d.toISOString().split('T')[0];
-  });
+  const [timeSlot, setTimeSlot] = useState('11:00 AM');
+  const [selectedDate, setSelectedDate] = useState(getTodayDateString());
+  const [selectedStylist, setSelectedStylist] = useState<Stylist | null>(INITIAL_STYLISTS[0]);
   const [includePortableChair, setIncludePortableChair] = useState(true);
   const [includeDysonVanity, setIncludeDysonVanity] = useState(true);
+
+  // Dynamic available stylists
+  const availableArtisans = getAvailableStylistsForSlot(selectedDate, timeSlot);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState<Appointment | null>(null);
@@ -244,7 +245,8 @@ export const AtHomeServiceModal: React.FC<AtHomeServiceModalProps> = ({
                     }}
                     className="w-full px-3.5 py-2.5 rounded-2xl border border-[#EAE3DA] dark:border-[#3A302A] bg-white dark:bg-[#201A18] text-xs font-bold text-[#2C2725] dark:text-[#FAF6F0] focus:outline-none focus:border-[#C1785A]"
                   >
-                    {INITIAL_STYLISTS.map((st) => (
+                    <option value="">Any Available Artisan ({availableArtisans.length} on duty)</option>
+                    {availableArtisans.map((st) => (
                       <option key={st.id} value={st.id}>
                         {st.name} — {st.title} ({st.specialties[0]})
                       </option>
