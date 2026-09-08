@@ -33,6 +33,8 @@ import {
   Image as ImageIcon,
   Target,
   Wand2,
+  Crosshair,
+  Lock,
 } from 'lucide-react';
 import { INITIAL_SERVICES, INITIAL_STYLISTS } from '@/lib/mockData';
 import { formatINR } from '@/lib/types';
@@ -63,7 +65,6 @@ const COLOR_SWATCHES: ColorSwatch[] = [
 
 type ARLightingMode = 'chandelier' | 'daylight' | 'golden_hour' | 'noir_studio';
 type TryOnMode = 'hair_only_color' | 'full_cut_volume';
-type HairlineArch = 'soft_oval' | 'widows_peak' | 'straight' | 'high_arch';
 
 interface HairstyleData {
   id: string;
@@ -218,24 +219,28 @@ const SAMPLE_CLIENTS = [
     name: 'Live AR Camera',
     isCamera: true,
     img: '',
+    detectedFace: { x: 200, y: 190, scale: 1.0, widthRatio: 1.0, hairlineOffset: -4 },
   },
   {
     id: 'client1',
     name: 'Sarah (Paris)',
     isCamera: false,
     img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800',
+    detectedFace: { x: 200, y: 192, scale: 1.02, widthRatio: 1.0, hairlineOffset: -4 },
   },
   {
     id: 'client2',
     name: 'Elena (Milan)',
     isCamera: false,
     img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=800',
+    detectedFace: { x: 200, y: 190, scale: 0.98, widthRatio: 1.02, hairlineOffset: -2 },
   },
   {
     id: 'client3',
     name: 'Rohan (Executive)',
     isCamera: false,
     img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800',
+    detectedFace: { x: 200, y: 188, scale: 1.0, widthRatio: 1.04, hairlineOffset: -6 },
   },
 ];
 
@@ -263,9 +268,8 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
 
   // Try-On Mode & Hairline State
   const [tryOnMode, setTryOnMode] = useState<TryOnMode>('full_cut_volume');
-  const [hairlineArch, setHairlineArch] = useState<HairlineArch>('soft_oval');
   const [showHairlineGuide, setShowHairlineGuide] = useState<boolean>(true);
-  const [rootFeathering, setRootFeathering] = useState<number>(85); // 50% to 100% feathering
+  const [isAiAutoFitted, setIsAiAutoFitted] = useState<boolean>(true);
 
   // Hairstyle State & Custom Alignment Controls
   const [selectedHairstyle, setSelectedHairstyle] = useState<HairstyleData>(HAIRSTYLES[0]);
@@ -276,9 +280,10 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
   });
 
   const [hairOffsetY, setHairOffsetY] = useState<number>(HAIRSTYLES[0].heightOffsetDefault);
+  const [hairOffsetX, setHairOffsetX] = useState<number>(0);
   const [hairScale, setHairScale] = useState<number>(HAIRSTYLES[0].hairVolumeDefault);
   const [hairWidth, setHairWidth] = useState<number>(100);
-  const [hairShine, setHairShine] = useState<number>(90);
+  const [hairShine, setHairShine] = useState<number>(92);
 
   // AR Advanced View Modes
   const [showWireframeMesh, setShowWireframeMesh] = useState<boolean>(false);
@@ -294,10 +299,23 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     undertone: 'Warm Golden Terracotta',
     hairlineDistance: '6.8 cm (Forehead Ratio)',
     hairDensity: 'Medium-High Density Strands',
-    hairlineArch: 'Soft Parisian Oval',
-    confidenceScore: '99.4%',
+    fitStatus: '100% Locked to Landmarks',
+    confidenceScore: '99.6%',
     recommendedStylist: INITIAL_STYLISTS[1], // Camille Laurent
   });
+
+  // AI Auto-Fit Calibration Function
+  const applyAiPerfectFit = (clientKey: string = activeClient) => {
+    setIsAiAutoFitted(true);
+    const client = SAMPLE_CLIENTS.find((c) => c.id === clientKey);
+    const detected = client?.detectedFace || { x: 200, y: 190, scale: 1.0, widthRatio: 1.0, hairlineOffset: -4 };
+
+    setHairOffsetX(0);
+    setHairOffsetY(selectedHairstyle.heightOffsetDefault + (detected.hairlineOffset || 0));
+    setHairScale(Math.round(selectedHairstyle.hairVolumeDefault * (detected.scale || 1.0)));
+    setHairWidth(Math.round(100 * (detected.widthRatio || 1.0)));
+    playChime('bell');
+  };
 
   // Start Camera
   const startCamera = async () => {
@@ -317,7 +335,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
 
         setStream(mediaStream);
         setCameraActive(true);
-        triggerComprehensiveFaceScan();
+        triggerComprehensiveFaceScan('cam');
       } else {
         throw new Error('Camera not supported');
       }
@@ -325,7 +343,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
       console.warn('Camera access unavailable:', err);
       setCameraActive(false);
       setActiveClient('client1');
-      triggerComprehensiveFaceScan();
+      triggerComprehensiveFaceScan('client1');
     }
   };
 
@@ -337,45 +355,40 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     setCameraActive(false);
   };
 
-  // Trigger Genuine Multi-Phase Craniofacial Scan Sequence (~4.8 seconds)
-  const triggerComprehensiveFaceScan = () => {
+  // Trigger Comprehensive Facial Scan
+  const triggerComprehensiveFaceScan = (clientTarget: string = activeClient) => {
     setShowOriginalComparison(false);
     setIsCardExported(false);
 
-    // Phase 1: 68 Craniofacial Landmark Keypoints
     setScanStep('landmarks');
     setScanProgress(15);
-    setScanStageText('Detecting 68 Facial Keypoints & Forehead Height...');
+    setScanStageText('Detecting 68 Facial Landmarks & Cranial Geometry...');
     playChime('notification');
 
-    // Phase 2: Original Hair & Hairline Boundary Arc
     setTimeout(() => {
       setScanStep('hairline_detection');
       setScanProgress(45);
-      setScanStageText('Mapping Original Hairline Arc & Scalp Perimeter...');
+      setScanStageText('Calculating Hairline Arc & Forehead-to-Scalp Anchor...');
     }, 1100);
 
-    // Phase 3: Skin Undertone & Melanin Spectrum
     setTimeout(() => {
       setScanStep('undertone');
       setScanProgress(70);
-      setScanStageText('Calibrating Hair Strand Density & Melanin Undertone...');
+      setScanStageText('Analyzing Hair Texture Density & Skin Undertone...');
     }, 2200);
 
-    // Phase 4: Volumetric Strand Synthesis (Hair Only)
     setTimeout(() => {
       setScanStep('strand_fitting');
       setScanProgress(92);
-      setScanStageText('Anchoring Volumetric Strands Directly to Scalp Contour...');
-    }, 3400);
+      setScanStageText('AI Auto-Fitting 4,800+ Strands to Facial Morphology...');
+    }, 3300);
 
-    // Phase 5: Complete
     setTimeout(() => {
       setScanStep('completed');
       setScanProgress(100);
-      setScanStageText('Bespoke Hairline Fitting Completed');
-      playChime('bell');
-    }, 4600);
+      setScanStageText('AI Facial Fit 100% Calibrated & Locked');
+      applyAiPerfectFit(clientTarget);
+    }, 4500);
   };
 
   const handleSelectHairstyle = (hs: HairstyleData) => {
@@ -386,6 +399,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     });
     setHairOffsetY(hs.heightOffsetDefault);
     setHairScale(hs.hairVolumeDefault);
+    setIsAiAutoFitted(true);
     playChime('notification');
   };
 
@@ -402,7 +416,6 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     };
   }, [isOpen]);
 
-  // Attach stream to video tag
   useEffect(() => {
     if (videoRef.current && stream && activeClient === 'cam') {
       videoRef.current.srcObject = stream;
@@ -419,7 +432,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
         if (event.target?.result) {
           setCustomPhoto(event.target.result as string);
           setActiveClient('custom');
-          triggerComprehensiveFaceScan();
+          triggerComprehensiveFaceScan('custom');
         }
       };
       reader.readAsDataURL(file);
@@ -480,15 +493,15 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-serif font-extrabold text-lg sm:text-xl text-[#2C2725] dark:text-[#FAF6F0]">
-                  AI Hairline-Anchored AR Hairstyle Studio
+                  AI Facial Fit &amp; Hairstyle Try-On Studio
                 </h3>
                 <span className="px-2.5 py-0.5 rounded-full bg-[#F5E6DF] dark:bg-[#38251E] text-[#8C462C] dark:text-[#F2A585] text-[10px] font-mono font-bold uppercase tracking-wider border border-[#C1785A]/30 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#C1785A] animate-ping" />
-                  Hairline Boundary AI
+                  AI Face-Lock Engine
                 </span>
               </div>
               <p className="text-xs text-[#6E6663] dark:text-[#B5ABA2]">
-                Original hair detection, natural root blending &amp; face-preserving realistic synthesis
+                Dynamic facial landmark calibration, hairline auto-anchoring &amp; realistic organic styling
               </p>
             </div>
           </div>
@@ -513,7 +526,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
               className="relative w-full flex-1 max-w-lg rounded-3xl overflow-hidden shadow-2xl border-2 border-[#C1785A]/40 bg-[#161210] flex items-center justify-center select-none"
             >
               
-              {/* 1. Live Video Feed OR Client Photo (100% Face Preserved) */}
+              {/* 1. Live Video Feed OR Client Photo */}
               <div
                 className="w-full h-full absolute inset-0 transition-all duration-300"
                 style={{ filter: getLightingFilter() }}
@@ -536,12 +549,12 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                 )}
               </div>
 
-              {/* 2. REALISTIC HAIR-ONLY AR SYNTHESIS (Anchored to Hairline) */}
+              {/* 2. REALISTIC HAIR-ONLY AR SYNTHESIS (100% Face Preserved) */}
               {!showOriginalComparison && scanStep === 'completed' && (
                 <div
                   className="absolute inset-0 pointer-events-none transition-all duration-300 flex items-center justify-center z-10"
                   style={{
-                    transform: `translateY(${hairOffsetY}px) scaleX(${(hairScale * (hairWidth / 100)) / 100}) scaleY(${hairScale / 100})`,
+                    transform: `translate(${hairOffsetX}px, ${hairOffsetY}px) scaleX(${(hairScale * (hairWidth / 100)) / 100}) scaleY(${hairScale / 100})`,
                     clipPath: isSplitMode ? `inset(0 ${100 - splitPercent}% 0 0)` : undefined,
                   }}
                 >
@@ -551,7 +564,6 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                     style={{ opacity: hairShine / 100 }}
                   >
                     <defs>
-                      {/* Realistic Base Hair Gradient */}
                       <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stopColor={currentColor.base} />
                         <stop offset="35%" stopColor={currentColor.highlight} />
@@ -559,71 +571,50 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                         <stop offset="100%" stopColor={currentColor.highlight} />
                       </linearGradient>
 
-                      {/* Natural Specular Shine Ribbon */}
                       <linearGradient id="shineGrad" x1="20%" y1="0%" x2="80%" y2="100%">
                         <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.5" />
                         <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.0" />
                         <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.3" />
                       </linearGradient>
 
-                      {/* Hairline Root Feathering Mask */}
-                      <linearGradient id="featherGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-                        <stop offset="70%" stopColor="#FFFFFF" stopOpacity="0.95" />
-                        <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.0" />
-                      </linearGradient>
-
-                      <mask id="rootBlendMask">
-                        <rect x="0" y="0" width="400" height="450" fill="url(#featherGrad)" />
-                      </mask>
-
-                      {/* Soft Root Shadow Filter */}
                       <filter id="naturalShadow" x="-10%" y="-10%" width="120%" height="120%">
                         <feDropShadow dx="0" dy="4" stdDeviation="5" floodColor="#000000" floodOpacity="0.35" />
                       </filter>
                     </defs>
 
-                    {/* TRY-ON MODE A: HAIR-ONLY COLOR BALAYAGE & GLOSS MELT */}
+                    {/* Mode A: Hair-Only Balayage Melt */}
                     {tryOnMode === 'hair_only_color' && (
                       <g filter="url(#naturalShadow)" style={{ mixBlendMode: 'soft-light' }}>
-                        {/* Cranial Crown Hair Region */}
                         <path
                           d="M 115,115 C 135,45 265,45 285,115 C 320,135 340,200 335,300 C 330,375 300,420 285,440 C 305,355 315,250 295,168 C 275,135 240,115 200,115 C 160,115 125,135 105,168 C 85,250 95,355 115,440 C 100,420 70,375 65,300 C 60,200 80,135 115,115 Z"
                           fill="url(#hairGrad)"
                           opacity="0.9"
                         />
-                        {/* Sun-kissed Balayage Ribbons */}
                         <path d="M 100,240 Q 70,330 110,420 Q 125,350 115,280 Z" fill={currentColor.highlight} opacity="0.85" />
                         <path d="M 300,240 Q 330,330 290,420 Q 275,350 285,280 Z" fill={currentColor.highlight} opacity="0.85" />
                       </g>
                     )}
 
-                    {/* TRY-ON MODE B: FULL HAIRSTYLE SCULPTING & VOLUME GRAFTING */}
+                    {/* Mode B: Full Cut Sculpting & Volume Grafting */}
                     {tryOnMode === 'full_cut_volume' && (
                       <g filter="url(#naturalShadow)">
-                        
-                        {/* HAIRSTYLE 1: Parisian Curtain Bangs */}
                         {selectedHairstyle.svgType === 'curtain_bangs' && (
                           <g>
-                            {/* Crown Volume */}
                             <path
                               d="M 115,115 C 135,45 265,45 285,115 C 315,135 338,195 332,290 C 326,350 298,390 282,415 C 295,335 305,250 285,175 C 272,142 240,122 200,122 C 160,122 128,142 115,175 C 95,250 105,335 118,415 C 102,390 74,350 68,290 C 62,195 85,135 115,115 Z"
                               fill="url(#hairGrad)"
                             />
-                            {/* Wispy Hairline Micro-Strands */}
                             <path
                               d="M 200,122 C 175,135 145,160 140,210 C 160,185 185,165 200,158 C 215,165 240,185 260,210 C 255,160 225,135 200,122 Z"
                               fill={currentColor.highlight}
                               opacity="0.95"
                             />
-                            {/* Hair Strands Layering */}
                             <path d="M 98,245 Q 75,325 112,410 Q 128,355 118,280 Z" fill={currentColor.highlight} opacity="0.8" />
                             <path d="M 302,245 Q 325,325 288,410 Q 272,355 282,280 Z" fill={currentColor.highlight} opacity="0.8" />
                             <path d="M 135,135 Q 165,85 200,85 Q 235,85 265,135" stroke="url(#shineGrad)" strokeWidth="8" fill="none" opacity="0.7" />
                           </g>
                         )}
 
-                        {/* HAIRSTYLE 2: French Bob */}
                         {selectedHairstyle.svgType === 'french_bob' && (
                           <g>
                             <path
@@ -636,7 +627,6 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                           </g>
                         )}
 
-                        {/* HAIRSTYLE 3: Balayage Waves */}
                         {selectedHairstyle.svgType === 'balayage_waves' && (
                           <g>
                             <path
@@ -648,7 +638,6 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                           </g>
                         )}
 
-                        {/* HAIRSTYLE 4: Platinum Layers */}
                         {selectedHairstyle.svgType === 'platinum_layers' && (
                           <g>
                             <path
@@ -660,7 +649,6 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                           </g>
                         )}
 
-                        {/* HAIRSTYLE 5: Espresso Glass */}
                         {selectedHairstyle.svgType === 'espresso_gloss' && (
                           <g>
                             <path
@@ -671,7 +659,6 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                           </g>
                         )}
 
-                        {/* HAIRSTYLE 6: Wolf Shag */}
                         {selectedHairstyle.svgType === 'wolf_cut' && (
                           <g>
                             <path
@@ -686,7 +673,6 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                           </g>
                         )}
 
-                        {/* HAIRSTYLE 7: Men's Fade */}
                         {selectedHairstyle.svgType === 'men_fade' && (
                           <g>
                             <path
@@ -703,7 +689,6 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                           </g>
                         )}
 
-                        {/* HAIRSTYLE 8: Beard Contour */}
                         {selectedHairstyle.svgType === 'beard_fade' && (
                           <g>
                             <path
@@ -752,11 +737,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
               {/* 4. SCANNING RETICLE & HAIRLINE DETECTOR OVERLAY */}
               {scanStep !== 'completed' && scanStep !== 'idle' && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0E0C0B]/80 backdrop-blur-[3px] z-30 p-6 text-center animate-fadeIn">
-                  
-                  {/* Hairline Reticle Box */}
                   <div className="relative w-64 h-72 border-2 border-dashed border-[#C1785A] rounded-[48%] flex items-center justify-center shadow-[0_0_50px_rgba(193,120,90,0.5)]">
-                    
-                    {/* Sweeping Hairline Laser Line */}
                     <div
                       className="w-full h-1.5 bg-gradient-to-r from-transparent via-[#FAF6F0] to-transparent absolute shadow-[0_0_20px_#FFFFFF]"
                       style={{
@@ -764,18 +745,15 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                         transition: 'top 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
                       }}
                     />
-
-                    {/* Hairline Anchor Pins */}
                     <div className="absolute top-6 inset-x-8 flex justify-between items-center">
                       <span className="w-2.5 h-2.5 rounded-full bg-[#C1785A] animate-ping shadow-[0_0_8px_#C1785A]" />
                       <span className="text-[10px] font-mono font-bold text-[#FAF6F0] bg-[#C1785A]/80 px-2 py-0.5 rounded-full">
-                        Hairline: 6.8cm
+                        AI Facial Fit: 100%
                       </span>
                       <span className="w-2.5 h-2.5 rounded-full bg-[#C1785A] animate-ping shadow-[0_0_8px_#C1785A]" />
                     </div>
                   </div>
 
-                  {/* Scan Stage Readout */}
                   <div className="mt-6 space-y-2 max-w-sm w-full">
                     <div className="w-full bg-[#241E1C] rounded-full h-2.5 overflow-hidden border border-[#C1785A]/40 shadow-inner">
                       <div
@@ -799,16 +777,12 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                 <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-[#1C1715]/90 backdrop-blur-md p-1 rounded-full border border-[#C1785A]/50 text-xs">
                   <button
                     type="button"
-                    onClick={() => setShowHairlineGuide(!showHairlineGuide)}
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all flex items-center gap-1 ${
-                      showHairlineGuide
-                        ? 'bg-[#C1785A] text-white shadow-sm'
-                        : 'text-[#DDD3C6] hover:text-white'
-                    }`}
-                    title="Toggle Hairline Arc Guide"
+                    onClick={() => applyAiPerfectFit()}
+                    className="px-2.5 py-1 rounded-full text-[10px] font-bold transition-all flex items-center gap-1 bg-[#C1785A] text-white shadow-sm hover:bg-[#8C462C]"
+                    title="1-Click AI Auto-Fit to Face"
                   >
-                    <Target className="w-3 h-3" />
-                    <span>Hairline Guide</span>
+                    <Wand2 className="w-3 h-3" />
+                    <span>AI Auto-Fit</span>
                   </button>
 
                   <button
@@ -878,7 +852,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                   }`}
                 >
                   <Scissors className="w-3.5 h-3.5" />
-                  <span>Bespoke Haircut &amp; Restyle</span>
+                  <span>Bespoke Haircut Fit</span>
                 </button>
 
                 <button
@@ -911,7 +885,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                         stopCamera();
                         setActiveClient(c.id);
                         setCustomPhoto(null);
-                        triggerComprehensiveFaceScan();
+                        triggerComprehensiveFaceScan(c.id);
                       }
                     }}
                     className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap ${
@@ -942,11 +916,11 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
               {/* Hairstyle Alignment & Custom Fit Adjusters */}
               <div className="p-3 rounded-2xl bg-[#1C1715] border border-[#382E28] space-y-2.5 text-xs text-[#FAF6F0]">
                 
-                {/* Sliders Grid: Hairline Height & Volume Fullness */}
+                {/* Sliders Grid: Hairline Height, Width, and Volume */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   <div className="space-y-1">
                     <div className="flex justify-between text-[10px] text-[#DDD3C6]">
-                      <span>Hairline Anchor</span>
+                      <span>Hairline Height</span>
                       <span>{hairOffsetY}px</span>
                     </div>
                     <input
@@ -954,7 +928,10 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                       min="-35"
                       max="35"
                       value={hairOffsetY}
-                      onChange={(e) => setHairOffsetY(Number(e.target.value))}
+                      onChange={(e) => {
+                        setHairOffsetY(Number(e.target.value));
+                        setIsAiAutoFitted(false);
+                      }}
                       className="w-full accent-[#C1785A] cursor-pointer"
                     />
                   </div>
@@ -969,7 +946,10 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                       min="80"
                       max="125"
                       value={hairScale}
-                      onChange={(e) => setHairScale(Number(e.target.value))}
+                      onChange={(e) => {
+                        setHairScale(Number(e.target.value));
+                        setIsAiAutoFitted(false);
+                      }}
                       className="w-full accent-[#C1785A] cursor-pointer"
                     />
                   </div>
@@ -977,12 +957,12 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                   <div className="col-span-2 sm:col-span-1 flex items-center gap-2 justify-end">
                     <button
                       type="button"
-                      onClick={triggerComprehensiveFaceScan}
+                      onClick={() => applyAiPerfectFit()}
                       className="px-3 py-1.5 rounded-full bg-[#2E2420] hover:bg-[#3D2E27] text-xs font-bold text-[#FAF6F0] flex items-center gap-1 border border-[#C1785A]/40 transition-colors"
-                      title="Re-run comprehensive facial scan"
+                      title="Auto-Fit Hairstyle to Face"
                     >
-                      <RefreshCw className="w-3 h-3 text-[#C1785A]" />
-                      <span>Rescan</span>
+                      <Crosshair className="w-3 h-3 text-[#C1785A]" />
+                      <span>Auto-Fit</span>
                     </button>
 
                     <button
@@ -1115,30 +1095,30 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                   <div className="flex items-center gap-2">
                     <Scan className="w-4 h-4 text-[#C1785A]" />
                     <span className="text-[10px] uppercase font-bold tracking-widest text-[#8C462C] dark:text-[#F2A585]">
-                      Hairline &amp; Cranial Diagnostics
+                      AI Facial Calibration Report
                     </span>
                   </div>
                   <span className="px-2.5 py-0.5 rounded-full bg-[#C1785A] text-white text-[10px] font-mono font-bold shadow-sm">
-                    {diagnostics.confidenceScore} Accuracy
+                    {diagnostics.fitStatus}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="bg-white/80 dark:bg-[#181413]/80 p-2.5 rounded-2xl border border-white/40 dark:border-[#382E28]">
                     <span className="text-[9px] uppercase text-[#6E6663] dark:text-[#B5ABA2] block font-bold">
-                      Hairline Distance
+                      Facial Morphology
                     </span>
                     <strong className="text-[#2C2725] dark:text-[#FAF6F0] block mt-0.5">
-                      {diagnostics.hairlineDistance}
+                      {diagnostics.faceShape}
                     </strong>
                   </div>
 
                   <div className="bg-white/80 dark:bg-[#181413]/80 p-2.5 rounded-2xl border border-white/40 dark:border-[#382E28]">
                     <span className="text-[9px] uppercase text-[#6E6663] dark:text-[#B5ABA2] block font-bold">
-                      Detected Density
+                      Hairline Distance
                     </span>
                     <strong className="text-[#2C2725] dark:text-[#FAF6F0] block mt-0.5">
-                      {diagnostics.hairDensity}
+                      {diagnostics.hairlineDistance}
                     </strong>
                   </div>
                 </div>
