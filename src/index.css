@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #fdf7ff;
+    color: #1e1831;
+    overflow-x: hidden;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+/* Material Symbols Icon Utility */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Light Glassmorphism */
+.aura-glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid #f2eaff;
+}
+
+.aura-glass-card {
+  background: #ffffff;
+  border: 1px solid #e8ddff;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+}
+
+.aura-glow-primary {
+  box-shadow: 0 4px 16px -2px rgba(219, 35, 121, 0.35);
+}
+
+/* Animations */
+@keyframes highlightFlash {
+  0% { background-color: #ffd9e2; }
+  100% { background-color: transparent; }
+}
+
+.highlight-flash {
+  animation: highlightFlash 1.2s ease-out;
+}
