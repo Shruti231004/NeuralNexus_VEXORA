@@ -250,32 +250,106 @@ const HAIRSTYLES: HairstyleData[] = [
 
 const SAMPLE_CLIENTS = [
   {
-    id: 'cam',
-    name: 'Live AR Camera',
-    isCamera: true,
-    img: '',
-    detectedFace: { x: 200, y: 190, scale: 1.0, widthRatio: 1.0, hairlineOffset: -4 },
-  },
-  {
     id: 'client1',
-    name: 'Sarah (Paris)',
+    name: 'Ananya',
+    tag: 'Oval Face • Natural Waves',
     isCamera: false,
     img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800',
     detectedFace: { x: 200, y: 192, scale: 1.02, widthRatio: 1.0, hairlineOffset: -4 },
+    diagnostics: {
+      faceShape: 'Harmonious Oval (1.618 Golden Ratio)',
+      undertone: 'Warm Golden Terracotta',
+      hairlineDistance: '6.8 cm (Forehead Ratio)',
+      hairDensity: 'High Dimensional Density',
+      fitStatus: '100% Calibrated to Hairline',
+      confidenceScore: '99.8%',
+      recommendedStylist: INITIAL_STYLISTS[0], // Arjun Khanna
+    },
   },
   {
     id: 'client2',
-    name: 'Elena (Milan)',
+    name: 'Meera',
+    tag: 'Heart Face • Balayage',
     isCamera: false,
-    img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=800',
+    img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800',
     detectedFace: { x: 200, y: 190, scale: 0.98, widthRatio: 1.02, hairlineOffset: -2 },
+    diagnostics: {
+      faceShape: 'Heart Contour & Soft Temples',
+      undertone: 'Honey Caramel Undertone',
+      hairlineDistance: '6.5 cm (Forehead Ratio)',
+      hairDensity: 'Medium Voluminous Waves',
+      fitStatus: '100% Calibrated to Hairline',
+      confidenceScore: '99.4%',
+      recommendedStylist: INITIAL_STYLISTS[1], // Priya Patel
+    },
   },
   {
     id: 'client3',
-    name: 'Rohan (Executive)',
+    name: 'Arjun',
+    tag: 'Square Face • Quiff & Fade',
     isCamera: false,
     img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800',
     detectedFace: { x: 200, y: 188, scale: 1.0, widthRatio: 1.04, hairlineOffset: -6 },
+    diagnostics: {
+      faceShape: 'Defined Square Jawline',
+      undertone: 'Warm Olive Terracotta',
+      hairlineDistance: '6.2 cm (Temple Taper)',
+      hairDensity: 'Thick Natural Texture',
+      fitStatus: '100% Calibrated to Hairline',
+      confidenceScore: '99.7%',
+      recommendedStylist: INITIAL_STYLISTS[2], // Rohan Mehta
+    },
+  },
+  {
+    id: 'client4',
+    name: 'Priya',
+    tag: 'Diamond Face • Chic Layer',
+    isCamera: false,
+    img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=800',
+    detectedFace: { x: 200, y: 194, scale: 1.0, widthRatio: 1.0, hairlineOffset: -3 },
+    diagnostics: {
+      faceShape: 'High Cheekbone Diamond',
+      undertone: 'Champagne Warm Neutral',
+      hairlineDistance: '6.7 cm (Forehead Ratio)',
+      hairDensity: 'Silky Feathered Texture',
+      fitStatus: '100% Calibrated to Hairline',
+      confidenceScore: '99.6%',
+      recommendedStylist: INITIAL_STYLISTS[1], // Priya Patel
+    },
+  },
+  {
+    id: 'client5',
+    name: 'Rohan',
+    tag: 'Executive Taper & Beard',
+    isCamera: false,
+    img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=800',
+    detectedFace: { x: 200, y: 190, scale: 1.02, widthRatio: 1.02, hairlineOffset: -5 },
+    diagnostics: {
+      faceShape: 'Chiseled Oval & Beard Arch',
+      undertone: 'Deep Espresso Tone',
+      hairlineDistance: '6.4 cm (Crown Density)',
+      hairDensity: 'Sculpted Beard & Temple Fade',
+      fitStatus: '100% Calibrated to Hairline',
+      confidenceScore: '99.5%',
+      recommendedStylist: INITIAL_STYLISTS[2], // Rohan Mehta
+    },
+  },
+  {
+    id: 'cam',
+    name: 'Live Camera',
+    tag: 'Optional Webcam',
+    isCamera: true,
+    img: '',
+    detectedFace: { x: 200, y: 190, scale: 1.0, widthRatio: 1.0, hairlineOffset: -4 },
+    diagnostics: {
+      faceShape: 'Live Biometric Calibrated',
+      undertone: 'Ambient Adaptive',
+      hairlineDistance: '6.5 cm (Sensor Lock)',
+      hairDensity: 'Active Video Mesh',
+      fitStatus: '100% Calibrated to Hairline',
+      confidenceScore: '99.9%',
+      recommendedStylist: INITIAL_STYLISTS[0],
+    },
   },
 ];
 
@@ -291,7 +365,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
 
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [cameraActive, setCameraActive] = useState<boolean>(false);
-  const [activeClient, setActiveClient] = useState<string>('cam');
+  const [activeClient, setActiveClient] = useState<string>('client1');
   const [customPhoto, setCustomPhoto] = useState<string | null>(null);
 
   // Scanning Lifecycle
@@ -333,7 +407,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     hairDensity: 'High Dimensional Density',
     fitStatus: '100% Calibrated to Hairline',
     confidenceScore: '99.8%',
-    recommendedStylist: INITIAL_STYLISTS[1], // Camille Laurent
+    recommendedStylist: INITIAL_STYLISTS[0], // Arjun Khanna
   });
 
   // AI Auto-Fit Calibration Function
@@ -392,35 +466,40 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     setShowOriginalComparison(false);
     setIsCardExported(false);
 
+    const client = SAMPLE_CLIENTS.find((c) => c.id === clientTarget);
+    if (client && client.diagnostics) {
+      setDiagnostics(client.diagnostics);
+    }
+
     setScanStep('landmarks');
     setScanProgress(15);
-    setScanStageText('Mapping 68 Craniofacial Landmark Nodes...');
+    setScanStageText('Mapping 68 Craniofacial Landmark Nodes on Portrait...');
     playChime('notification');
 
     setTimeout(() => {
       setScanStep('hairline_detection');
       setScanProgress(45);
-      setScanStageText('Scanning Hairline Arc & Forehead-to-Scalp Boundary (6.8cm)...');
-    }, 1200);
+      setScanStageText('Scanning Hairline Arc & Scalp Boundary on Photo...');
+    }, 1000);
 
     setTimeout(() => {
       setScanStep('undertone');
       setScanProgress(70);
-      setScanStageText('Analyzing Hair Follicle Density & Melanin Undertone Spectrum...');
-    }, 2400);
+      setScanStageText('Analyzing Hair Texture Density & Undertone Spectrum...');
+    }, 2000);
 
     setTimeout(() => {
       setScanStep('strand_fitting');
       setScanProgress(92);
-      setScanStageText('Synthesizing 4,800+ Organic Parisian Strands & Specular Sheen...');
-    }, 3600);
+      setScanStageText('Synthesizing 4,800+ Organic Hair Strands & Natural Specular Sheen...');
+    }, 3000);
 
     setTimeout(() => {
       setScanStep('completed');
       setScanProgress(100);
-      setScanStageText('AI Hairstyle 100% Locked to Client Hairline');
+      setScanStageText('Hairstyle 100% Calibrated to Photo Hairline');
       applyAiPerfectFit(clientTarget);
-    }, 4800);
+    }, 4000);
   };
 
   const handleSelectHairstyle = (hs: HairstyleData) => {
@@ -434,7 +513,10 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
 
   useEffect(() => {
     if (isOpen) {
-      startCamera();
+      stopCamera();
+      setActiveClient('client1');
+      setCustomPhoto(null);
+      triggerComprehensiveFaceScan('client1');
     } else {
       stopCamera();
       setScanStep('idle');
@@ -922,45 +1004,90 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                 </button>
               </div>
 
-              {/* Input Client Selection Strip */}
-              <div className="flex items-center justify-between gap-1.5 overflow-x-auto pb-0.5">
-                {SAMPLE_CLIENTS.map((c) => (
-                  <button
-                    key={c.id}
-                    type="button"
-                    onClick={() => {
-                      if (c.isCamera) {
-                        startCamera();
-                      } else {
+              {/* Photo & Model Selection Strip */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-[10px] uppercase font-extrabold tracking-wider text-[#A89C94] flex items-center gap-1">
+                    <ImageIcon className="w-3 h-3 text-[#C1785A]" />
+                    <span>Select Client Photo or Upload Your Own:</span>
+                  </span>
+                  {activeClient === 'custom' && (
+                    <span className="text-[10px] text-emerald-400 font-bold">Custom Photo Loaded ✓</span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                  {SAMPLE_CLIENTS.filter((c) => !c.isCamera).map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => {
                         stopCamera();
                         setActiveClient(c.id);
                         setCustomPhoto(null);
                         triggerComprehensiveFaceScan(c.id);
+                      }}
+                      className={`flex items-center gap-2 p-1.5 pr-3 rounded-2xl border transition-all shrink-0 ${
+                        activeClient === c.id
+                          ? 'bg-[#2E2420] border-[#C1785A] text-white shadow-warm ring-1 ring-[#C1785A]'
+                          : 'bg-[#1C1715] border-[#382E28] text-[#DDD3C6] hover:bg-[#251F1C]'
+                      }`}
+                    >
+                      <img
+                        src={c.img}
+                        alt={c.name}
+                        className="w-7 h-7 rounded-xl object-cover border border-[#C1785A]/50"
+                      />
+                      <div className="text-left">
+                        <span className="text-xs font-bold block leading-tight">{c.name}</span>
+                        <span className="text-[9px] text-[#A89C94] block leading-tight">{c.tag.split('•')[0].trim()}</span>
+                      </div>
+                    </button>
+                  ))}
+
+                  {/* Upload Custom Selfie / Photo */}
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className={`flex items-center gap-2 p-1.5 px-3 rounded-2xl border transition-all shrink-0 ${
+                      activeClient === 'custom'
+                        ? 'bg-[#2E2420] border-[#C1785A] text-white shadow-warm ring-1 ring-[#C1785A]'
+                        : 'bg-[#1C1715] border-[#382E28] text-[#DDD3C6] hover:bg-[#251F1C]'
+                    }`}
+                    title="Upload your own photo to try on hairstyles"
+                  >
+                    <div className="w-7 h-7 rounded-xl bg-[#C1785A]/20 border border-[#C1785A]/40 flex items-center justify-center text-[#C1785A]">
+                      <Upload className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="text-left">
+                      <span className="text-xs font-bold block leading-tight">Upload Photo</span>
+                      <span className="text-[9px] text-[#A89C94] block leading-tight">Your Selfie</span>
+                    </div>
+                  </button>
+
+                  {/* Optional Camera Toggle */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (cameraActive) {
+                        stopCamera();
+                        setActiveClient('client1');
+                        triggerComprehensiveFaceScan('client1');
+                      } else {
+                        startCamera();
                       }
                     }}
-                    className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap ${
-                      activeClient === c.id
-                        ? 'bg-[#C1785A] text-white shadow-warm'
-                        : 'bg-[#241E1C] text-[#DDD3C6] hover:bg-[#332A26] border border-[#3A302A]'
+                    className={`flex items-center gap-1.5 p-1.5 px-2.5 rounded-2xl border text-[11px] font-medium transition-all shrink-0 ${
+                      activeClient === 'cam' && cameraActive
+                        ? 'bg-[#C1785A] border-[#C1785A] text-white'
+                        : 'bg-[#181413] border-[#2C2420] text-[#8C7E76] hover:text-[#DDD3C6]'
                     }`}
+                    title="Toggle live camera mode"
                   >
-                    {c.isCamera ? <Camera className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}
-                    <span>{c.name}</span>
+                    <Camera className="w-3.5 h-3.5" />
+                    <span>{cameraActive ? 'Live' : 'Webcam'}</span>
                   </button>
-                ))}
-
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap ${
-                    activeClient === 'custom'
-                      ? 'bg-[#C1785A] text-white shadow-warm'
-                      : 'bg-[#241E1C] text-[#DDD3C6] hover:bg-[#332A26] border border-[#3A302A]'
-                  }`}
-                >
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>Upload Photo</span>
-                </button>
+                </div>
               </div>
 
               {/* Hairstyle Alignment & Custom Fit Adjusters */}
