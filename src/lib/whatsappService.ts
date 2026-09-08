@@ -23,6 +23,7 @@ export function formatWhatsAppMessage(
   const chairNumber = appointment.stylist?.chair_number || 1;
   const tokenCode = appointment.queue_number || 'SQ-101';
   const serviceDuration = appointment.service?.duration_minutes || 30;
+  const isHomeService = appointment.notes?.includes('[DOORSTEP AT-HOME SERVICE]') || appointment.queue_number?.startsWith('HOME');
 
   // Calculate Allotted Start & End Time Slot
   const startTime = appointment.estimated_start_time
@@ -40,6 +41,31 @@ export function formatWhatsAppMessage(
     month: 'short',
     year: 'numeric',
   });
+
+  if (isHomeService) {
+    return `🌹 *ROSE & ROGUE • HAUTE AT-HOME CONCIERGE* 🌹
+━━━━━━━━━━━━━━━━━━━━━
+🏠 *Doorstep Luxury Salon Appointment Confirmed!*
+
+Hello *${appointment.customer_name}*,
+Our certified master stylist is scheduled to visit your residence:
+
+📅 *Date:* ${dateStr}
+⏰ *Scheduled Window:* *${timeSlot}*
+🎟️ *Concierge Pass ID:* *#${tokenCode}*
+✂️ *Service:* ${appointment.service?.name || 'Hair Artistry'} (${serviceDuration} mins)
+💈 *Assigned Master Stylist:* ${stylistName}
+🧰 *Sanitized Vanity Kit:* Dyson Airwrap & Micro-Mist Included ✓
+📍 *Delivery Destination:*
+_${appointment.notes?.replace('[DOORSTEP AT-HOME SERVICE]', '').trim() || 'Client Residence'}_
+
+━━━━━━━━━━━━━━━━━━━━━
+📲 *Live Stylist ETA & Arrival Tracker:*
+${trackingUrl}
+
+_Our artisan will contact you prior to arrival. Please ensure security gate entry is authorized._
+*Rose & Rogue Concierge Desk*`;
+  }
 
   return `🌹 *ROSE & ROGUE SALON* 🌹
 ━━━━━━━━━━━━━━━━━━━━━
@@ -70,11 +96,50 @@ _Please arrive at your allotted time slot. You will be alerted when Station #${c
 export function getWhatsAppDirectLink(
   appointment: Appointment,
   queuePosition: number = 1,
-  estimatedWaitMinutes: number = 15
+  estimatedWaitMinutes: number = 15,
+  originUrl?: string
 ): string {
   const cleanPhone = appointment.customer_phone.replace(/\D/g, '');
-  const message = formatWhatsAppMessage(appointment, queuePosition, estimatedWaitMinutes);
+  const message = formatWhatsAppMessage(appointment, queuePosition, estimatedWaitMinutes, originUrl);
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Unified dispatch helper for easy one-liner invocation
+ */
+export function sendWhatsAppAppointmentMessage(
+  recipientPhone: string,
+  customerName: string,
+  appointment: Appointment,
+  queuePosition: number = 1,
+  estimatedWaitMinutes: number = 15,
+  originUrl?: string
+): WhatsAppNotificationResult {
+  const message = formatWhatsAppMessage(appointment, queuePosition, estimatedWaitMinutes, originUrl);
+  const cleanPhone = recipientPhone.replace(/\D/g, '');
+  const directWaLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+
+  // Also trigger background POST if in browser
+  if (typeof window !== 'undefined') {
+    fetch('/api/whatsapp/send-booking', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        appointment,
+        queuePosition,
+        estimatedWaitMinutes,
+        origin: originUrl || window.location.origin,
+        recipientPhone: cleanPhone,
+      }),
+    }).catch((err) => console.warn('Background WhatsApp API dispatch notice:', err));
+  }
+
+  return {
+    success: true,
+    message: 'WhatsApp notification dispatched',
+    directWaLink,
+    method: 'meta_cloud_api',
+  };
 }
 
 /**

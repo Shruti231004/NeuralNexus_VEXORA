@@ -132,3 +132,12 @@ export interface CustomerProfile {
   allergies_notes?: string;
   total_bookings_count: number;
 }
+
+export function formatINR(amount: number): string {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+

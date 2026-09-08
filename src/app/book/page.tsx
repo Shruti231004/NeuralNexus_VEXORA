@@ -37,6 +37,9 @@ import { GoogleSecurityGate } from '@/components/GoogleSecurityGate';
 import { createAppointment, subscribeToAppointments } from '@/lib/supabaseClient';
 import { playChime } from '@/lib/soundEffects';
 import { sendWhatsAppBookingConfirmation } from '@/lib/whatsappService';
+import { VirtualStyleMirrorModal } from '@/components/VirtualStyleMirrorModal';
+import { AtHomeServiceModal } from '@/components/AtHomeServiceModal';
+import { Home } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 function BookPageContent() {
@@ -45,6 +48,8 @@ function BookPageContent() {
   const preselectedServiceId = searchParams.get('service');
 
   const [bookingMode, setBookingMode] = useState<'standard' | 'scanner'>('standard');
+  const [isVirtualMirrorOpen, setIsVirtualMirrorOpen] = useState(false);
+  const [isAtHomeModalOpen, setIsAtHomeModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedService, setSelectedService] = useState<Service>(
     INITIAL_SERVICES.find((s) => s.id === preselectedServiceId) || INITIAL_SERVICES[0]
@@ -247,33 +252,51 @@ function BookPageContent() {
           <p className="text-sm sm:text-base text-[#6E6663] max-w-xl mx-auto">
             Lock in your chair with a ₹99 advance deposit or use our instant QR scanner for fast-track walk-in booking.
           </p>
-
-          {/* Quick-Switch Booking Modes */}
-          <div className="flex items-center justify-center gap-3 pt-2">
+          {/* Quick-Switch Booking Modes & Innovations */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
             <button
               type="button"
               onClick={() => setBookingMode('standard')}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+              className={`px-4 sm:px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
                 bookingMode === 'standard'
                   ? 'bg-[#C1785A] text-[#FAF6F0] shadow-warm'
                   : 'bg-[#F3ECE3] text-[#6E6663] hover:text-[#2C2725] border border-[#EAE3DA]'
               }`}
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span>Standard Booking (₹99 Deposit)</span>
+              <span>Standard (In-Salon)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsVirtualMirrorOpen(true)}
+              className="px-4 sm:px-5 py-2.5 rounded-full text-xs font-extrabold uppercase tracking-wider transition-all flex items-center gap-2 bg-white hover:bg-[#F5E6DF] border-2 border-[#C1785A] text-[#8C462C] shadow-sm"
+            >
+              <Camera className="w-3.5 h-3.5 text-[#C1785A]" />
+              <span>Virtual Style Try-On</span>
+              <span className="w-2 h-2 rounded-full bg-[#C1785A] animate-ping" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsAtHomeModalOpen(true)}
+              className="px-4 sm:px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 bg-[#2C2725] hover:bg-[#3D3532] text-white shadow-warm"
+            >
+              <Home className="w-3.5 h-3.5 text-[#D48464]" />
+              <span>Book At-Home Concierge</span>
             </button>
 
             <button
               type="button"
               onClick={() => setBookingMode('scanner')}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+              className={`px-4 sm:px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
                 bookingMode === 'scanner'
                   ? 'bg-[#C1785A] text-[#FAF6F0] shadow-warm'
-                  : 'bg-[#F5E6DF] text-[#8C462C] hover:bg-[#E8D8CE] border border-[#E8D0C5]'
+                  : 'bg-[#F3ECE3] text-[#6E6663] hover:text-[#2C2725] border border-[#EAE3DA]'
               }`}
             >
-              <QrCode className="w-3.5 h-3.5 text-[#C1785A]" />
-              <span>Scan QR to Book</span>
+              <QrCode className="w-3.5 h-3.5" />
+              <span>QR Quick Add</span>
             </button>
           </div>
         </div>
@@ -758,6 +781,22 @@ function BookPageContent() {
               } catch (e) {}
             }
           }}
+        />
+
+        {/* AR Virtual Style Mirror Modal */}
+        <VirtualStyleMirrorModal
+          isOpen={isVirtualMirrorOpen}
+          onClose={() => setIsVirtualMirrorOpen(false)}
+          onSelectService={(servId) => {
+            const found = INITIAL_SERVICES.find((s) => s.id === servId);
+            if (found) setSelectedService(found);
+          }}
+        />
+
+        {/* Haute At-Home Concierge Modal */}
+        <AtHomeServiceModal
+          isOpen={isAtHomeModalOpen}
+          onClose={() => setIsAtHomeModalOpen(false)}
         />
       </div>
     </div>
