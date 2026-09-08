@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-main: #FAF6F0;
+  --bg-card: #FAF6F0;
+  --bg-surface: #F3ECE3;
+  --bg-surface-subtle: #F5E6DF;
+  --border-color: #EAE3DA;
+  --border-subtle: #DDD3C6;
+  --text-primary: #2C2725;
+  --text-secondary: #6E6663;
+  --text-muted: #8F8178;
+  --accent-primary: #C1785A;
+  --accent-hover: #A86347;
+  --accent-dark: #8C462C;
+  --accent-gold: #C98A2C;
+  --accent-badge-bg: #F5E6DF;
+  --accent-badge-text: #8C462C;
+  --accent-badge-border: #E8D0C5;
+  --header-glass: rgba(250, 246, 240, 0.92);
+}
+
+.dark {
+  --bg-main: #141110;
+  --bg-card: #1D1816;
+  --bg-surface: #26201D;
+  --bg-surface-subtle: #302622;
+  --border-color: #3D332D;
+  --border-subtle: #4D413A;
+  --text-primary: #FAF6F0;
+  --text-secondary: #C7BCB3;
+  --text-muted: #9E9187;
+  --accent-primary: #D48464;
+  --accent-hover: #E29B7E;
+  --accent-dark: #EAB29B;
+  --accent-gold: #E5A642;
+  --accent-badge-bg: #38251E;
+  --accent-badge-text: #F2A585;
+  --accent-badge-border: #52352A;
+  --header-glass: rgba(20, 17, 16, 0.92);
+}
+
+/* FONT THEMES */
+html.font-editorial,
+html[data-font="editorial"] {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+html.font-editorial h1,
+html.font-editorial h2,
+html.font-editorial h3,
+html.font-editorial h4,
+html.font-editorial .font-serif,
+html[data-font="editorial"] h1,
+html[data-font="editorial"] h2,
+html[data-font="editorial"] h3,
+html[data-font="editorial"] h4,
+html[data-font="editorial"] .font-serif {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+}
+
+html.font-modern,
+html[data-font="modern"] {
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+}
+html.font-modern h1,
+html.font-modern h2,
+html.font-modern h3,
+html.font-modern h4,
+html.font-modern .font-serif,
+html[data-font="modern"] h1,
+html[data-font="modern"] h2,
+html[data-font="modern"] h3,
+html[data-font="modern"] h4,
+html[data-font="modern"] .font-serif {
+  font-family: 'Syne', 'Outfit', sans-serif;
+  letter-spacing: -0.03em;
+}
+
+html.font-geometric,
+html[data-font="geometric"] {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+}
+html.font-geometric h1,
+html.font-geometric h2,
+html.font-geometric h3,
+html.font-geometric h4,
+html.font-geometric .font-serif,
+html[data-font="geometric"] h1,
+html[data-font="geometric"] h2,
+html[data-font="geometric"] h3,
+html[data-font="geometric"] h4,
+html[data-font="geometric"] .font-serif {
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: -0.04em;
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  h1, h2, h3, h4, .font-serif {
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Custom Luxe Architectural Arches */
+.arch-hero {
+  border-top-left-radius: 180px;
+  border-top-right-radius: 180px;
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+}
+
+.arch-card {
+  border-top-left-radius: 120px;
+  border-top-right-radius: 120px;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+.arch-pill {
+  border-radius: 9999px;
+}
+
+/* Subtle glassmorphism */
+.glass-panel {
+  background: var(--header-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Hide scrollbar for clean horizontal scrolls */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom scrollbar for dashboard */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+.dark ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: #C1785A55;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C1785A99;
+}
+
+/* Dark Mode Overrides for Hardcoded Light Palette Classes */
+.dark body {
+  background-color: #141110;
+  color: #FAF6F0;
+}
+
+.dark header {
+  background-color: rgba(20, 17, 16, 0.94) !important;
+  border-color: #332B26 !important;
+  color: #FAF6F0 !important;
+}
+
+.dark footer {
+  background-color: #120E0D !important;
+  border-color: #2D2521 !important;
+}
+
+/* Card surfaces */
+.dark .bg-\[\#FAF6F0\],
+.dark .bg-\[\#FAF6F0\]\/95,
+.dark .bg-\[\#FAF6F0\]\/60 {
+  background-color: #1B1715 !important;
+  color: #FAF6F0 !important;
+}
+
+.dark .bg-\[\#F3ECE3\] {
+  background-color: #241E1C !important;
+  color: #FAF6F0 !important;
+}
+
+.dark .bg-\[\#F5E6DF\] {
+  background-color: #35251F !important;
+  color: #F7B599 !important;
+}
+
+.dark .bg-\[\#FDF2E2\],
+.dark .bg-\[\#FFF9F2\] {
+  background-color: #332514 !important;
+  color: #F5C578 !important;
+}
+
+.dark .bg-\[\#EAE3DC\],
+.dark .bg-\[\#EBE7E2\],
+.dark .bg-\[\#EAE3DA\] {
+  background-color: #2F2723 !important;
+  color: #E2D7CE !important;
+}
+
+/* Dark Borders */
+.dark .border-\[\#EAE3DA\],
+.dark .border-\[\#DDD3C6\],
+.dark .border-\[\#E8D8CE\],
+.dark .border-\[\#E8D0C5\],
+.dark .border-\[\#F2DEBF\],
+.dark .border-\[\#DBD5CE\] {
+  border-color: #3A302A !important;
+}
+
+/* Dark Text */
+.dark .text-\[\#2C2725\] {
+  color: #FAF6F0 !important;
+}
+
+.dark .text-\[\#6E6663\],
+.dark .text-\[\#4A423D\],
+.dark .text-\[\#5C5550\] {
+  color: #B5ABA2 !important;
+}
+
+.dark .text-\[\#8C462C\] {
+  color: #F09B7A !important;
+}
+
+.dark .text-\[\#9E6517\],
+.dark .text-\[\#946114\] {
+  color: #F5C578 !important;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #241E1C !important;
+  border-color: #423630 !important;
+  color: #FAF6F0 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #8C8077 !important;
+}
