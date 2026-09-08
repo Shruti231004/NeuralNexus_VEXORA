@@ -68,6 +68,7 @@ function BookPageContent() {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('11:00 AM');
   const [availableStylists, setAvailableStylists] = useState<Stylist[]>([]);
   const [selectedStylist, setSelectedStylist] = useState<Stylist | null>(null);
+  const [customServiceNote, setCustomServiceNote] = useState('');
 
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
@@ -89,22 +90,19 @@ function BookPageContent() {
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
 
-  // Dynamic Stylist Availability Calculation based on Chosen Time Slot
-  const updateAvailableStylists = () => {
+  // Dynamic time-based availability calculation
+  useEffect(() => {
     const artisans = getAvailableStylistsForSlot(selectedDate, selectedTimeSlot);
     setAvailableStylists(artisans);
-
-    // If selected stylist is no longer available at this time slot, switch smoothly to Any Available
-    if (selectedStylist && !artisans.some((a) => a.id === selectedStylist.id)) {
+    if (selectedStylist && !artisans.some((st) => st.id === selectedStylist.id)) {
       setSelectedStylist(null);
     }
-  };
 
-  useEffect(() => {
-    updateAvailableStylists();
+    const handleScheduleUpdate = () => {
+      const fresh = getAvailableStylistsForSlot(selectedDate, selectedTimeSlot);
+      setAvailableStylists(fresh);
+    };
 
-    // Listen to real-time staff schedule updates
-    const handleScheduleUpdate = () => updateAvailableStylists();
     window.addEventListener('stylist-availability-updated', handleScheduleUpdate);
     return () => {
       window.removeEventListener('stylist-availability-updated', handleScheduleUpdate);
@@ -119,7 +117,7 @@ function BookPageContent() {
     return () => unsubscribe();
   }, []);
 
-  const categories = ['All', 'Cut & Style', 'Color Services', 'Hair Treatments', 'Grooming'];
+  const categories = ['All', 'Cut & Style', 'Color Services', 'Spa & Scalp Rituals', 'Hair Treatments', 'Grooming', 'Custom Request'];
 
   const filteredServices =
     selectedCategory === 'All'
@@ -151,7 +149,8 @@ function BookPageContent() {
 
     // Calculate targeted start time from date + time slot
     const assignedStylist = selectedStylist || (availableStylists.length > 0 ? availableStylists[0] : INITIAL_STYLISTS[0]);
-    const slotNotes = `[SCHEDULED SLOT: ${selectedDate} at ${selectedTimeSlot}] ${notes.trim() || ''}`.trim();
+    const customReqPrefix = customServiceNote.trim() ? `[CUSTOM SERVICE: ${customServiceNote.trim()}] ` : '';
+    const slotNotes = `[SCHEDULED SLOT: ${selectedDate} at ${selectedTimeSlot}] ${customReqPrefix}${notes.trim() || ''}`.trim();
 
     const newApt = await createAppointment({
       salon_id: INITIAL_SALON.id,
@@ -463,6 +462,22 @@ function BookPageContent() {
                     </option>
                   ))}
                 </select>
+
+                {selectedService.name.includes('Other') && (
+                  <div className="pt-2 animate-fadeIn">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#8C462C] block mb-1">
+                      Specify Custom Request:
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={customServiceNote}
+                      onChange={(e) => setCustomServiceNote(e.target.value)}
+                      placeholder="e.g. Extensions, Special Color, Scalp Detox..."
+                      className="w-full px-3.5 py-2 rounded-xl border border-[#C1785A] bg-[#FAF6F0] text-xs font-bold text-[#2C2725] focus:outline-none"
+                    />
+                  </div>
+                )}
               </div>
 
               <button
@@ -578,6 +593,26 @@ function BookPageContent() {
                   );
                 })}
               </div>
+
+              {selectedService.name.includes('Other') && (
+                <div className="p-5 rounded-3xl bg-white border-2 border-[#C1785A] shadow-warm space-y-2 animate-fadeIn">
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#8C462C]">
+                    <Sparkles className="w-4 h-4 text-[#C1785A]" />
+                    <span>Specify Your Custom Hair &amp; Beauty Service Request:</span>
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    value={customServiceNote}
+                    onChange={(e) => setCustomServiceNote(e.target.value)}
+                    placeholder="e.g. Tape-in Extensions, Root Retouch, Special Bridal Consultation, Texture Spa..."
+                    className="w-full px-4 py-3 rounded-2xl border border-[#EAE3DA] bg-[#FAF6F0] text-sm font-bold text-[#2C2725] focus:outline-none focus:border-[#C1785A] shadow-inner"
+                  />
+                  <p className="text-[11px] text-[#6E6663]">
+                    Our master artisans will review your custom notes prior to your appointment session.
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* STEP 2: Pick Appointment Date & Dynamic Time */}

@@ -175,6 +175,20 @@ export const INITIAL_SERVICES: Service[] = [
     image_url: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&q=80&w=800',
     tag: 'VIP All-Inclusive',
   },
+  {
+    id: 'c0000000-0000-0000-0000-000000000099',
+    salon_id: INITIAL_SALON.id,
+    name: 'Other (Bespoke / Custom Service)',
+    category: 'Custom Request',
+    description: 'Custom haircut, extensions, root touchup, specialized texture therapy, or personalized Parisian beauty consultation.',
+    duration_minutes: 45,
+    processing_time_minutes: 0,
+    price_inr: 2500,
+    deposit_required_inr: 99,
+    is_popular: false,
+    image_url: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&q=80&w=800',
+    tag: 'Custom Service',
+  },
 ];
 
 const now = new Date();

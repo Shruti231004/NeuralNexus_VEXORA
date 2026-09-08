@@ -38,6 +38,7 @@ export const AtHomeServiceModal: React.FC<AtHomeServiceModalProps> = ({
   const { user } = useAuth();
 
   const [selectedService, setSelectedService] = useState<Service>(INITIAL_SERVICES[0]);
+  const [customServiceText, setCustomServiceText] = useState('');
   const [customerName, setCustomerName] = useState(user?.full_name || 'Natasha Kapoor');
   const [customerPhone, setCustomerPhone] = useState(user?.phone || '+91 98200 88888');
   
@@ -77,6 +78,7 @@ export const AtHomeServiceModal: React.FC<AtHomeServiceModalProps> = ({
 
     try {
       const now = new Date();
+      const customNotes = customServiceText.trim() ? ` [CUSTOM SERVICE REQUEST: ${customServiceText.trim()}]` : '';
       const newAppointment: Appointment = {
         id: `home-apt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         salon_id: 'a0000000-0000-0000-0000-000000000001',
@@ -90,7 +92,7 @@ export const AtHomeServiceModal: React.FC<AtHomeServiceModalProps> = ({
         deposit_amount_inr: 99,
         queue_number: `HOME-${Math.floor(100 + Math.random() * 900)}`,
         estimated_start_time: new Date(now.getTime() + 30 * 60000).toISOString(),
-        notes: `[DOORSTEP AT-HOME SERVICE] Address: ${addressLine}, ${landmark}, ${cityArea} (${pincode}). Gate: ${gateNotes}. Vanity Kit: ${includeDysonVanity ? 'Dyson Airwrap' : ''}, ${includePortableChair ? 'Portable Chair' : ''}. Slot: ${timeSlot}`,
+        notes: `[DOORSTEP AT-HOME SERVICE]${customNotes} Address: ${addressLine}, ${landmark}, ${cityArea} (${pincode}). Gate: ${gateNotes}. Vanity Kit: ${includeDysonVanity ? 'Dyson Airwrap' : ''}, ${includePortableChair ? 'Portable Chair' : ''}. Slot: ${timeSlot}`,
         created_at: now.toISOString(),
         updated_at: now.toISOString(),
         service: selectedService,
@@ -230,6 +232,22 @@ export const AtHomeServiceModal: React.FC<AtHomeServiceModalProps> = ({
                       </option>
                     ))}
                   </select>
+
+                  {selectedService.name.includes('Other') && (
+                    <div className="pt-2 space-y-1 animate-fadeIn">
+                      <label className="text-[10px] uppercase font-bold tracking-wider text-[#8C462C] dark:text-[#F2A585] block">
+                        Specify Your Desired Custom Service:
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={customServiceText}
+                        onChange={(e) => setCustomServiceText(e.target.value)}
+                        placeholder="e.g. Tape-in Hair Extensions, Root Touchup, Scalp Spa..."
+                        className="w-full px-3.5 py-2 rounded-xl border border-[#C1785A] bg-[#FAF6F0] dark:bg-[#161211] text-xs font-bold text-[#2C2725] dark:text-[#FAF6F0] focus:outline-none"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">

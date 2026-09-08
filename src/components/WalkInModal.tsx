@@ -19,6 +19,7 @@ interface WalkInModalProps {
 export const WalkInModal: React.FC<WalkInModalProps> = ({ isOpen, onClose, onSuccess }) => {
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
+  const [customServiceName, setCustomServiceName] = useState('');
   const [selectedServiceId, setSelectedServiceId] = useState(INITIAL_SERVICES[0].id);
   const [selectedStylistId, setSelectedStylistId] = useState(INITIAL_STYLISTS[0].id);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,6 +37,7 @@ export const WalkInModal: React.FC<WalkInModalProps> = ({ isOpen, onClose, onSuc
     const selectedStylist = INITIAL_STYLISTS.find((st) => st.id === selectedStylistId);
 
     const now = new Date();
+    const customReqNote = customServiceName.trim() ? `[CUSTOM SERVICE: ${customServiceName.trim()}] ` : '';
     const newApt = await createAppointment({
       salon_id: INITIAL_SALON.id,
       service_id: selectedServiceId,
@@ -49,6 +51,7 @@ export const WalkInModal: React.FC<WalkInModalProps> = ({ isOpen, onClose, onSuc
       deposit_paid: true,
       deposit_amount_inr: 0,
       estimated_start_time: new Date(now.getTime() + 10 * 60000).toISOString(),
+      notes: `${customReqNote}[WALK-IN GUEST]`,
       service: selectedService,
       stylist: selectedStylist,
     });
@@ -135,6 +138,22 @@ export const WalkInModal: React.FC<WalkInModalProps> = ({ isOpen, onClose, onSuc
                 </option>
               ))}
             </select>
+
+            {INITIAL_SERVICES.find((s) => s.id === selectedServiceId)?.name.includes('Other') && (
+              <div className="pt-2 animate-fadeIn">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-[#8C462C] block mb-1">
+                  Specify Custom Request:
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={customServiceName}
+                  onChange={(e) => setCustomServiceName(e.target.value)}
+                  placeholder="e.g. Balayage Correction, Texture Spa, Extensions..."
+                  className="w-full px-3.5 py-2 rounded-xl border border-[#C1785A] bg-[#FAF6F0] text-xs font-bold text-[#2C2725] focus:outline-none"
+                />
+              </div>
+            )}
           </div>
 
           <div className="space-y-1.5">
