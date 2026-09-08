@@ -100,13 +100,13 @@ export const Navbar: React.FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full px-3 sm:px-6 lg:px-8 py-2.5 bg-[#FAF6F0]/85 dark:bg-[#141110]/85 backdrop-blur-md transition-all duration-300 border-b border-[#EAE3DA]/60 dark:border-[#382E28]/60 shadow-sm">
-      {/* FLOATING LUXURY GLASSMORPHIC ISLAND */}
-      <div className="max-w-7xl mx-auto rounded-full bg-[#FAF6F0] dark:bg-[#1C1715] border border-[#E0D7CC] dark:border-[#382E28] px-4 sm:px-6 py-2 shadow-md dark:shadow-2xl transition-all flex items-center justify-between gap-3">
+    <header className="sticky top-0 z-50 w-full bg-[#FAF6F0]/95 dark:bg-[#141110]/95 backdrop-blur-xl border-b border-[#EAE3DA] dark:border-[#382E28] transition-all duration-300 shadow-sm">
+      {/* EXPANDED LUXURY FULL-WIDTH NAVBAR CONTAINER */}
+      <div className="w-full px-4 sm:px-8 lg:px-12 py-3 flex items-center justify-between gap-4">
         {/* 1. BRAND & LIVE ATMOSPHERE */}
-        <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+        <div className="flex items-center gap-3 sm:gap-5 shrink-0">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full overflow-hidden border border-[#C1785A] shadow-warm transition-transform duration-300 group-hover:scale-105 bg-white flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#C1785A] shadow-warm transition-transform duration-300 group-hover:scale-105 bg-white flex items-center justify-center">
               <img
                 src="/logo.png"
                 alt="Rose & Rogue Logo"
@@ -124,7 +124,7 @@ export const Navbar: React.FC = () => {
           </Link>
 
           {/* Compact Live Status Pill */}
-          <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-[#F3ECE3] dark:bg-[#241E1C] border border-[#EAE3DA] dark:border-[#3A302A] text-[11px] font-bold text-[#2C2725] dark:text-[#FAF6F0] shadow-sm">
+          <div className="hidden xl:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#F3ECE3] dark:bg-[#241E1C] border border-[#EAE3DA] dark:border-[#3A302A] text-xs font-bold text-[#2C2725] dark:text-[#FAF6F0] shadow-sm">
             <span className="w-2 h-2 rounded-full bg-[#C1785A] animate-pulse" />
             <span className="text-[#8C462C] dark:text-[#F2A585]">{inChairCount} In Chair</span>
             <span className="text-[#DDD3C6] dark:text-[#4D413A]">·</span>
@@ -133,7 +133,7 @@ export const Navbar: React.FC = () => {
         </div>
 
         {/* 2. CENTER EDITORIAL NAVIGATION LINKS */}
-        <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+        <nav className="hidden lg:flex items-center gap-1.5 xl:gap-3">
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isStaffRestricted = link.href.includes('dashboard') || link.href.includes('analytics');
@@ -144,20 +144,20 @@ export const Navbar: React.FC = () => {
                 key={link.href}
                 href={link.href}
                 target={link.external ? '_blank' : undefined}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold uppercase tracking-[0.12em] transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-[0.14em] transition-all ${
                   link.active
                     ? 'bg-[#C1785A] text-[#FAF6F0] shadow-warm'
                     : 'text-[#2C2725] dark:text-[#FAF6F0] hover:bg-[#F3ECE3] dark:hover:bg-[#241E1C]'
                 }`}
               >
                 <Icon
-                  className={`w-3.5 h-3.5 ${
+                  className={`w-4 h-4 ${
                     link.active ? 'text-white' : 'text-[#C1785A] dark:text-[#D48464]'
                   }`}
                 />
                 <span>{link.label}</span>
                 {showPinLock && (
-                  <span className="text-[9px] bg-[#F5E6DF] dark:bg-[#38251E] text-[#8C462C] dark:text-[#F2A585] px-1.5 py-0.2 rounded-full font-mono font-bold flex items-center gap-0.5 ml-0.5">
+                  <span className="text-[9px] bg-[#F5E6DF] dark:bg-[#38251E] text-[#8C462C] dark:text-[#F2A585] px-1.5 py-0.5 rounded-full font-mono font-bold flex items-center gap-0.5 ml-0.5">
                     <Lock className="w-2.5 h-2.5" /> PIN
                   </span>
                 )}
@@ -167,7 +167,7 @@ export const Navbar: React.FC = () => {
         </nav>
 
         {/* 3. RIGHT CONTROLS: PRIMARY CTA + AUTH MENU + THEME/FONT + MOBILE MENU */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-3 shrink-0">
           {/* Primary Action Button */}
           <Link
             href="/book"
@@ -178,7 +178,7 @@ export const Navbar: React.FC = () => {
                 setIsGoogleModalOpen(true);
               }
             }}
-            className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full bg-[#C1785A] hover:bg-[#8C462C] text-[#FAF6F0] text-xs font-bold uppercase tracking-[0.15em] shadow-warm hover:shadow-warm-lg transition-all transform hover:-translate-y-0.5 shrink-0"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#C1785A] hover:bg-[#8C462C] text-[#FAF6F0] text-xs font-bold uppercase tracking-[0.16em] shadow-warm hover:shadow-warm-lg transition-all transform hover:-translate-y-0.5 shrink-0"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Book Session</span>
@@ -197,7 +197,7 @@ export const Navbar: React.FC = () => {
                 <img
                   src={user.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400'}
                   alt={user.full_name}
-                  className="w-7 h-7 rounded-full object-cover border border-[#C1785A]"
+                  className="w-8 h-8 rounded-full object-cover border border-[#C1785A]"
                 />
                 <span className="w-2 h-2 rounded-full bg-emerald-500 mr-1" />
               </button>
@@ -205,7 +205,7 @@ export const Navbar: React.FC = () => {
               <div className="flex items-center gap-1.5">
                 <Link
                   href="/auth/staff-login"
-                  className="px-3.5 py-1.5 rounded-full bg-white dark:bg-[#241E1C] hover:bg-[#F5E6DF] dark:hover:bg-[#2F2521] border-2 border-[#C1785A] text-xs font-extrabold text-[#8C462C] dark:text-[#F2A585] shadow-sm transition-all flex items-center gap-1.5 group"
+                  className="px-4 py-2 rounded-full bg-white dark:bg-[#241E1C] hover:bg-[#F5E6DF] dark:hover:bg-[#2F2521] border-2 border-[#C1785A] text-xs font-extrabold text-[#8C462C] dark:text-[#F2A585] shadow-sm transition-all flex items-center gap-1.5 group"
                 >
                   <Lock className="w-3.5 h-3.5 text-[#C1785A]" />
                   <span className="hidden sm:inline">Staff &amp; Admin PIN</span>
@@ -264,7 +264,7 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* Theme & Font Toggle Controls */}
-          <div className="pl-1 sm:pl-2 border-l border-[#EAE3DA] dark:border-[#382E28] flex items-center">
+          <div className="pl-2 border-l border-[#EAE3DA] dark:border-[#382E28] flex items-center">
             <ThemeFontToggle />
           </div>
 
@@ -281,7 +281,7 @@ export const Navbar: React.FC = () => {
 
       {/* MOBILE LUXURY SLIDE-DOWN DRAWER */}
       {mobileMenuOpen && (
-        <div className="lg:hidden mt-2 max-w-7xl mx-auto rounded-3xl bg-[#FAF6F0]/95 dark:bg-[#161210]/95 backdrop-blur-2xl border border-[#EAE3DA] dark:border-[#382E28] p-5 shadow-2xl space-y-4 animate-fadeIn">
+        <div className="lg:hidden w-full px-4 pb-5 pt-2 bg-[#FAF6F0]/98 dark:bg-[#161210]/98 backdrop-blur-2xl border-b border-[#EAE3DA] dark:border-[#382E28] shadow-2xl space-y-4 animate-fadeIn">
           {/* User Status Bar */}
           {user ? (
             <div className="flex items-center justify-between p-3 rounded-2xl bg-[#F3ECE3] dark:bg-[#241E1C] border border-[#EAE3DA] dark:border-[#382E28]">
