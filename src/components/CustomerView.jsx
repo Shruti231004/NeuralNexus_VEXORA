@@ -100,18 +100,18 @@ export default function CustomerView({ store }) {
       
       {/* 1. Hero Banner */}
       <section className="max-w-[1360px] mx-auto px-4 md:px-8 w-full pt-4">
-        <div className="relative rounded-3xl p-6 md:p-10 bg-white border border-[#f2eaff] shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="relative rounded-3xl p-6 md:p-10 bg-white border border-[#f2eaff] luxury-glow-card overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           {/* Left Details */}
           <div className="lg:col-span-7 relative z-10 flex flex-col items-start gap-4">
             
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#b50060] text-white shadow-sm text-xs font-semibold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#b50060] to-[#7d2dce] text-white shadow-md text-xs font-semibold uppercase tracking-wider">
               <span className="material-symbols-outlined text-sm">auto_awesome</span>
               <span>Atelier Collection • For Every Texture & Identity</span>
             </div>
 
             <h1 className="font-headline text-3xl sm:text-4xl lg:text-5xl text-[#1e1831] tracking-tight font-extrabold leading-tight">
-              Crafted Hair & Scalp <span className="text-[#b50060]">Artistry</span>
+              Crafted Hair & Scalp <span className="luxury-gradient-text">Artistry</span>
             </h1>
 
             <p className="font-body text-xs sm:text-sm lg:text-base text-[#594047] max-w-2xl leading-relaxed">
@@ -163,9 +163,9 @@ export default function CustomerView({ store }) {
                 <button
                   type="button"
                   onClick={() => setShowTryOnStudio(true)}
-                  className="px-5 py-2.5 bg-[#f8f1ff] hover:bg-[#ede4ff] text-[#b50060] border border-[#db2379]/40 font-headline font-bold text-xs rounded-full shadow flex items-center gap-2 transition-all hover:scale-[1.02]"
+                  className="shimmer-btn px-6 py-3 text-white font-headline font-bold text-xs rounded-full shadow-lg flex items-center gap-2 transition-all hover:scale-[1.03] active:scale-[0.97]"
                 >
-                  <span className="material-symbols-outlined text-base">face</span>
+                  <span className="material-symbols-outlined text-lg">face</span>
                   <span>Virtual Try-On & AI Matcher</span>
                 </button>
               </div>
@@ -757,10 +757,10 @@ export default function CustomerView({ store }) {
             <button
               type="button"
               onClick={handleReservation}
-              className="w-full py-3.5 rounded-full bg-[#b50060] hover:bg-[#8e004a] text-white font-headline font-bold text-sm shadow-md hover:opacity-95 flex items-center justify-center gap-2 transition-all"
+              className="shimmer-btn w-full py-4 rounded-full text-white font-headline font-bold text-sm shadow-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              <span>Confirm & Reserve Ritual</span>
-              <span className="material-symbols-outlined text-lg">auto_awesome</span>
+              <span>Confirm & Reserve Sanctuary Ritual</span>
+              <span className="material-symbols-outlined text-xl">auto_awesome</span>
             </button>
 
             <p className="text-center font-body text-[10px] text-[#594047] uppercase tracking-wider">

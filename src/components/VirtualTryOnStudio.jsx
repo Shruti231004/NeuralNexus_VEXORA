@@ -96,7 +96,7 @@ export default function VirtualTryOnStudio({ onSelectServiceAndBook, onClose }) 
   };
 
   return (
-    <div className="bg-white border border-[#f2eaff] rounded-3xl p-6 md:p-8 shadow-xl max-w-5xl mx-auto w-full space-y-6">
+    <div className="bg-white border border-[#f2eaff] luxury-glow-card rounded-3xl p-6 md:p-8 shadow-2xl max-w-5xl mx-auto w-full space-y-6 animate-fade-in-scale">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#f2eaff] pb-5">
