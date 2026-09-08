@@ -27,6 +27,7 @@ import { INITIAL_SERVICES, INITIAL_STYLISTS, INITIAL_SALON } from '@/lib/mockDat
 import { createAppointment, subscribeToAppointments } from '@/lib/supabaseClient';
 import { playChime } from '@/lib/soundEffects';
 import confetti from 'canvas-confetti';
+import { formatINR } from '@/lib/queueEngine';
 import { QueueTokenModal } from '@/components/QueueTokenModal';
 import { GoogleSecurityGate } from '@/components/GoogleSecurityGate';
 import { sendWhatsAppBookingConfirmation } from '@/lib/whatsappService';
