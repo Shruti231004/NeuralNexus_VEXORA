@@ -31,14 +31,6 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
 
   const googleAccounts = [
     {
-      name: 'Natasha Kapoor',
-      email: 'vip.natasha@gmail.com',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400',
-      role: 'customer' as const,
-      badge: 'Platinum VIP',
-      lastUsed: 'Active on this device',
-    },
-    {
       name: 'Antoine Dubois',
       email: 'antoine@roseandrogue.com',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400',
@@ -47,12 +39,20 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
       lastUsed: 'Staff Lead',
     },
     {
-      name: 'Rohan Mehta',
-      email: 'rohan.mehta@gmail.com',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400',
-      role: 'customer' as const,
-      badge: 'Gold VIP',
-      lastUsed: 'Signed in recently',
+      name: 'Camille Laurent',
+      email: 'camille@roseandrogue.com',
+      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400',
+      role: 'staff' as const,
+      badge: 'Master Colorist',
+      lastUsed: 'Senior Artisan',
+    },
+    {
+      name: 'Isabelle Marchand',
+      email: 'manager@roseandrogue.com',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400',
+      role: 'staff' as const,
+      badge: 'Operations Manager',
+      lastUsed: 'Admin Console',
     },
   ];
 

@@ -192,7 +192,7 @@ export const Navbar: React.FC = () => {
               <button
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 className="flex items-center gap-1.5 p-1 rounded-full bg-[#F3ECE3] dark:bg-[#241E1C] border border-[#EAE3DA] dark:border-[#382E28] hover:border-[#C1785A] transition-all"
-                title={`${user.full_name} (${user.role})`}
+                title={`${user.full_name} (${user.role === 'manager' ? 'Admin' : 'Staff'})`}
               >
                 <img
                   src={user.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400'}
@@ -203,18 +203,14 @@ export const Navbar: React.FC = () => {
               </button>
             ) : (
               <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setGoogleTargetRole('customer');
-                    setIsGoogleModalOpen(true);
-                  }}
-                  className="px-3.5 py-1.5 rounded-full bg-white dark:bg-[#241E1C] hover:bg-[#F5E6DF] dark:hover:bg-[#2F2521] border-2 border-[#C1785A] text-xs font-extrabold text-[#8C462C] dark:text-[#F2A585] shadow-sm transition-all flex items-center gap-2 group"
+                <Link
+                  href="/auth/staff-login"
+                  className="px-3.5 py-1.5 rounded-full bg-white dark:bg-[#241E1C] hover:bg-[#F5E6DF] dark:hover:bg-[#2F2521] border-2 border-[#C1785A] text-xs font-extrabold text-[#8C462C] dark:text-[#F2A585] shadow-sm transition-all flex items-center gap-1.5 group"
                 >
-                  <GoogleIcon className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Sign In with Google</span>
-                  <span className="sm:hidden">Sign In</span>
-                </button>
+                  <Lock className="w-3.5 h-3.5 text-[#C1785A]" />
+                  <span className="hidden sm:inline">Staff &amp; Admin PIN</span>
+                  <span className="sm:hidden">Staff</span>
+                </Link>
               </div>
             )}
 
@@ -232,9 +228,7 @@ export const Navbar: React.FC = () => {
                       {user.full_name}
                     </p>
                     <span className="px-2 py-0.5 rounded-full bg-[#F5E6DF] dark:bg-[#38251E] text-[#8C462C] dark:text-[#F2A585] text-[9px] font-extrabold uppercase tracking-wider inline-block">
-                      {user.role === 'staff' || user.role === 'manager'
-                        ? 'Staff Artisan'
-                        : 'VIP Client'}
+                      {user.role === 'manager' ? 'Admin / Manager' : 'Staff Stylist'}
                     </span>
                   </div>
                 </div>
@@ -242,35 +236,19 @@ export const Navbar: React.FC = () => {
                 <div className="p-1 space-y-1 mt-1 text-xs">
                   <Link
                     href="/dashboard"
-                    className="w-full flex items-center justify-between p-2.5 rounded-2xl hover:bg-[#F3ECE3] dark:hover:bg-[#241E1C] text-[#2C2725] dark:text-[#FAF6F0] font-bold"
+                    className="w-full flex items-center gap-2 p-2.5 rounded-2xl hover:bg-[#F3ECE3] dark:hover:bg-[#241E1C] text-[#2C2725] dark:text-[#FAF6F0] font-bold"
                   >
-                    <div className="flex items-center gap-2">
-                      <LayoutDashboard className="w-4 h-4 text-[#C1785A]" />
-                      <span>Staff &amp; Admin Terminal</span>
-                    </div>
-                    {!isStaff && (
-                      <span className="text-[9px] bg-[#F5E6DF] dark:bg-[#38251E] text-[#8C462C] dark:text-[#F2A585] px-2 py-0.5 rounded-full font-mono font-bold flex items-center gap-1">
-                        <Lock className="w-2.5 h-2.5" /> PIN
-                      </span>
-                    )}
+                    <LayoutDashboard className="w-4 h-4 text-[#C1785A]" />
+                    <span>Manager &amp; Chair Console</span>
                   </Link>
 
                   <Link
-                    href="/profile"
+                    href="/analytics"
                     className="w-full flex items-center gap-2 p-2.5 rounded-2xl hover:bg-[#F3ECE3] dark:hover:bg-[#241E1C] text-[#2C2725] dark:text-[#FAF6F0] font-bold"
                   >
-                    <Crown className="w-4 h-4 text-[#C98A2C]" />
-                    <span>VIP Client Portal</span>
+                    <TrendingUp className="w-4 h-4 text-[#C1785A]" />
+                    <span>AI Predictions &amp; Load</span>
                   </Link>
-
-                  <button
-                    type="button"
-                    onClick={() => switchDemoUser(isStaff ? 'customer' : 'staff')}
-                    className="w-full flex items-center justify-between p-2.5 rounded-2xl bg-[#F3ECE3]/60 dark:bg-[#241E1C]/60 hover:bg-[#F3ECE3] dark:hover:bg-[#241E1C] text-[#2C2725] dark:text-[#FAF6F0] font-semibold text-[11px]"
-                  >
-                    <span>Switch to {isStaff ? 'VIP Client' : 'Staff'} Mode</span>
-                    <span className="text-[10px] font-mono text-[#C1785A]">Demo ⇄</span>
-                  </button>
 
                   <button
                     type="button"

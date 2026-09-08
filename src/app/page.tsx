@@ -366,25 +366,25 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4. DUAL ACCESS PORTALS: VIP CLIENT & STAFF KIOSK GATEWAYS */}
+      {/* 4. STAFF & ADMIN ACCESS GATEWAYS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F5E6DF] border border-[#E8D8CE] text-[#8C462C]">
-            <Sparkles className="w-3.5 h-3.5 text-[#C1785A]" />
+            <Lock className="w-3.5 h-3.5 text-[#C1785A]" />
             <span className="text-[11px] uppercase font-extrabold tracking-[0.2em]">
-              Access Gateways
+              PIN-Protected Operations Terminals
             </span>
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2C2725]">
-            Dedicated Portals for Guests & Stylists
+            Staff &amp; Administrator Management Portals
           </h2>
           <p className="text-sm text-[#6E6663]">
-            Select your destination portal below for personalized token passes or salon queue administration.
+            Direct hardware terminals for floor artisans and salon operations managers with 4-digit PIN authentication.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* A. VIP CUSTOMER PORTAL CARD */}
+          {/* A. STAFF STYLIST KIOSK */}
           <div className="bg-[#F3ECE3] rounded-3xl p-8 sm:p-10 border-2 border-[#EAE3DA] hover:border-[#C1785A] shadow-card hover:shadow-warm-lg transition-all duration-300 flex flex-col justify-between space-y-8 relative overflow-hidden group">
             {/* Top Accent Strip */}
             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#C1785A] to-[#E09D80]" />
@@ -392,56 +392,50 @@ export default function LandingPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="w-14 h-14 rounded-2xl bg-[#FAF6F0] border border-[#EAE3DA] flex items-center justify-center text-[#C1785A] shadow-sm group-hover:scale-105 transition-transform">
-                  <Crown className="w-7 h-7" />
+                  <Scissors className="w-7 h-7" />
                 </div>
-                <span className="px-3.5 py-1 rounded-full bg-[#FAF6F0] text-[#8C462C] border border-[#E8D0C5] text-[10px] font-extrabold uppercase tracking-wider">
-                  VIP Guest Access
+                <span className="px-3.5 py-1 rounded-full bg-[#FAF6F0] text-[#8C462C] border border-[#E8D0C5] text-[10px] font-mono font-extrabold uppercase tracking-wider">
+                  PIN: 1234
                 </span>
               </div>
 
               <div>
                 <h3 className="font-serif text-2xl sm:text-3xl font-extrabold text-[#2C2725]">
-                  VIP Client Lounge
+                  Artisan Stylist Floor Kiosk
                 </h3>
                 <p className="text-xs sm:text-sm text-[#6E6663] mt-2 leading-relaxed">
-                  View your live queue token passes, check real-time chair call times, review past invoices, and rate your stylists.
+                  Real-time salon queue engine, station chair rotation, instant walk-in guest injection, and live delay synchronization.
                 </p>
               </div>
 
               <div className="space-y-2.5 pt-2">
                 <div className="flex items-center gap-2.5 text-xs text-[#4A423D] font-medium">
                   <CheckCircle2 className="w-4 h-4 text-[#C1785A]" />
-                  <span>Real-time digital token pass with scannable QR</span>
+                  <span>Instant walk-in customer addition &amp; digital token pass</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs text-[#4A423D] font-medium">
                   <CheckCircle2 className="w-4 h-4 text-[#C1785A]" />
-                  <span>One-tap Google login & verified phone authentication</span>
+                  <span>Smart Overlap calculation for color processing cycles</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs text-[#4A423D] font-medium">
                   <CheckCircle2 className="w-4 h-4 text-[#C1785A]" />
-                  <span>Exclusive loyalty points, gift vouchers & styling history</span>
+                  <span>Live TV queue board synchronization &amp; chair chimes</span>
                 </div>
               </div>
             </div>
 
             <div className="pt-4 border-t border-[#EAE3DA] flex flex-col sm:flex-row gap-3">
               <Link
-                href="/auth/customer-login"
+                href="/dashboard"
                 className="flex-1 py-3.5 px-6 rounded-full bg-[#C1785A] hover:bg-[#8C462C] text-[#FAF6F0] text-xs font-bold uppercase tracking-[0.18em] shadow-warm transition-all flex items-center justify-center gap-2 text-center"
               >
-                <LogIn className="w-4 h-4" />
-                <span>Sign In as VIP Client</span>
-              </Link>
-              <Link
-                href="/book"
-                className="py-3.5 px-6 rounded-full bg-[#FAF6F0] hover:bg-[#EAE3DA] text-[#2C2725] border border-[#EAE3DA] text-xs font-bold uppercase tracking-[0.15em] transition-colors text-center"
-              >
-                <span>Book Slot (₹99)</span>
+                <Lock className="w-4 h-4" />
+                <span>Open Staff Terminal</span>
               </Link>
             </div>
           </div>
 
-          {/* B. STAFF & MANAGER KIOSK CARD */}
+          {/* B. OPERATIONS MANAGER & ADMIN CONSOLE */}
           <div className="bg-[#2C2725] text-[#FAF6F0] rounded-3xl p-8 sm:p-10 border-2 border-[#3D3532] hover:border-[#C1785A] shadow-xl hover:shadow-warm-lg transition-all duration-300 flex flex-col justify-between space-y-8 relative overflow-hidden group">
             {/* Top Accent Strip */}
             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#8C462C] to-[#C1785A]" />
@@ -449,51 +443,45 @@ export default function LandingPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="w-14 h-14 rounded-2xl bg-[#3D3532] border border-[#4A403C] flex items-center justify-center text-[#FAF6F0] shadow-sm group-hover:scale-105 transition-transform">
-                  <Scissors className="w-7 h-7 text-[#C1785A]" />
+                  <TrendingUp className="w-7 h-7 text-[#C1785A]" />
                 </div>
-                <span className="px-3.5 py-1 rounded-full bg-[#3D3532] text-[#F5E6DF] border border-[#4D423D] text-[10px] font-extrabold uppercase tracking-wider">
-                  Staff & Manager Portal
+                <span className="px-3.5 py-1 rounded-full bg-[#3D3532] text-[#F5E6DF] border border-[#4D423D] text-[10px] font-mono font-extrabold uppercase tracking-wider">
+                  Admin PIN: 9999
                 </span>
               </div>
 
               <div>
                 <h3 className="font-serif text-2xl sm:text-3xl font-extrabold text-[#FAF6F0]">
-                  Stylist & Manager Kiosk
+                  Operations Manager &amp; Admin Console
                 </h3>
                 <p className="text-xs sm:text-sm text-[#DDD3C6] mt-2 leading-relaxed">
-                  Real-time salon queue engine, station chair rotation, walk-in token injector, and live delay optimization.
+                  Predictive AI footfall forecasting, revenue metrics, hourly client distribution curves, and chair load analytics.
                 </p>
               </div>
 
               <div className="space-y-2.5 pt-2">
                 <div className="flex items-center gap-2.5 text-xs text-[#DDD3C6] font-medium">
                   <CheckCircle2 className="w-4 h-4 text-[#C1785A]" />
-                  <span>Instant walk-in customer addition & queue token generation</span>
+                  <span>Real-time hourly footfall &amp; AI prediction curves</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs text-[#DDD3C6] font-medium">
                   <CheckCircle2 className="w-4 h-4 text-[#C1785A]" />
-                  <span>Smart Overlap calculation for color processing & wash cycles</span>
+                  <span>Stylist chair utilization percentages &amp; load tracking</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs text-[#DDD3C6] font-medium">
                   <CheckCircle2 className="w-4 h-4 text-[#C1785A]" />
-                  <span>Live TV queue board synchronization & station chimes</span>
+                  <span>Doorstep at-home concierge logistics dispatch</span>
                 </div>
               </div>
             </div>
 
             <div className="pt-4 border-t border-[#3D3532] flex flex-col sm:flex-row gap-3">
               <Link
-                href="/auth/staff-login"
-                className="flex-1 py-3.5 px-6 rounded-full bg-[#C1785A] hover:bg-[#A86347] text-[#FAF6F0] text-xs font-bold uppercase tracking-[0.18em] shadow-warm transition-all flex items-center justify-center gap-2 text-center"
+                href="/analytics"
+                className="flex-1 py-3.5 px-6 rounded-full bg-[#C1785A] hover:bg-[#8C462C] text-[#FAF6F0] text-xs font-bold uppercase tracking-[0.18em] shadow-warm transition-all flex items-center justify-center gap-2 text-center"
               >
-                <KeyRound className="w-4 h-4" />
-                <span>Sign In as Staff Artisan</span>
-              </Link>
-              <Link
-                href="/dashboard"
-                className="py-3.5 px-6 rounded-full bg-[#3D3532] hover:bg-[#4D423D] text-[#FAF6F0] border border-[#4D423D] text-xs font-bold uppercase tracking-[0.15em] transition-colors text-center"
-              >
-                <span>Manager Kiosk</span>
+                <Lock className="w-4 h-4" />
+                <span>Open Admin Analytics</span>
               </Link>
             </div>
           </div>

@@ -32,8 +32,8 @@ const footerLinks: FooterSection[] = [
 		links: [
 			{ title: 'Live Priority Queue', href: '/queue/demo' },
 			{ title: 'Scan-to-Book QR', href: '/scan' },
-			{ title: 'VIP Customer Portal', href: '/auth/customer-login' },
-			{ title: 'Staff Kiosk Login', href: '/auth/staff-login' },
+			{ title: 'Staff & Admin Console', href: '/dashboard' },
+			{ title: 'Staff PIN Terminal', href: '/auth/staff-login' },
 		],
 	},
 	{
