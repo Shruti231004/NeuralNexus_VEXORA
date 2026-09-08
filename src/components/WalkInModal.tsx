@@ -8,6 +8,7 @@ import { formatINR } from '@/lib/queueEngine';
 import { QueueTokenModal } from './QueueTokenModal';
 import { Appointment } from '@/lib/types';
 import { playChime } from '@/lib/soundEffects';
+import { sendWhatsAppBookingConfirmation } from '@/lib/whatsappService';
 
 interface WalkInModalProps {
   isOpen: boolean;
@@ -51,6 +52,11 @@ export const WalkInModal: React.FC<WalkInModalProps> = ({ isOpen, onClose, onSuc
       service: selectedService,
       stylist: selectedStylist,
     });
+
+    // Trigger Meta WhatsApp notification
+    if (newApt && newApt.customer_phone) {
+      sendWhatsAppBookingConfirmation(newApt, 1, 10);
+    }
 
     playChime('bell');
     setIsSubmitting(false);

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Ticket,
@@ -18,9 +18,12 @@ import {
   Phone,
   Calendar,
   Award,
+  MessageCircle,
+  CheckCircle2,
 } from 'lucide-react';
 import { Appointment } from '@/lib/types';
 import { formatINR } from '@/lib/queueEngine';
+import { getWhatsAppDirectLink, sendWhatsAppBookingConfirmation } from '@/lib/whatsappService';
 
 interface QueueTokenModalProps {
   isOpen: boolean;
@@ -38,6 +41,15 @@ export const QueueTokenModal: React.FC<QueueTokenModalProps> = ({
   estimatedWaitMinutes = 15,
 }) => {
   const [copied, setCopied] = useState(false);
+  const [waSent, setWaSent] = useState(false);
+
+  useEffect(() => {
+    if (isOpen && appointment && appointment.customer_phone) {
+      sendWhatsAppBookingConfirmation(appointment, queuePosition, estimatedWaitMinutes).then(() => {
+        setWaSent(true);
+      });
+    }
+  }, [isOpen, appointment, queuePosition, estimatedWaitMinutes]);
 
   if (!isOpen || !appointment) return null;
 
@@ -58,10 +70,8 @@ export const QueueTokenModal: React.FC<QueueTokenModalProps> = ({
   };
 
   const shareWhatsApp = () => {
-    const text = encodeURIComponent(
-      `Bonjour! Here is my Styliq Salon Queue Token: ${appointment.queue_number}\nService: ${appointment.service?.name}\nTrack live wait status here: ${trackerUrl}`
-    );
-    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    const waUrl = getWhatsAppDirectLink(appointment, queuePosition, estimatedWaitMinutes);
+    window.open(waUrl, '_blank');
   };
 
   const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
@@ -178,6 +188,33 @@ export const QueueTokenModal: React.FC<QueueTokenModalProps> = ({
               </div>
             </div>
 
+            {/* Automated WhatsApp Confirmation Pill */}
+            {appointment.customer_phone && (
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-emerald-50/90 border border-emerald-200/80 shadow-sm">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-xl bg-[#25D366] flex items-center justify-center text-white shadow-sm flex-shrink-0">
+                    <MessageCircle className="w-4 h-4 fill-white" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-bold text-emerald-950">WhatsApp Confirmation</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 fill-emerald-100" />
+                    </div>
+                    <p className="text-[10px] text-emerald-700 font-mono">
+                      Sent to {appointment.customer_phone}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={shareWhatsApp}
+                  className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 hover:bg-emerald-200 rounded-lg transition-colors"
+                >
+                  Open Pass
+                </button>
+              </div>
+            )}
+
             {/* Timing & Wait Stats */}
             <div className="grid grid-cols-2 gap-3 text-center">
               <div className="bg-[#F3ECE3] p-3 rounded-2xl border border-[#EAE3DA]">
@@ -253,11 +290,11 @@ export const QueueTokenModal: React.FC<QueueTokenModalProps> = ({
               <button
                 type="button"
                 onClick={shareWhatsApp}
-                className="py-2.5 px-3 rounded-xl bg-[#FAF6F0] hover:bg-[#EAE3DA] border border-[#EAE3DA] text-[11px] font-bold text-[#2C2725] transition-colors flex items-center justify-center gap-1.5 shadow-sm"
-                title="Share via WhatsApp"
+                className="py-2.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300/80 text-[11px] font-bold text-emerald-900 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                title="Send or Open in WhatsApp"
               >
-                <Share2 className="w-3.5 h-3.5 text-[#C1785A]" />
-                <span>Share</span>
+                <MessageCircle className="w-3.5 h-3.5 text-[#25D366] fill-[#25D366]" />
+                <span>WhatsApp</span>
               </button>
 
               <button

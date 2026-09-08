@@ -36,6 +36,7 @@ import { GoogleAuthModal } from '@/components/GoogleAuthModal';
 import { GoogleSecurityGate } from '@/components/GoogleSecurityGate';
 import { createAppointment, subscribeToAppointments } from '@/lib/supabaseClient';
 import { playChime } from '@/lib/soundEffects';
+import { sendWhatsAppBookingConfirmation } from '@/lib/whatsappService';
 import confetti from 'canvas-confetti';
 
 function BookPageContent() {
@@ -122,6 +123,11 @@ function BookPageContent() {
     setCreatedTokenAppointment(newApt);
     setIsTokenModalOpen(true);
     playChime('bell');
+
+    // Trigger WhatsApp Cloud API automated dispatch
+    if (newApt && newApt.customer_phone) {
+      sendWhatsAppBookingConfirmation(newApt, queueCount + 1, (queueCount + 1) * 20);
+    }
   };
 
   // Instant Scan & Book Handler
@@ -171,6 +177,11 @@ function BookPageContent() {
     setIsInstantBooking(false);
     setCreatedTokenAppointment(newApt);
     setIsTokenModalOpen(true);
+
+    // Trigger WhatsApp Cloud API automated dispatch
+    if (newApt && newApt.customer_phone) {
+      sendWhatsAppBookingConfirmation(newApt, queueCount + 1, (queueCount + 1) * 15);
+    }
   };
 
   const startScannerCamera = async () => {
