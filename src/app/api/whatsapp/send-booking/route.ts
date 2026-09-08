@@ -44,18 +44,35 @@ export async function POST(req: NextRequest) {
     // If Meta WhatsApp Cloud API credentials are provided in environment:
     if (metaToken && phoneNumberId) {
       try {
-        const templatePayload = {
+        // 1. Send customized Rose & Rogue salon booking text
+        const textPayload = {
           messaging_product: 'whatsapp',
+          recipient_type: 'individual',
           to: formattedPhone,
-          type: 'template',
-          template: {
-            name: 'hello_world',
-            language: { code: 'en_US' },
+          type: 'text',
+          text: {
+            preview_url: true,
+            body: messageText,
           },
         };
 
-        const curlResult = await sendViaCurl(phoneNumberId, metaToken, templatePayload);
-        console.log('WhatsApp message successfully dispatched via Meta Cloud API:', curlResult);
+        let curlResult = await sendViaCurl(phoneNumberId, metaToken, textPayload);
+        console.log('WhatsApp custom message response:', curlResult);
+
+        // 2. If text fails due to 24h window restriction, fallback to template
+        if (!curlResult.messages?.[0]?.id) {
+          console.warn('Text restricted outside 24h window, sending template fallback...');
+          const templatePayload = {
+            messaging_product: 'whatsapp',
+            to: formattedPhone,
+            type: 'template',
+            template: {
+              name: 'hello_world',
+              language: { code: 'en_US' },
+            },
+          };
+          curlResult = await sendViaCurl(phoneNumberId, metaToken, templatePayload);
+        }
 
         if (curlResult.messages?.[0]?.id) {
           return NextResponse.json({
@@ -79,7 +96,7 @@ export async function POST(req: NextRequest) {
       method: 'meta_cloud_api_verified',
       messageId: `wamid-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
       recipient: formattedPhone,
-      salon: 'STYLIQ Haute Coiffure Paris',
+      salon: 'Rose & Rogue Luxury Salon',
       token: appointment.queue_number || 'SQ-101',
       messageText,
       directWaLink: `https://wa.me/${formattedPhone}?text=${encodeURIComponent(messageText)}`,
