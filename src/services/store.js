@@ -407,7 +407,7 @@ export function useSalonStore() {
 
     const target = bookings.find(b => b.id === bookingId);
     updateStateAndBroadcast(nextBookings, {
-      text: `Payment of $${target?.amount} recorded via ${paymentMethod} for ${target?.customerName}`,
+      text: `Payment of ₹${target?.amount} recorded via ${paymentMethod} for ${target?.customerName}`,
       type: 'success'
     });
   };
@@ -434,7 +434,7 @@ export function useSalonStore() {
     });
 
     const refundMsg = isFullRefundEligible 
-      ? `Full 100% deposit refund ($${target.amount}) processed.`
+      ? `Full 100% deposit refund (₹${target.amount}) processed.`
       : `No refund applicable (cancelled after check-in).`;
 
     updateStateAndBroadcast(nextBookings, {
@@ -460,7 +460,7 @@ export function useSalonStore() {
 
     const target = bookings.find(b => b.id === bookingId);
     updateStateAndBroadcast(nextBookings, {
-      text: `Refund of $${customAmount || target?.amount} issued to ${target?.customerName}`,
+      text: `Refund of ₹${customAmount || target?.amount} issued to ${target?.customerName}`,
       type: 'warning'
     });
   };
@@ -478,7 +478,7 @@ export function useSalonStore() {
 
     const target = bookings.find(b => b.id === bookingId);
     updateStateAndBroadcast(nextBookings, {
-      text: `🌟 ${feedbackData.rating}-Star Feedback & $${feedbackData.tip} tip received from ${target?.customerName}!`,
+      text: `🌟 ${feedbackData.rating}-Star Feedback & ₹${feedbackData.tip} tip received from ${target?.customerName}!`,
       type: 'success'
     });
   };

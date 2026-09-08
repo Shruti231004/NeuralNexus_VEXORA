@@ -313,7 +313,7 @@ export default function VirtualTryOnStudio({ onSelectServiceAndBook, onClose }) 
               }}
               className="w-full py-3 px-4 bg-[#b50060] hover:bg-[#8e004a] text-white font-headline font-bold text-xs rounded-full shadow-md flex items-center justify-center gap-2 transition-all"
             >
-              <span>Book Recommended Look (${recommendation.service.price})</span>
+              <span>Book Recommended Look (₹{recommendation.service.price})</span>
               <span className="material-symbols-outlined text-base">auto_awesome</span>
             </button>
 

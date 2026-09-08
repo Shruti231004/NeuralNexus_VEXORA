@@ -37,7 +37,7 @@ export default function PaymentModal({ booking, onClose, onProcessPayment }) {
               <div className="text-xs text-gray-400">{service ? service.name : 'Salon Service'}</div>
             </div>
             <div className="text-right">
-              <div className="text-lg font-serif font-bold text-amber-400">${booking.amount}</div>
+              <div className="text-lg font-serif font-bold text-amber-400">₹{booking.amount}</div>
               <div className="text-[11px] text-emerald-400 font-medium">Bill Ready</div>
             </div>
           </div>
@@ -96,7 +96,7 @@ export default function PaymentModal({ booking, onClose, onProcessPayment }) {
             className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl shadow-lg shadow-emerald-950/40 flex items-center justify-center gap-2 transition-all mt-6"
           >
             <CheckCircle2 className="w-5 h-5" />
-            <span>Mark Paid (${booking.amount} via {selectedMethod})</span>
+            <span>Mark Paid (₹{booking.amount} via {selectedMethod})</span>
           </button>
         </form>
 

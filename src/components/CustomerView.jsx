@@ -456,7 +456,7 @@ export default function CustomerView({ store }) {
                     <div className="pt-3 border-t border-[#f2eaff] flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="font-headline text-2xl font-extrabold text-[#b50060]">
-                          ${service.price}
+                          ₹{service.price}
                         </span>
                         <span className="text-[#594047] font-body text-xs">• {service.duration}m</span>
                       </div>
@@ -721,7 +721,7 @@ export default function CustomerView({ store }) {
                     <p className="font-headline text-sm font-bold text-[#1e1831]">{service.name}</p>
                     <span className="font-body text-[11px] text-[#594047]">{service.duration} mins</span>
                   </div>
-                  <span className="font-headline text-base font-extrabold text-[#b50060]">${service.price}</span>
+                  <span className="font-headline text-base font-extrabold text-[#b50060]">₹{service.price}</span>
                 </div>
               ))}
             </div>
@@ -730,17 +730,17 @@ export default function CustomerView({ store }) {
             <div className="pt-2 flex flex-col gap-2">
               <div className="flex items-center justify-between text-xs text-[#594047]">
                 <span>Experience Total</span>
-                <span className="font-bold text-[#1e1831] text-base">${cartTotal.toFixed(2)}</span>
+                <span className="font-bold text-[#1e1831] text-base">₹{cartTotal.toFixed(2)}</span>
               </div>
 
               {/* Flexible Deposit Card */}
               <div className="p-3.5 rounded-xl bg-[#f2eaff] flex flex-col gap-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-[#b50060]">20% Flexible Deposit</span>
-                  <span className="font-headline font-extrabold text-[#b50060]">${depositAmount.toFixed(2)}</span>
+                  <span className="font-headline font-extrabold text-[#b50060]">₹{depositAmount.toFixed(2)}</span>
                 </div>
                 <p className="font-body text-[11px] text-[#594047]">
-                  Balance of <span className="font-semibold text-[#1e1831]">${balanceDue.toFixed(2)}</span> paid in-salon after ritual completion.
+                  Balance of <span className="font-semibold text-[#1e1831]">₹{balanceDue.toFixed(2)}</span> paid in-salon after ritual completion.
                 </p>
               </div>
             </div>

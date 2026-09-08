@@ -195,7 +195,7 @@ export default function FeedbackModal({ booking, onClose, onSubmitFeedback }) {
               <div>
                 <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
                   <span>Add Stylist Tip for {stylist?.name.split(' ')[0]}</span>
-                  <span className="text-amber-400 font-serif font-bold text-sm">${tipAmount} Tip</span>
+                  <span className="text-amber-400 font-serif font-bold text-sm">₹{tipAmount} Tip</span>
                 </label>
                 <div className="grid grid-cols-4 gap-2">
                   {[0, 5, 10, 15].map((amt) => (
@@ -209,7 +209,7 @@ export default function FeedbackModal({ booking, onClose, onSubmitFeedback }) {
                           : 'bg-[#161A20] border-gray-800 text-gray-400 hover:text-white'
                       }`}
                     >
-                      {amt === 0 ? 'No Tip' : `$${amt}`}
+                      {amt === 0 ? 'No Tip' : `₹${amt}`}
                     </button>
                   ))}
                 </div>
@@ -220,7 +220,7 @@ export default function FeedbackModal({ booking, onClose, onSubmitFeedback }) {
                 className="w-full py-3 px-4 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold rounded-xl shadow-lg shadow-amber-950/50 flex items-center justify-center gap-2 transition-all mt-4"
               >
                 <Send className="w-4 h-4" />
-                <span>Submit Guest Review & Tip (${tipAmount})</span>
+                <span>Submit Guest Review & Tip (₹{tipAmount})</span>
               </button>
 
             </form>

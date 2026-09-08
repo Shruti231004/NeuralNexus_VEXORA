@@ -39,7 +39,7 @@ export default function RefundModal({ booking, onClose, onProcessRefund }) {
           <div>
             <span className="font-semibold">Refund Policy Rule:</span>
             {isCancelledBeforeCheckIn ? (
-              <span> Booking cancelled prior to check-in $\rightarrow$ 100% full refund eligible (${booking.amount}).</span>
+              <span> Booking cancelled prior to check-in $\rightarrow$ 100% full refund eligible (₹{booking.amount}).</span>
             ) : (
               <span> Paid booking refund requested by staff $\rightarrow$ adjust amount below if partial.</span>
             )}
@@ -48,7 +48,7 @@ export default function RefundModal({ booking, onClose, onProcessRefund }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Refund Amount ($)</label>
+            <label className="block text-xs font-medium text-gray-300 mb-1">Refund Amount (₹)</label>
             <input
               type="number"
               min="0"
@@ -58,7 +58,7 @@ export default function RefundModal({ booking, onClose, onProcessRefund }) {
               className="w-full bg-[#161A20] border border-gray-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-amber-500 text-sm font-semibold"
               required
             />
-            <div className="text-[11px] text-gray-400 mt-1">Original Paid Amount: ${booking.amount}</div>
+            <div className="text-[11px] text-gray-400 mt-1">Original Paid Amount: ₹{booking.amount}</div>
           </div>
 
           <div>
@@ -77,7 +77,7 @@ export default function RefundModal({ booking, onClose, onProcessRefund }) {
             className="w-full py-3 px-4 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl shadow-lg shadow-amber-950/40 flex items-center justify-center gap-2 transition-all mt-4"
           >
             <ShieldCheck className="w-5 h-5" />
-            <span>Confirm & Issue ${customAmount} Refund</span>
+            <span>Confirm & Issue ₹{customAmount} Refund</span>
           </button>
         </form>
 

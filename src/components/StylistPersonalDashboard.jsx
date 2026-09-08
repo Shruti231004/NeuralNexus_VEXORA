@@ -90,7 +90,7 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
                 <span className="text-xs font-body text-[#594047] font-normal">({currentClientInChair.customerPhone})</span>
               </div>
               <div className="text-xs text-[#b50060] font-medium">
-                Ritual: {SERVICES.find(s => s.id === currentClientInChair.serviceId)?.name} (${currentClientInChair.amount})
+                Ritual: {SERVICES.find(s => s.id === currentClientInChair.serviceId)?.name} (₹{currentClientInChair.amount})
               </div>
               <div className="text-[11px] text-[#594047]">Ritual Started At: {currentClientInChair.startedAt || 'Just Now'}</div>
             </div>
@@ -134,7 +134,7 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
         <MetricCard title="My Appointments" value={myTotalBookings} icon="person" color="text-[#3b82f6]" />
         <MetricCard title="My Waiting Line" value={myWaitingCount} icon="schedule" color="text-[#b50060]" pulse={myWaitingCount > 0} />
         <MetricCard title="Completed Today" value={myCompletedCount} icon="check_circle" color="text-emerald-600" />
-        <MetricCard title="My Revenue" value={`$${myRevenue}`} icon="payments" color="text-[#ae3115]" />
+        <MetricCard title="My Revenue" value={`₹${myRevenue}`} icon="payments" color="text-[#ae3115]" />
       </div>
 
       {/* Personal Queue Table */}
@@ -215,11 +215,11 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <div className="font-headline font-bold text-[#b50060]">${b.amount}</div>
+                        <div className="font-headline font-bold text-[#b50060]">₹{b.amount}</div>
                         <div className="text-[10px] text-[#594047]">{b.paymentStatus}</div>
                         {b.feedback && (
                           <div className="mt-1 text-[11px] text-[#ae3115] bg-[#ffdad2] border border-[#ae3115]/30 px-2 py-0.5 rounded-full font-medium">
-                            {'⭐'.repeat(b.feedback.rating)} {b.feedback.rating}/5 • Tip: ${b.feedback.tip}
+                            {'⭐'.repeat(b.feedback.rating)} {b.feedback.rating}/5 • Tip: ₹{b.feedback.tip}
                           </div>
                         )}
                       </td>
@@ -259,7 +259,7 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
                               onClick={() => setPaymentTargetBooking(b)}
                               className="px-3 py-1 bg-[#b50060] hover:bg-[#8e004a] text-white rounded-full text-xs font-semibold shadow"
                             >
-                              Collect ${b.amount}
+                              Collect ₹{b.amount}
                             </button>
                           )}
 

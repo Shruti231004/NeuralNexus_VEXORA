@@ -67,7 +67,7 @@ export default function StaffDashboard({ store }) {
 
         <MetricCard
           title="Revenue Collected"
-          value={`$${metrics.totalRevenue}`}
+          value={`₹${metrics.totalRevenue}`}
           subtitle="Settled Payments"
           icon="payments"
           color="text-[#ae3115]"
@@ -243,14 +243,14 @@ export default function StaffDashboard({ store }) {
 
                       {/* Amount & Payment */}
                       <td className="py-3.5 px-4">
-                        <div className="font-headline font-bold text-[#b50060] text-base">${b.amount}</div>
+                        <div className="font-headline font-bold text-[#b50060] text-base">₹{b.amount}</div>
                         {b.paymentStatus === 'paid' ? (
                           <span className="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full font-semibold">
                             PAID ({b.paymentMethod})
                           </span>
                         ) : b.paymentStatus === 'refunded' ? (
                           <span className="text-[10px] bg-rose-100 text-rose-800 border border-rose-300 px-2 py-0.5 rounded-full font-semibold">
-                            REFUNDED (${b.refundAmount})
+                            REFUNDED (₹{b.refundAmount})
                           </span>
                         ) : (
                           <span className="text-[10px] bg-[#f8f1ff] text-[#594047] px-2 py-0.5 rounded-full">
@@ -259,7 +259,7 @@ export default function StaffDashboard({ store }) {
                         )}
                         {b.feedback && (
                           <div className="mt-1 text-[11px] text-[#ae3115] bg-[#ffdad2] border border-[#ae3115]/30 px-2 py-0.5 rounded-full font-medium">
-                            {'⭐'.repeat(b.feedback.rating)} {b.feedback.rating}/5 • Tip: ${b.feedback.tip}
+                            {'⭐'.repeat(b.feedback.rating)} {b.feedback.rating}/5 • Tip: ₹{b.feedback.tip}
                           </div>
                         )}
                       </td>
