@@ -131,6 +131,11 @@ interface HairstyleData {
   stylistNote: string;
   hairVolumeDefault: number;
   heightOffsetDefault: number;
+  editorialLook: string;
+  compatibilityScore: string;
+  colorFormula: string;
+  faceBenefit: string;
+  maintenanceSchedule: string;
 }
 
 const HAIRSTYLES: HairstyleData[] = [
@@ -144,9 +149,14 @@ const HAIRSTYLES: HairstyleData[] = [
     tag: 'Signature Paris Cut',
     description: 'Cheekbone-grazing curtain bangs with textured cascading French waves and root lift.',
     suitableFaceShapes: ['Oval', 'Heart', 'Square'],
-    stylistNote: 'Accentuates high cheekbones and softens the jawline with airy face-framing movement.',
+    stylistNote: 'Accentuates high cheekbones and softens upper forehead angles with airy face-framing movement.',
     hairVolumeDefault: 102,
     heightOffsetDefault: -4,
+    editorialLook: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=1000',
+    compatibilityScore: '99.4% Match',
+    colorFormula: 'Chestnut 6.34 + Amber Glaze',
+    faceBenefit: 'Drapes effortlessly across temples to soften forehead width and spotlight eyes and lips.',
+    maintenanceSchedule: 'Trim bangs every 4–5 weeks; glaze refresh at 8 weeks.',
   },
   {
     id: 'hs2',
@@ -161,6 +171,11 @@ const HAIRSTYLES: HairstyleData[] = [
     stylistNote: 'Elongates the neckline and draws immediate focus to the eyes, cheekbones, and lips.',
     hairVolumeDefault: 98,
     heightOffsetDefault: 0,
+    editorialLook: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=1000',
+    compatibilityScore: '98.8% Match',
+    colorFormula: 'Espresso Velvet 4.0 + Gloss Toner',
+    faceBenefit: 'Architectural horizontal cut line sculpts rounder faces and accentuates the collarbone.',
+    maintenanceSchedule: 'Reshape every 6 weeks for perimeter sharpness.',
   },
   {
     id: 'hs3',
@@ -175,6 +190,11 @@ const HAIRSTYLES: HairstyleData[] = [
     stylistNote: 'Infuses luminous multidimensional warmth that flatters golden, neutral, and warm skin undertones.',
     hairVolumeDefault: 105,
     heightOffsetDefault: -2,
+    editorialLook: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&q=80&w=1000',
+    compatibilityScore: '99.8% Master Match',
+    colorFormula: 'Honey Caramel 8.3 + Terracotta Ribbons',
+    faceBenefit: 'Sunlit face-framing pieces reflect natural light directly onto the complexion for instant radiance.',
+    maintenanceSchedule: 'Low maintenance grow-out; toner refresh every 10–12 weeks.',
   },
   {
     id: 'hs4',
@@ -189,6 +209,11 @@ const HAIRSTYLES: HairstyleData[] = [
     stylistNote: 'Creates high-fashion editorial contrast with luminous specular gloss and feather-soft perimeter.',
     hairVolumeDefault: 100,
     heightOffsetDefault: -3,
+    editorialLook: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=1000',
+    compatibilityScore: '97.6% Editorial Match',
+    colorFormula: 'Icy Violet Platinum 10.21 + Anti-Brass Bath',
+    faceBenefit: 'Striking editorial contrast that brings out depth in brown, hazel, and dark eyes.',
+    maintenanceSchedule: 'Silver toner bath every 3–4 weeks; root touch-up at 6 weeks.',
   },
   {
     id: 'hs5',
@@ -203,6 +228,11 @@ const HAIRSTYLES: HairstyleData[] = [
     stylistNote: 'Gives the optical illusion of maximum hair density and nourished organic silkiness.',
     hairVolumeDefault: 96,
     heightOffsetDefault: 0,
+    editorialLook: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=1000',
+    compatibilityScore: '99.5% Gloss Match',
+    colorFormula: 'Mocha Noir 3.0 + Acidic Botanical Glaze',
+    faceBenefit: 'High-contrast reflection creates dramatic contouring and frames facial symmetry.',
+    maintenanceSchedule: 'Botanical gloss mask infusion every 6 weeks.',
   },
   {
     id: 'hs6',
@@ -217,6 +247,11 @@ const HAIRSTYLES: HairstyleData[] = [
     stylistNote: 'Adds effortless Parisian volume and framing texture for fine or medium density hair.',
     hairVolumeDefault: 104,
     heightOffsetDefault: -6,
+    editorialLook: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=1000',
+    compatibilityScore: '98.3% Volume Match',
+    colorFormula: 'Auburn Copper 7.4 + Velvet Dimension',
+    faceBenefit: 'Crown layering adds vertical lift and natural height to round and square face shapes.',
+    maintenanceSchedule: 'Dry razor shaping every 6–8 weeks.',
   },
   {
     id: 'hs7',
@@ -231,6 +266,11 @@ const HAIRSTYLES: HairstyleData[] = [
     stylistNote: 'Adds structured vertical height and sharp architectural temple angles to masculine features.',
     hairVolumeDefault: 100,
     heightOffsetDefault: -5,
+    editorialLook: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=1000',
+    compatibilityScore: '99.7% Precision Match',
+    colorFormula: 'Natural Matte Charcoal Clay Styling',
+    faceBenefit: 'Sharp temple transitions chisel the side profile and create a defined masculine jaw.',
+    maintenanceSchedule: 'Taper refresh every 2–3 weeks.',
   },
   {
     id: 'hs8',
@@ -245,6 +285,11 @@ const HAIRSTYLES: HairstyleData[] = [
     stylistNote: 'Sculpts a sharp masculine jawline and balances facial symmetry with laser accuracy.',
     hairVolumeDefault: 100,
     heightOffsetDefault: 0,
+    editorialLook: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=1000',
+    compatibilityScore: '99.6% Beard Sculpt Match',
+    colorFormula: 'Sandalwood Argan Beard Oil Treatment',
+    faceBenefit: 'Squares the chin and sharpens jawline angles with clean millimeter razor gradients.',
+    maintenanceSchedule: 'Hot towel shaping every 2 weeks.',
   },
 ];
 
@@ -394,8 +439,9 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
   // AR Advanced View Modes
   const [showWireframeMesh, setShowWireframeMesh] = useState<boolean>(false);
   const [showOriginalComparison, setShowOriginalComparison] = useState<boolean>(false);
-  const [isSplitMode, setIsSplitMode] = useState<boolean>(false);
+  const [isSplitMode, setIsSplitMode] = useState<boolean>(true);
   const [splitPercent, setSplitPercent] = useState<number>(50);
+  const [isDraggingSplit, setIsDraggingSplit] = useState<boolean>(false);
   const [lightingMode, setLightingMode] = useState<ARLightingMode>('chandelier');
   const [isCardExported, setIsCardExported] = useState<boolean>(false);
 
@@ -409,6 +455,15 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     confidenceScore: '99.8%',
     recommendedStylist: INITIAL_STYLISTS[0], // Arjun Khanna
   });
+
+  // Handle Dragging Split Comparison
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!splitContainerRef.current) return;
+    const rect = splitContainerRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    const percent = Math.min(Math.max((x / rect.width) * 100, 5), 95);
+    setSplitPercent(Math.round(percent));
+  };
 
   // AI Auto-Fit Calibration Function
   const applyAiPerfectFit = (clientKey: string = activeClient) => {
@@ -634,7 +689,22 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
             {/* Viewport Frame */}
             <div
               ref={splitContainerRef}
-              className="relative w-full flex-1 max-w-lg rounded-3xl overflow-hidden shadow-2xl border-2 border-[#C1785A]/40 bg-[#161210] flex items-center justify-center select-none"
+              onPointerDown={(e) => {
+                if (isSplitMode && scanStep === 'completed') {
+                  setIsDraggingSplit(true);
+                  handlePointerMove(e);
+                }
+              }}
+              onPointerMove={(e) => {
+                if (isDraggingSplit && isSplitMode) {
+                  handlePointerMove(e);
+                }
+              }}
+              onPointerUp={() => setIsDraggingSplit(false)}
+              onPointerLeave={() => setIsDraggingSplit(false)}
+              className={`relative w-full flex-1 max-w-lg rounded-3xl overflow-hidden shadow-2xl border-2 border-[#C1785A]/40 bg-[#161210] flex items-center justify-center select-none ${
+                isSplitMode && scanStep === 'completed' ? 'cursor-ew-resize' : ''
+              }`}
             >
               
               {/* 1. Live Video Feed OR Client Photo */}
@@ -660,208 +730,139 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                 )}
               </div>
 
-              {/* 2. REALISTIC HAIR-ONLY AR SYNTHESIS (Preserves Face 100%) */}
-              {!showOriginalComparison && scanStep === 'completed' && (
-                <div
-                  className="absolute inset-0 pointer-events-none transition-all duration-300 flex items-center justify-center z-10"
-                  style={{
-                    transform: `translate(${hairOffsetX}px, ${hairOffsetY}px) scaleX(${(hairScale * (hairWidth / 100)) / 100}) scaleY(${hairScale / 100})`,
-                    clipPath: isSplitMode ? `inset(0 ${100 - splitPercent}% 0 0)` : undefined,
-                  }}
-                >
-                  <svg
-                    viewBox="0 0 400 450"
-                    className="w-full h-full drop-shadow-[0_16px_40px_rgba(0,0,0,0.75)]"
-                    style={{ opacity: hairShine / 100 }}
-                  >
-                    <defs>
-                      {/* Realistic Multi-Stop Hair Gradient */}
-                      <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor={currentSwatch.rootColor} />
-                        <stop offset="25%" stopColor={currentSwatch.baseColor} />
-                        <stop offset="55%" stopColor={currentSwatch.midColor} />
-                        <stop offset="80%" stopColor={currentSwatch.highlightColor} />
-                        <stop offset="100%" stopColor={currentSwatch.baseColor} />
-                      </linearGradient>
-
-                      {/* Specular Silk Shine Ribbon */}
-                      <linearGradient id="shineGrad" x1="20%" y1="0%" x2="80%" y2="100%">
-                        <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.55" />
-                        <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.0" />
-                        <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.35" />
-                      </linearGradient>
-
-                      {/* Micro-Strand Texture Gradient */}
-                      <linearGradient id="strandGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor={currentSwatch.rootColor} stopOpacity="0.9" />
-                        <stop offset="60%" stopColor={currentSwatch.highlightColor} stopOpacity="0.95" />
-                        <stop offset="100%" stopColor={currentSwatch.baseColor} stopOpacity="0.8" />
-                      </linearGradient>
-
-                      <filter id="naturalShadow" x="-10%" y="-10%" width="120%" height="120%">
-                        <feDropShadow dx="0" dy="5" stdDeviation="6" floodColor="#000000" floodOpacity="0.4" />
-                      </filter>
-                    </defs>
-
-                    {/* Mode A: Hair-Only Balayage Melt */}
-                    {tryOnMode === 'hair_only_color' && (
-                      <g filter="url(#naturalShadow)" style={{ mixBlendMode: 'soft-light' }}>
-                        <path
-                          d="M 115,115 C 135,45 265,45 285,115 C 320,135 340,200 335,300 C 330,375 300,420 285,440 C 305,355 315,250 295,168 C 275,135 240,115 200,115 C 160,115 125,135 105,168 C 85,250 95,355 115,440 C 100,420 70,375 65,300 C 60,200 80,135 115,115 Z"
-                          fill="url(#hairGrad)"
-                          opacity="0.9"
-                        />
-                        <path d="M 100,240 Q 70,330 110,420 Q 125,350 115,280 Z" fill={currentSwatch.highlightColor} opacity="0.85" />
-                        <path d="M 300,240 Q 330,330 290,420 Q 275,350 285,280 Z" fill={currentSwatch.highlightColor} opacity="0.85" />
-                      </g>
-                    )}
-
-                    {/* Mode B: Full Cut Sculpting & Volume Grafting */}
-                    {tryOnMode === 'full_cut_volume' && (
-                      <g filter="url(#naturalShadow)">
-                        {/* 1. CURTAIN BANGS & CASCADE WAVES */}
-                        {selectedHairstyle.svgType === 'curtain_bangs' && (
-                          <g>
-                            {/* Crown Volume */}
-                            <path
-                              d="M 115,115 C 135,45 265,45 285,115 C 315,135 338,195 332,290 C 326,350 298,390 282,415 C 295,335 305,250 285,175 C 272,142 240,122 200,122 C 160,122 128,142 115,175 C 95,250 105,335 118,415 C 102,390 74,350 68,290 C 62,195 85,135 115,115 Z"
-                              fill="url(#hairGrad)"
-                            />
-                            {/* Soft Feathered Curtain Bangs (Draped gently at forehead edge) */}
-                            <path
-                              d="M 200,122 C 175,135 145,160 140,210 C 160,185 185,165 200,158 C 215,165 240,185 260,210 C 255,160 225,135 200,122 Z"
-                              fill="url(#strandGrad)"
-                              opacity="0.95"
-                            />
-                            {/* Hair Strands Layering */}
-                            <path d="M 98,245 Q 75,325 112,410 Q 128,355 118,280 Z" fill={currentSwatch.highlightColor} opacity="0.8" />
-                            <path d="M 302,245 Q 325,325 288,410 Q 272,355 282,280 Z" fill={currentSwatch.highlightColor} opacity="0.8" />
-                            <path d="M 135,135 Q 165,85 200,85 Q 235,85 265,135" stroke="url(#shineGrad)" strokeWidth="8" fill="none" opacity="0.75" />
-                          </g>
-                        )}
-
-                        {/* 2. FRENCH TEXTURED BOB */}
-                        {selectedHairstyle.svgType === 'french_bob' && (
-                          <g>
-                            <path
-                              d="M 112,112 C 138,50 262,50 288,112 C 320,138 335,195 325,280 C 315,325 280,335 268,322 C 290,265 288,190 272,150 C 252,122 225,118 200,118 C 175,118 148,122 128,150 C 112,190 110,265 132,322 C 120,335 85,325 75,280 C 65,195 80,138 112,112 Z"
-                              fill="url(#hairGrad)"
-                            />
-                            <path d="M 128,150 Q 152,240 138,312 Q 118,255 128,150 Z" fill={currentSwatch.highlightColor} opacity="0.9" />
-                            <path d="M 272,150 Q 248,240 262,312 Q 282,255 272,150 Z" fill={currentSwatch.highlightColor} opacity="0.9" />
-                            <path d="M 135,120 Q 200,75 265,120" stroke="url(#shineGrad)" strokeWidth="6" fill="none" opacity="0.7" />
-                          </g>
-                        )}
-
-                        {/* 3. HONEY BALAYAGE WAVES */}
-                        {selectedHairstyle.svgType === 'balayage_waves' && (
-                          <g>
-                            <path
-                              d="M 108,102 C 135,38 265,38 292,102 C 330,132 350,210 345,315 C 340,390 310,432 292,448 C 315,365 320,260 298,178 C 282,138 245,118 200,118 C 155,118 118,138 102,178 C 80,260 85,365 108,448 C 90,432 60,390 55,315 C 50,210 70,132 108,102 Z"
-                              fill="url(#hairGrad)"
-                            />
-                            <path d="M 85,260 Q 55,360 98,440 Q 115,365 102,290 Z" fill={currentSwatch.highlightColor} opacity="0.95" />
-                            <path d="M 315,260 Q 345,360 302,440 Q 285,365 298,290 Z" fill={currentSwatch.highlightColor} opacity="0.95" />
-                          </g>
-                        )}
-
-                        {/* 4. PLATINUM LAYERS */}
-                        {selectedHairstyle.svgType === 'platinum_layers' && (
-                          <g>
-                            <path
-                              d="M 112,98 C 138,36 262,36 288,98 C 325,128 345,200 340,305 C 335,378 305,420 288,440 C 310,355 315,250 295,168 C 278,132 242,112 200,112 C 158,112 122,132 105,168 C 85,250 90,355 112,440 C 95,420 65,378 60,305 C 55,200 75,128 112,98 Z"
-                              fill="url(#hairGrad)"
-                            />
-                            <path d="M 175,112 Q 145,185 135,270 Q 160,225 180,160 Z" fill="#FFFFFF" opacity="0.75" />
-                            <path d="M 225,112 Q 255,185 265,270 Q 240,225 220,160 Z" fill="#FFFFFF" opacity="0.75" />
-                          </g>
-                        )}
-
-                        {/* 5. ESPRESSO GLASS */}
-                        {selectedHairstyle.svgType === 'espresso_gloss' && (
-                          <g>
-                            <path
-                              d="M 116,105 C 140,44 260,44 284,105 C 318,132 335,195 330,295 C 324,368 300,410 284,430 C 302,350 306,250 290,172 C 274,135 238,115 200,115 C 162,115 126,135 110,172 C 94,250 98,350 116,430 C 100,410 76,368 70,295 C 65,195 82,132 116,105 Z"
-                              fill="url(#hairGrad)"
-                            />
-                            <path d="M 130,120 Q 200,70 270,120" stroke="url(#shineGrad)" strokeWidth="10" fill="none" opacity="0.85" />
-                          </g>
-                        )}
-
-                        {/* 6. WOLF SHAG */}
-                        {selectedHairstyle.svgType === 'wolf_cut' && (
-                          <g>
-                            <path
-                              d="M 110,105 C 135,42 265,42 290,105 C 325,130 335,180 325,240 C 340,270 330,340 310,380 C 295,330 295,260 285,190 C 270,145 240,125 200,125 C 160,125 130,145 115,190 C 105,260 105,330 90,380 C 70,340 60,270 75,240 C 65,180 75,130 110,105 Z"
-                              fill="url(#hairGrad)"
-                            />
-                            <path
-                              d="M 160,125 L 175,170 L 190,130 L 205,175 L 220,130 L 235,170 L 245,125 Z"
-                              fill={currentSwatch.highlightColor}
-                              opacity="0.9"
-                            />
-                          </g>
-                        )}
-
-                        {/* 7. MEN'S FADE */}
-                        {selectedHairstyle.svgType === 'men_fade' && (
-                          <g>
-                            <path
-                              d="M 125,115 C 142,48 258,48 275,115 C 282,132 290,150 288,168 C 272,162 262,145 252,132 C 230,110 170,110 148,132 C 138,145 128,162 112,168 C 110,150 118,132 125,115 Z"
-                              fill="url(#hairGrad)"
-                            />
-                            <path
-                              d="M 155,105 C 178,58 228,68 245,105 C 215,88 185,88 155,105 Z"
-                              fill={currentSwatch.highlightColor}
-                              opacity="0.95"
-                            />
-                            <path d="M 115,158 L 122,205 L 128,180 Z" opacity="0.65" fill={currentSwatch.baseColor} />
-                            <path d="M 285,158 L 278,205 L 272,180 Z" opacity="0.65" fill={currentSwatch.baseColor} />
-                          </g>
-                        )}
-
-                        {/* 8. BEARD CONTOUR */}
-                        {selectedHairstyle.svgType === 'beard_fade' && (
-                          <g>
-                            <path
-                              d="M 138,240 Q 145,315 200,350 Q 255,315 262,240 Q 242,265 200,270 Q 158,265 138,240 Z"
-                              opacity="0.95"
-                              fill="url(#hairGrad)"
-                            />
-                            <path
-                              d="M 172,224 Q 200,218 228,224 Q 200,240 172,224 Z"
-                              opacity="0.98"
-                              fill={currentSwatch.baseColor}
-                            />
-                          </g>
-                        )}
-                      </g>
-                    )}
-
-                    {/* Detected Hairline Arc Visual Guide */}
-                    {showHairlineGuide && (
-                      <path
-                        d="M 125,125 C 150,110 250,110 275,125"
-                        stroke="#C1785A"
-                        strokeWidth="1.5"
-                        strokeDasharray="3 3"
-                        fill="none"
-                        opacity="0.8"
-                      />
-                    )}
+              {/* Subtle Biometric Facial Landmarks Reticle (Delicate golden telemetry, no cartoon stickers) */}
+              {scanStep === 'completed' && showHairlineGuide && (
+                <div className="absolute inset-0 pointer-events-none opacity-40">
+                  <svg viewBox="0 0 400 450" className="w-full h-full">
+                    <ellipse cx="200" cy="215" rx="92" ry="128" stroke="#C1785A" strokeWidth="1" strokeDasharray="4 4" fill="none" opacity="0.6" />
+                    <path d="M 125,135 Q 200,115 275,135" stroke="#FAF6F0" strokeWidth="1.5" strokeDasharray="3 3" fill="none" opacity="0.8" />
+                    <circle cx="200" cy="115" r="2.5" fill="#FAF6F0" />
+                    <circle cx="145" cy="190" r="2" fill="#C1785A" />
+                    <circle cx="255" cy="190" r="2" fill="#C1785A" />
+                    <circle cx="200" cy="230" r="2" fill="#C1785A" />
+                    <circle cx="200" cy="285" r="2.5" fill="#FAF6F0" />
                   </svg>
                 </div>
               )}
 
-              {/* 3. AR SPLIT-SCREEN DRAGGABLE DIVIDER */}
-              {isSplitMode && scanStep === 'completed' && (
+              {/* Mode C: Organic Balayage Glaze on Client's Original Hair (Soft-Light, No Clipart) */}
+              {tryOnMode === 'hair_only_color' && scanStep === 'completed' && !showOriginalComparison && !isSplitMode && (
                 <div
-                  className="absolute inset-y-0 pointer-events-none z-25 flex items-center justify-center"
+                  className="absolute inset-0 pointer-events-none transition-all duration-300 z-10"
+                  style={{
+                    background: `radial-gradient(ellipse at 50% 25%, ${currentSwatch.highlightColor}88 0%, ${currentSwatch.baseColor}66 45%, transparent 75%)`,
+                    mixBlendMode: 'soft-light',
+                    opacity: hairShine / 100,
+                  }}
+                />
+              )}
+
+              {/* 2. PHOTOREALISTIC EDITORIAL SALON TRANSFORMATION (Replaces clipart AR sticker) */}
+              {!showOriginalComparison && scanStep === 'completed' && (
+                <>
+                  {/* Mode 1 & 2: Photographic Salon Transformation (Split view or Full Studio Transformation) */}
+                  {tryOnMode === 'full_cut_volume' && (
+                    <div
+                      className="absolute inset-0 transition-all duration-75 overflow-hidden z-15 pointer-events-none"
+                      style={{
+                        clipPath: isSplitMode ? `inset(0 0 0 ${splitPercent}%)` : undefined,
+                        filter: getLightingFilter(),
+                      }}
+                    >
+                      <img
+                        src={selectedHairstyle.editorialLook}
+                        alt={selectedHairstyle.name}
+                        className="w-full h-full object-cover transition-transform duration-300"
+                        style={{
+                          transform: `translateY(${hairOffsetY}px) scale(${hairScale / 100})`,
+                        }}
+                      />
+                      {/* Organic Swatch Tone Infusion Glaze */}
+                      <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background: `linear-gradient(180deg, ${currentSwatch.rootColor}25 0%, ${currentSwatch.baseColor}30 40%, ${currentSwatch.highlightColor}20 100%)`,
+                          mixBlendMode: 'soft-light',
+                          opacity: hairShine / 100,
+                        }}
+                      />
+                      {/* Floating After Badge in Split View */}
+                      {isSplitMode && (
+                        <div className="absolute top-4 right-4 z-20 px-3 py-1 rounded-full bg-[#1C1715]/90 backdrop-blur-md border border-[#C1785A] text-[#FAF6F0] text-[10px] font-mono font-bold tracking-wider shadow-lg flex items-center gap-1.5 pointer-events-auto">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span>AFTER: {selectedHairstyle.name}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Mode 3: Natural Balayage Glaze (Toner on Client's Original Hair - Soft Light Blend, No Clipart) */}
+                  {tryOnMode === 'hair_only_color' && (
+                    <div
+                      className="absolute inset-0 pointer-events-none transition-all duration-300 z-15"
+                      style={{
+                        clipPath: isSplitMode ? `inset(0 0 0 ${splitPercent}%)` : undefined,
+                      }}
+                    >
+                      <div
+                        className="w-full h-full"
+                        style={{
+                          background: `radial-gradient(ellipse at 50% 20%, ${currentSwatch.highlightColor}77 0%, ${currentSwatch.midColor}55 35%, ${currentSwatch.rootColor}44 65%, transparent 85%)`,
+                          mixBlendMode: 'soft-light',
+                          opacity: hairShine / 100,
+                        }}
+                      />
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background: `linear-gradient(135deg, transparent 40%, ${currentSwatch.highlightColor}40 50%, transparent 60%)`,
+                          mixBlendMode: 'screen',
+                          opacity: 0.6,
+                        }}
+                      />
+                      {isSplitMode && (
+                        <div className="absolute top-4 right-4 z-20 px-3 py-1 rounded-full bg-[#1C1715]/90 backdrop-blur-md border border-[#C1785A] text-[#FAF6F0] text-[10px] font-mono font-bold tracking-wider shadow-lg flex items-center gap-1.5 pointer-events-auto">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span>TONE: {currentSwatch.name}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Before Badge in Split View */}
+                  {isSplitMode && (
+                    <div className="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-[#1C1715]/90 backdrop-blur-md border border-[#FAF6F0]/30 text-[#FAF6F0] text-[10px] font-mono font-bold tracking-wider shadow-lg flex items-center gap-1.5 pointer-events-auto">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C1785A]" />
+                      <span>BEFORE: Client Profile</span>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* 3. INTERACTIVE BEFORE / AFTER DRAGGABLE SPLIT DIVIDER */}
+              {isSplitMode && scanStep === 'completed' && !showOriginalComparison && (
+                <div
+                  className="absolute inset-y-0 z-25 pointer-events-none flex items-center justify-center select-none"
                   style={{ left: `${splitPercent}%` }}
                 >
-                  <div className="w-0.5 h-full bg-[#FAF6F0] shadow-[0_0_8px_#C1785A]" />
-                  <div className="absolute w-8 h-8 rounded-full bg-[#C1785A] text-white border-2 border-white flex items-center justify-center shadow-lg pointer-events-auto cursor-ew-resize">
+                  <div className="w-0.5 h-full bg-[#FAF6F0] shadow-[0_0_12px_rgba(193,120,90,0.9)]" />
+                  
+                  {/* Draggable Circle Handle */}
+                  <div
+                    onPointerDown={(e) => {
+                      e.stopPropagation();
+                      setIsDraggingSplit(true);
+                      handlePointerMove(e);
+                    }}
+                    className="absolute w-9 h-9 -translate-x-1/2 rounded-full bg-gradient-to-br from-[#C1785A] to-[#8C462C] text-white border-2 border-white flex items-center justify-center shadow-2xl pointer-events-auto cursor-ew-resize hover:scale-110 active:scale-95 transition-transform"
+                    title="Drag to compare before and after"
+                  >
                     <Split className="w-4 h-4" />
+                  </div>
+
+                  {/* Drag Prompt Tooltip */}
+                  <div className="absolute bottom-4 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-[#1C1715]/90 border border-[#C1785A]/60 text-[9px] font-mono text-[#FAF6F0] whitespace-nowrap shadow-md pointer-events-none">
+                    Drag To Compare
                   </div>
                 </div>
               )}
@@ -906,7 +907,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
 
               {/* 5. Top Viewport Controls */}
               {scanStep === 'completed' && (
-                <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-[#1C1715]/90 backdrop-blur-md p-1 rounded-full border border-[#C1785A]/50 text-xs">
+                <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-[#1C1715]/90 backdrop-blur-md p-1 rounded-full border border-[#C1785A]/50 text-xs shadow-lg">
                   <button
                     type="button"
                     onClick={() => applyAiPerfectFit()}
@@ -922,6 +923,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                     onClick={() => {
                       setIsSplitMode(!isSplitMode);
                       setShowOriginalComparison(false);
+                      playChime('tap');
                     }}
                     className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all flex items-center gap-1 ${
                       isSplitMode
@@ -938,6 +940,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                     onClick={() => {
                       setShowOriginalComparison(!showOriginalComparison);
                       setIsSplitMode(false);
+                      playChime('tap');
                     }}
                     className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all ${
                       showOriginalComparison
@@ -945,16 +948,19 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                         : 'text-[#DDD3C6] hover:text-white'
                     }`}
                   >
-                    {showOriginalComparison ? 'Original' : 'Styled'}
+                    {showOriginalComparison ? 'Original' : 'Transformed'}
                   </button>
                 </div>
               )}
 
-              {/* Active Badge */}
-              <div className="absolute top-3 left-3 z-10 flex items-center gap-2 bg-[#1C1715]/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#C1785A]/50 text-[#FAF6F0] text-xs font-bold shadow-md">
-                <Scissors className="w-3.5 h-3.5 text-[#C1785A]" />
-                <span>{selectedHairstyle.name}</span>
-              </div>
+              {/* Active Badge (When not in split mode) */}
+              {!isSplitMode && (
+                <div className="absolute top-3 left-3 z-10 flex items-center gap-2 bg-[#1C1715]/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#C1785A]/50 text-[#FAF6F0] text-xs font-bold shadow-md">
+                  <Scissors className="w-3.5 h-3.5 text-[#C1785A]" />
+                  <span>{selectedHairstyle.name}</span>
+                  <span className="text-[10px] text-emerald-400 font-mono font-bold">• {selectedHairstyle.compatibilityScore}</span>
+                </div>
+              )}
             </div>
 
             {/* Hidden file input */}
@@ -969,38 +975,60 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
             {/* BOTTOM CONTROLS & ALIGNMENT STRIP */}
             <div className="w-full max-w-lg space-y-2 pt-3">
               
-              {/* Try-On Mode Switcher */}
-              <div className="grid grid-cols-2 gap-2 bg-[#1C1715] p-1.5 rounded-2xl border border-[#382E28]">
+              {/* Try-On Experience Mode Switcher */}
+              <div className="grid grid-cols-3 gap-1.5 bg-[#1C1715] p-1.5 rounded-2xl border border-[#382E28]">
                 <button
                   type="button"
                   onClick={() => {
                     setTryOnMode('full_cut_volume');
+                    setIsSplitMode(true);
+                    setShowOriginalComparison(false);
                     playChime('tap');
                   }}
-                  className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-                    tryOnMode === 'full_cut_volume'
+                  className={`py-2 px-2 rounded-xl text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
+                    isSplitMode && !showOriginalComparison
+                      ? 'bg-[#C1785A] text-white shadow-warm'
+                      : 'text-[#DDD3C6] hover:bg-[#2C2420]'
+                  }`}
+                >
+                  <Split className="w-3.5 h-3.5" />
+                  <span>Before / After Split</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTryOnMode('full_cut_volume');
+                    setIsSplitMode(false);
+                    setShowOriginalComparison(false);
+                    playChime('tap');
+                  }}
+                  className={`py-2 px-2 rounded-xl text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
+                    tryOnMode === 'full_cut_volume' && !isSplitMode && !showOriginalComparison
                       ? 'bg-[#C1785A] text-white shadow-warm'
                       : 'text-[#DDD3C6] hover:bg-[#2C2420]'
                   }`}
                 >
                   <Scissors className="w-3.5 h-3.5" />
-                  <span>Bespoke Haircut Fit</span>
+                  <span>Studio Transformation</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => {
                     setTryOnMode('hair_only_color');
+                    setIsSplitMode(false);
+                    setShowOriginalComparison(false);
                     playChime('tap');
                   }}
-                  className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-                    tryOnMode === 'hair_only_color'
+                  className={`py-2 px-2 rounded-xl text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
+                    tryOnMode === 'hair_only_color' && !isSplitMode
                       ? 'bg-[#C1785A] text-white shadow-warm'
                       : 'text-[#DDD3C6] hover:bg-[#2C2420]'
                   }`}
                 >
                   <Wand2 className="w-3.5 h-3.5" />
-                  <span>Original Hair Color Melt</span>
+                  <span>Balayage Glaze</span>
                 </button>
               </div>
 
@@ -1184,6 +1212,37 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                     })}
                   </div>
                 </div>
+
+                {/* Salon Ambient Lighting Modes */}
+                <div className="pt-2 border-t border-[#2C2420] flex items-center justify-between gap-2">
+                  <span className="text-[10px] uppercase font-bold text-[#A89C94] shrink-0">
+                    Salon Ambience Lighting:
+                  </span>
+                  <div className="flex items-center gap-1.5 overflow-x-auto">
+                    {[
+                      { id: 'chandelier', label: 'Chandelier' },
+                      { id: 'daylight', label: 'Daylight' },
+                      { id: 'golden_hour', label: 'Golden Hour' },
+                      { id: 'noir_studio', label: 'Noir Studio' },
+                    ].map((mode) => (
+                      <button
+                        key={mode.id}
+                        type="button"
+                        onClick={() => {
+                          setLightingMode(mode.id as ARLightingMode);
+                          playChime('tap');
+                        }}
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all shrink-0 ${
+                          lightingMode === mode.id
+                            ? 'bg-[#C1785A] text-white shadow-warm ring-1 ring-[#C1785A]'
+                            : 'bg-[#251F1C] text-[#DDD3C6] hover:bg-[#302723]'
+                        }`}
+                      >
+                        {mode.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1215,7 +1274,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
               </div>
 
               {/* Hairstyle Selection List */}
-              <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
+              <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
                 {filteredStyles.map((hs) => {
                   const isSelected = selectedHairstyle.id === hs.id;
                   const swatch = COLOR_SWATCHES[hs.defaultSwatchIndex] || COLOR_SWATCHES[0];
@@ -1224,33 +1283,41 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                     <button
                       key={hs.id}
                       onClick={() => handleSelectHairstyle(hs)}
-                      className={`w-full text-left p-3 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
+                      className={`w-full text-left p-2.5 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
                         isSelected
                           ? 'bg-[#F5E6DF] dark:bg-[#38251E] border-[#C1785A] shadow-sm ring-1 ring-[#C1785A]'
                           : 'bg-white dark:bg-[#201A18] border-[#EAE3DA] dark:border-[#332A26] hover:border-[#C1785A]/60'
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-8 h-8 rounded-full border-2 border-white shadow-sm shrink-0 flex items-center justify-center text-white"
-                          style={{
-                            background: `linear-gradient(135deg, ${swatch.baseColor}, ${swatch.highlightColor})`,
-                          }}
-                        >
-                          <Scissors className="w-3.5 h-3.5" />
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-[#C1785A]/40 shadow-sm">
+                          <img
+                            src={hs.editorialLook}
+                            alt={hs.name}
+                            className="w-full h-full object-cover"
+                          />
+                          <span
+                            className="absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full border border-white"
+                            style={{ background: swatch.baseColor }}
+                          />
                         </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-serif font-bold text-xs sm:text-sm text-[#2C2725] dark:text-[#FAF6F0]">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="font-serif font-bold text-xs sm:text-sm text-[#2C2725] dark:text-[#FAF6F0] truncate">
                               {hs.name}
                             </span>
-                            <span className="text-[9px] bg-[#EAE3DA] dark:bg-[#2C2420] text-[#8C462C] dark:text-[#F2A585] px-2 py-0.5 rounded-full font-bold uppercase">
+                            <span className="text-[9px] bg-[#EAE3DA] dark:bg-[#2C2420] text-[#8C462C] dark:text-[#F2A585] px-2 py-0.5 rounded-full font-bold uppercase shrink-0">
                               {hs.tag}
                             </span>
                           </div>
-                          <p className="text-[11px] text-[#6E6663] dark:text-[#B5ABA2] line-clamp-1">
-                            {hs.description}
-                          </p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono font-bold">
+                              ★ {hs.compatibilityScore}
+                            </span>
+                            <span className="text-[10px] text-[#6E6663] dark:text-[#B5ABA2] truncate">
+                              • {hs.colorFormula}
+                            </span>
+                          </div>
                         </div>
                       </div>
 
@@ -1262,24 +1329,25 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                 })}
               </div>
 
-              {/* 3D BIOMETRIC FACIAL SCAN DIAGNOSTICS CARD */}
-              <div className="p-4 rounded-3xl bg-gradient-to-br from-[#F5E6DF] to-[#EAE3DA] dark:from-[#291F1B] dark:to-[#201A18] border border-[#E0D0C5] dark:border-[#3D2E27] space-y-2.5">
+              {/* 3D BIOMETRIC FACIAL SCAN & STYLE CONSULTATION DOSSIER CARD */}
+              <div className="p-4 rounded-3xl bg-gradient-to-br from-[#F5E6DF] to-[#EAE3DA] dark:from-[#291F1B] dark:to-[#201A18] border border-[#E0D0C5] dark:border-[#3D2E27] space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Scan className="w-4 h-4 text-[#C1785A]" />
                     <span className="text-[10px] uppercase font-bold tracking-widest text-[#8C462C] dark:text-[#F2A585]">
-                      Biometric Face Scan Telemetry
+                      AI Consultation Dossier
                     </span>
                   </div>
                   <span className="px-2.5 py-0.5 rounded-full bg-[#C1785A] text-white text-[10px] font-mono font-bold shadow-sm">
-                    {diagnostics.confidenceScore} Match
+                    {selectedHairstyle.compatibilityScore}
                   </span>
                 </div>
 
+                {/* Biometrics Matrix */}
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="bg-white/80 dark:bg-[#181413]/80 p-2.5 rounded-2xl border border-white/40 dark:border-[#382E28]">
                     <span className="text-[9px] uppercase text-[#6E6663] dark:text-[#B5ABA2] block font-bold">
-                      Facial Morphology
+                      Facial Architecture
                     </span>
                     <strong className="text-[#2C2725] dark:text-[#FAF6F0] block mt-0.5">
                       {diagnostics.faceShape}
@@ -1288,7 +1356,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
 
                   <div className="bg-white/80 dark:bg-[#181413]/80 p-2.5 rounded-2xl border border-white/40 dark:border-[#382E28]">
                     <span className="text-[9px] uppercase text-[#6E6663] dark:text-[#B5ABA2] block font-bold">
-                      Hairline Distance
+                      Hairline Alignment
                     </span>
                     <strong className="text-[#2C2725] dark:text-[#FAF6F0] block mt-0.5">
                       {diagnostics.hairlineDistance}
@@ -1296,8 +1364,56 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                   </div>
                 </div>
 
-                <div className="p-3 rounded-2xl bg-white/60 dark:bg-[#181413]/60 border border-[#EAE3DA] dark:border-[#332A26] text-[11px] text-[#4A423D] dark:text-[#CFC3B8] leading-relaxed">
-                  💡 <strong>Master Stylist Prescription:</strong> {selectedHairstyle.stylistNote}
+                {/* Facial Architecture Harmony Benefit */}
+                <div className="p-2.5 rounded-2xl bg-white/70 dark:bg-[#181413]/70 border border-[#EAE3DA] dark:border-[#332A26] text-[11px] leading-relaxed">
+                  <span className="text-[9px] uppercase font-bold text-[#8C462C] dark:text-[#F2A585] block mb-0.5">
+                    Architectural Symmetry Benefit
+                  </span>
+                  <p className="text-[#4A423D] dark:text-[#CFC3B8]">
+                    {selectedHairstyle.faceBenefit}
+                  </p>
+                </div>
+
+                {/* Salon Formulation & Maintenance Breakdown */}
+                <div className="grid grid-cols-2 gap-2 text-[11px]">
+                  <div className="p-2.5 rounded-2xl bg-white/70 dark:bg-[#181413]/70 border border-[#EAE3DA] dark:border-[#332A26]">
+                    <span className="text-[9px] uppercase font-bold text-[#6E6663] dark:text-[#B5ABA2] block">
+                      Salon Color Formula
+                    </span>
+                    <span className="font-semibold text-[#2C2725] dark:text-[#FAF6F0] block mt-0.5">
+                      {selectedHairstyle.colorFormula}
+                    </span>
+                    <span className="text-[9px] text-[#8C462C] dark:text-[#F2A585] block mt-0.5">
+                      Tone: {currentSwatch.name}
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-2xl bg-white/70 dark:bg-[#181413]/70 border border-[#EAE3DA] dark:border-[#332A26]">
+                    <span className="text-[9px] uppercase font-bold text-[#6E6663] dark:text-[#B5ABA2] block">
+                      Upkeep Cadence
+                    </span>
+                    <span className="font-semibold text-[#2C2725] dark:text-[#FAF6F0] block mt-0.5">
+                      {selectedHairstyle.maintenanceSchedule}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Recommended Master Artisan */}
+                <div className="p-2.5 rounded-2xl bg-white/70 dark:bg-[#181413]/70 border border-[#EAE3DA] dark:border-[#332A26] flex items-center justify-between text-[11px]">
+                  <div>
+                    <span className="text-[9px] uppercase font-bold text-[#6E6663] dark:text-[#B5ABA2] block">
+                      Recommended Artisan
+                    </span>
+                    <span className="font-bold text-[#2C2725] dark:text-[#FAF6F0]">
+                      {diagnostics.recommendedStylist?.name}
+                    </span>
+                    <span className="text-[10px] text-[#8C462C] dark:text-[#F2A585] ml-1.5 font-mono">
+                      Chair #{diagnostics.recommendedStylist?.chair_number}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-bold bg-[#C1785A]/20 text-[#8C462C] dark:text-[#F2A585] px-2 py-0.5 rounded-full">
+                    Certified Specialist
+                  </span>
                 </div>
               </div>
             </div>
@@ -1310,7 +1426,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                 className="w-full py-4 rounded-full bg-[#C1785A] hover:bg-[#8C462C] text-[#FAF6F0] text-xs sm:text-sm font-bold uppercase tracking-[0.18em] shadow-warm transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
               >
                 <Scissors className="w-4 h-4" />
-                <span>Book This Hairstyle Look</span>
+                <span>Reserve This Look with {diagnostics.recommendedStylist?.name || 'Master Artisan'}</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
