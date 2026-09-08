@@ -1,66 +1,102 @@
 import { Stylist } from './types';
 import { INITIAL_STYLISTS } from './mockData';
 
-export interface TimeSlotOption {
-  time: string; // e.g. "10:00 AM"
-  period: 'morning' | 'afternoon' | 'evening';
-}
-
-export const ALL_TIME_SLOTS: TimeSlotOption[] = [
-  { time: '10:00 AM', period: 'morning' },
-  { time: '10:30 AM', period: 'morning' },
-  { time: '11:00 AM', period: 'morning' },
-  { time: '11:30 AM', period: 'morning' },
-  { time: '12:00 PM', period: 'morning' },
-  { time: '12:30 PM', period: 'afternoon' },
-  { time: '01:00 PM', period: 'afternoon' },
-  { time: '01:30 PM', period: 'afternoon' },
-  { time: '02:00 PM', period: 'afternoon' },
-  { time: '02:30 PM', period: 'afternoon' },
-  { time: '03:00 PM', period: 'afternoon' },
-  { time: '03:30 PM', period: 'afternoon' },
-  { time: '04:00 PM', period: 'afternoon' },
-  { time: '04:30 PM', period: 'evening' },
-  { time: '05:00 PM', period: 'evening' },
-  { time: '05:30 PM', period: 'evening' },
-  { time: '06:00 PM', period: 'evening' },
-  { time: '06:30 PM', period: 'evening' },
-  { time: '07:00 PM', period: 'evening' },
-  { time: '07:30 PM', period: 'evening' },
-  { time: '08:00 PM', period: 'evening' },
-];
-
 export interface StylistScheduleRecord {
   stylistId: string;
   date: string; // YYYY-MM-DD
-  availableSlots: string[];
   isOffDuty: boolean;
+  shiftStart: string; // e.g. "10:00 AM" or "10:00"
+  shiftEnd: string;   // e.g. "08:00 PM" or "20:00"
+  hasBreak?: boolean;
+  breakStart?: string; // e.g. "01:30 PM"
+  breakEnd?: string;   // e.g. "02:30 PM"
 }
 
-const STORAGE_KEY = 'rose_rogue_stylist_schedules_v1';
+const STORAGE_KEY = 'rose_rogue_stylist_schedules_v2';
 
-// Default default shifts for each artisan
-const DEFAULT_SHIFT_PATTERNS: Record<string, string[]> = {
-  // Antoine Dubois (Morning & Afternoon Master): 10:00 AM - 04:30 PM
-  'b0000000-0000-0000-0000-000000000001': [
-    '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM',
-    '01:00 PM', '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM'
-  ],
-  // Camille Laurent (Midday to Evening Color Lead): 11:30 AM - 07:30 PM
-  'b0000000-0000-0000-0000-000000000002': [
-    '11:30 AM', '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM', '02:30 PM',
-    '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM', '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM'
-  ],
-  // Julien Moreau (Afternoon to Night Precision Lead): 01:00 PM - 08:00 PM
-  'b0000000-0000-0000-0000-000000000003': [
-    '01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM', '03:30 PM', '04:00 PM',
-    '04:30 PM', '05:00 PM', '05:30 PM', '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM', '08:00 PM'
-  ],
-  // Élodie Fontaine (Full Day Restorative Care): 10:00 AM - 06:00 PM
-  'b0000000-0000-0000-0000-000000000004': [
-    '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM',
-    '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM', '06:00 PM'
-  ],
+/**
+ * Converts any 12-hour ("11:30 AM", "2:15 PM") or 24-hour ("14:30") string into minutes from midnight.
+ */
+export function timeToMinutes(timeStr: string): number {
+  if (!timeStr) return 600; // Default 10:00 AM (10 * 60)
+  const clean = timeStr.trim().toUpperCase();
+
+  // Match 12-hour format: "02:30 PM" or "2:30PM"
+  const match12 = clean.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+  if (match12) {
+    let hours = parseInt(match12[1], 10);
+    const minutes = parseInt(match12[2], 10);
+    const meridiem = match12[3];
+    if (meridiem === 'PM' && hours < 12) hours += 12;
+    if (meridiem === 'AM' && hours === 12) hours = 0;
+    return hours * 60 + minutes;
+  }
+
+  // Match 24-hour format: "14:30"
+  const match24 = clean.match(/^(\d{1,2}):(\d{2})$/);
+  if (match24) {
+    const hours = parseInt(match24[1], 10);
+    const minutes = parseInt(match24[2], 10);
+    return hours * 60 + minutes;
+  }
+
+  return 600;
+}
+
+/**
+ * Converts minutes from midnight back to 12-hour format "hh:mm AM/PM"
+ */
+export function minutesTo12Hour(totalMinutes: number): string {
+  const norm = ((totalMinutes % 1440) + 1440) % 1440;
+  const rawHours = Math.floor(norm / 60);
+  const minutes = norm % 60;
+  const meridiem = rawHours >= 12 ? 'PM' : 'AM';
+  const hours12 = rawHours % 12 === 0 ? 12 : rawHours % 12;
+  const padHours = String(hours12).padStart(2, '0');
+  const padMinutes = String(minutes).padStart(2, '0');
+  return `${padHours}:${padMinutes} ${meridiem}`;
+}
+
+/**
+ * Default shift schedules for each master stylist
+ */
+const DEFAULT_DYNAMIC_SHIFTS: Record<string, Partial<StylistScheduleRecord>> = {
+  // Antoine Dubois (Morning & Afternoon Master): 10:00 AM - 05:00 PM, Break: 01:30 PM - 02:15 PM
+  'b0000000-0000-0000-0000-000000000001': {
+    shiftStart: '10:00 AM',
+    shiftEnd: '05:00 PM',
+    hasBreak: true,
+    breakStart: '01:30 PM',
+    breakEnd: '02:15 PM',
+    isOffDuty: false,
+  },
+  // Camille Laurent (Midday to Evening Color Lead): 11:00 AM - 08:00 PM, Break: 03:00 PM - 03:45 PM
+  'b0000000-0000-0000-0000-000000000002': {
+    shiftStart: '11:00 AM',
+    shiftEnd: '08:00 PM',
+    hasBreak: true,
+    breakStart: '03:00 PM',
+    breakEnd: '03:45 PM',
+    isOffDuty: false,
+  },
+  // Julien Moreau (Precision Styling Lead): 12:00 PM - 08:30 PM, Break: 04:00 PM - 04:30 PM
+  'b0000000-0000-0000-0000-000000000003': {
+    shiftStart: '12:00 PM',
+    shiftEnd: '08:30 PM',
+    hasBreak: true,
+    breakStart: '04:00 PM',
+    breakEnd: '04:30 PM',
+    isOffDuty: false,
+  },
+  // Élodie Fontaine (Restorative Care Lead): 10:00 AM - 06:30 PM, Break: 01:00 PM - 01:45 PM
+  'b0000000-0000-0000-0000-000000000004': {
+    shiftStart: '10:00 AM',
+    shiftEnd: '06:30 PM',
+    hasBreak: true,
+    breakStart: '01:00 PM',
+    breakEnd: '01:45 PM',
+    isOffDuty: false,
+  },
 };
 
 export function getTodayDateString(): string {
@@ -86,13 +122,12 @@ export function saveAllSchedulesToStorage(data: Record<string, StylistScheduleRe
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    // Dispatch custom event for cross-component live reactive updates
     window.dispatchEvent(new Event('stylist-availability-updated'));
   } catch (e) {}
 }
 
 /**
- * Returns schedule for a given stylist and date, creating defaults if not yet initialized.
+ * Returns dynamic schedule for a given stylist and date
  */
 export function getStylistSchedule(stylistId: string, dateStr: string): StylistScheduleRecord {
   const all = getAllSchedulesFromStorage();
@@ -101,34 +136,37 @@ export function getStylistSchedule(stylistId: string, dateStr: string): StylistS
     return all[key];
   }
 
-  // Generate standard default shift
-  const defaultSlots = DEFAULT_SHIFT_PATTERNS[stylistId] || ALL_TIME_SLOTS.map((s) => s.time);
+  const defaultShift = DEFAULT_DYNAMIC_SHIFTS[stylistId] || {
+    shiftStart: '10:00 AM',
+    shiftEnd: '08:00 PM',
+    hasBreak: false,
+    isOffDuty: false,
+  };
+
   return {
     stylistId,
     date: dateStr,
-    availableSlots: defaultSlots,
-    isOffDuty: false,
+    isOffDuty: defaultShift.isOffDuty || false,
+    shiftStart: defaultShift.shiftStart || '10:00 AM',
+    shiftEnd: defaultShift.shiftEnd || '08:00 PM',
+    hasBreak: defaultShift.hasBreak || false,
+    breakStart: defaultShift.breakStart || '02:00 PM',
+    breakEnd: defaultShift.breakEnd || '03:00 PM',
   };
 }
 
 /**
- * Toggle a specific slot's availability for a stylist
+ * Update dynamic shift parameters for a stylist
  */
-export function toggleStylistSlotAvailability(
+export function updateStylistShift(
   stylistId: string,
   dateStr: string,
-  timeSlot: string
+  updates: Partial<StylistScheduleRecord>
 ): StylistScheduleRecord {
   const current = getStylistSchedule(stylistId, dateStr);
-  const exists = current.availableSlots.includes(timeSlot);
-
-  const updatedSlots = exists
-    ? current.availableSlots.filter((t) => t !== timeSlot)
-    : [...current.availableSlots, timeSlot];
-
   const updatedRecord: StylistScheduleRecord = {
     ...current,
-    availableSlots: updatedSlots,
+    ...updates,
   };
 
   const all = getAllSchedulesFromStorage();
@@ -146,41 +184,50 @@ export function setStylistDutyStatus(
   dateStr: string,
   isOffDuty: boolean
 ): StylistScheduleRecord {
-  const current = getStylistSchedule(stylistId, dateStr);
-  const updatedRecord: StylistScheduleRecord = {
-    ...current,
-    isOffDuty,
-  };
-
-  const all = getAllSchedulesFromStorage();
-  all[`${stylistId}_${dateStr}`] = updatedRecord;
-  saveAllSchedulesToStorage(all);
-
-  return updatedRecord;
+  return updateStylistShift(stylistId, dateStr, { isOffDuty });
 }
 
 /**
- * Returns ONLY the stylists who are actually available at the chosen date and time slot.
+ * Checks if a stylist is available at any dynamic time string (e.g. "11:45 AM", "02:15 PM")
  */
-export function getAvailableStylistsForSlot(dateStr: string, timeSlot: string): Stylist[] {
-  return INITIAL_STYLISTS.filter((stylist) => {
-    if (!stylist.is_active) return false;
-    const schedule = getStylistSchedule(stylist.id, dateStr);
-    if (schedule.isOffDuty) return false;
-    return schedule.availableSlots.includes(timeSlot);
-  });
+export function isStylistAvailableAtTime(
+  stylistId: string,
+  dateStr: string,
+  timeStr: string
+): boolean {
+  const stylist = INITIAL_STYLISTS.find((s) => s.id === stylistId);
+  if (!stylist || !stylist.is_active) return false;
+
+  const schedule = getStylistSchedule(stylistId, dateStr);
+  if (schedule.isOffDuty) return false;
+
+  const targetMinutes = timeToMinutes(timeStr);
+  const startMinutes = timeToMinutes(schedule.shiftStart);
+  const endMinutes = timeToMinutes(schedule.shiftEnd);
+
+  // Check within working hours
+  if (targetMinutes < startMinutes || targetMinutes > endMinutes) {
+    return false;
+  }
+
+  // Check break time
+  if (schedule.hasBreak && schedule.breakStart && schedule.breakEnd) {
+    const breakStartM = timeToMinutes(schedule.breakStart);
+    const breakEndM = timeToMinutes(schedule.breakEnd);
+    if (targetMinutes >= breakStartM && targetMinutes < breakEndM) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /**
- * Returns list of time slots with the count of currently available artisans for each.
+ * Returns ONLY the stylists who are actually available at any dynamic time on the chosen date.
  */
-export function getAvailableSlotsSummary(dateStr: string): { slot: string; period: string; availableCount: number }[] {
-  return ALL_TIME_SLOTS.map((slotObj) => {
-    const available = getAvailableStylistsForSlot(dateStr, slotObj.time);
-    return {
-      slot: slotObj.time,
-      period: slotObj.period,
-      availableCount: available.length,
-    };
-  });
+export function getAvailableStylistsForSlot(dateStr: string, timeStr: string): Stylist[] {
+  return INITIAL_STYLISTS.filter((stylist) =>
+    isStylistAvailableAtTime(stylist.id, dateStr, timeStr)
+  );
 }
+

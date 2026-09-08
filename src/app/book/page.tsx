@@ -43,10 +43,10 @@ import { sendWhatsAppBookingConfirmation } from '@/lib/whatsappService';
 import { VirtualStyleMirrorModal } from '@/components/VirtualStyleMirrorModal';
 import { AtHomeServiceModal } from '@/components/AtHomeServiceModal';
 import {
-  ALL_TIME_SLOTS,
   getAvailableStylistsForSlot,
   getTodayDateString,
-  TimeSlotOption,
+  timeToMinutes,
+  minutesTo12Hour,
 } from '@/lib/stylistAvailability';
 import confetti from 'canvas-confetti';
 
@@ -580,24 +580,24 @@ function BookPageContent() {
               </div>
             </div>
 
-            {/* STEP 2: Pick Appointment Date & Time Slot */}
+            {/* STEP 2: Pick Appointment Date & Dynamic Time */}
             <div className="bg-[#F3ECE3] p-6 sm:p-8 rounded-3xl border border-[#EAE3DA] shadow-card space-y-6">
               <div className="border-b border-[#EAE3DA] pb-5">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
                     <span className="text-xs font-mono uppercase tracking-wider text-[#C1785A] font-bold block">
                       Step 02
                     </span>
                     <h2 className="font-serif text-2xl font-bold text-[#2C2725] mt-0.5">
-                      Choose Date &amp; Time Slot
+                      Choose Date &amp; Dynamic Time
                     </h2>
                   </div>
-                  <span className="px-3 py-1 rounded-full bg-[#FAF6F0] text-[#8C462C] border border-[#E8D0C5] text-xs font-mono font-bold">
-                    {selectedTimeSlot} on {selectedDate}
+                  <span className="px-3.5 py-1.5 rounded-full bg-[#FAF6F0] text-[#8C462C] border border-[#E8D0C5] text-xs font-mono font-bold self-start sm:self-auto shadow-sm">
+                    {selectedTimeSlot} &bull; {selectedDate}
                   </span>
                 </div>
                 <p className="text-xs text-[#6E6663] mt-1">
-                  Artisans working on this date and time will be dynamically highlighted below.
+                  Choose any arrival time. Master artisans on duty at your exact time will be dynamically matched below.
                 </p>
               </div>
 
@@ -632,44 +632,101 @@ function BookPageContent() {
                 </div>
               </div>
 
-              {/* Time Slots Grid */}
-              <div className="space-y-2 pt-2">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[#4A423D] flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-[#C1785A]" />
-                  <span>Available Time Slots:</span>
-                </label>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                  {ALL_TIME_SLOTS.map((slotObj) => {
-                    const isSelected = selectedTimeSlot === slotObj.time;
-                    const artisansForSlot = getAvailableStylistsForSlot(selectedDate, slotObj.time);
-                    const isAvailable = artisansForSlot.length > 0;
-
-                    return (
+              {/* Dynamic Time Selector & Presets */}
+              <div className="space-y-4 pt-2">
+                <div className="p-5 rounded-3xl bg-white border border-[#EAE3DA] shadow-sm space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#8C462C] flex items-center gap-1.5">
+                      <Clock className="w-4 h-4 text-[#C1785A]" />
+                      <span>Preferred Dynamic Arrival Time:</span>
+                    </label>
+                    <div className="flex items-center gap-2">
                       <button
-                        key={slotObj.time}
                         type="button"
-                        disabled={!isAvailable}
                         onClick={() => {
-                          setSelectedTimeSlot(slotObj.time);
+                          const curr = timeToMinutes(selectedTimeSlot);
+                          setSelectedTimeSlot(minutesTo12Hour(curr - 15));
                           playChime('tap');
                         }}
-                        className={`p-2.5 rounded-2xl border text-xs font-bold transition-all flex flex-col items-center justify-center gap-0.5 ${
-                          isSelected
-                            ? 'bg-[#C1785A] text-white shadow-warm border-[#C1785A] ring-2 ring-[#C1785A]/30'
-                            : isAvailable
-                            ? 'bg-white text-[#2C2725] border-[#EAE3DA] hover:border-[#C1785A]'
-                            : 'bg-[#EAE3DA]/40 text-[#A89C94] border-transparent opacity-40 cursor-not-allowed'
-                        }`}
+                        className="px-3 py-1 rounded-xl bg-[#F3ECE3] hover:bg-[#EAE3DA] text-xs font-bold text-[#2C2725] border border-[#EAE3DA]"
                       >
-                        <span className="font-mono text-xs">{slotObj.time}</span>
-                        <span className={`text-[9px] font-normal ${
-                          isSelected ? 'text-white/90' : isAvailable ? 'text-[#8C462C]' : 'text-gray-400'
-                        }`}>
-                          {isAvailable ? `${artisansForSlot.length} available` : 'Full'}
-                        </span>
+                        -15 min
                       </button>
-                    );
-                  })}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const curr = timeToMinutes(selectedTimeSlot);
+                          setSelectedTimeSlot(minutesTo12Hour(curr + 15));
+                          playChime('tap');
+                        }}
+                        className="px-3 py-1 rounded-xl bg-[#F3ECE3] hover:bg-[#EAE3DA] text-xs font-bold text-[#2C2725] border border-[#EAE3DA]"
+                      >
+                        +15 min
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Primary Dynamic Time Display & Input */}
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="text"
+                      value={selectedTimeSlot}
+                      onChange={(e) => setSelectedTimeSlot(e.target.value)}
+                      placeholder="e.g. 11:30 AM or 02:45 PM"
+                      className="w-full px-5 py-3.5 rounded-2xl border-2 border-[#C1785A]/40 focus:border-[#C1785A] bg-[#FAF6F0] font-mono text-base sm:text-lg font-extrabold text-[#2C2725] focus:outline-none shadow-inner"
+                    />
+                  </div>
+
+                  {/* Quick Dynamic Time Presets */}
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] uppercase font-bold text-[#6E6663] tracking-wider block">
+                      Quick Time Presets:
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { label: '⚡ Next Available', time: '11:00 AM' },
+                        { label: '🌅 Morning (11:30 AM)', time: '11:30 AM' },
+                        { label: '☀️ Midday (01:30 PM)', time: '01:30 PM' },
+                        { label: '🌇 Afternoon (03:45 PM)', time: '03:45 PM' },
+                        { label: '✨ Evening (05:30 PM)', time: '05:30 PM' },
+                        { label: '🌙 Late (07:30 PM)', time: '07:30 PM' },
+                      ].map((preset) => {
+                        const isPresetActive = selectedTimeSlot === preset.time;
+                        return (
+                          <button
+                            key={preset.label}
+                            type="button"
+                            onClick={() => {
+                              setSelectedTimeSlot(preset.time);
+                              playChime('tap');
+                            }}
+                            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                              isPresetActive
+                                ? 'bg-[#C1785A] text-white shadow-warm'
+                                : 'bg-[#F3ECE3] hover:bg-[#EAE3DA] text-[#4A423D]'
+                            }`}
+                          >
+                            {preset.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Live Artisan Availability Status Feedback */}
+                  <div className="p-3 rounded-2xl bg-[#F5E6DF] border border-[#E8D0C5] flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#C1785A]" />
+                      <span className="font-bold text-[#8C462C]">
+                        {availableStylists.length > 0
+                          ? `${availableStylists.length} Master Artisan${availableStylists.length > 1 ? 's' : ''} on duty at ${selectedTimeSlot}`
+                          : `No artisans on duty at ${selectedTimeSlot} (Please adjust time)`}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-mono text-[#8C462C] uppercase font-bold">
+                      Dynamic Match
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
