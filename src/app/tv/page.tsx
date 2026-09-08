@@ -75,8 +75,12 @@ export default function SmartTvBoardPage() {
       {/* 1. TOP AIRPORT-STYLE FLIGHT BOARD HEADER */}
       <header className="px-10 py-7 bg-[#F3ECE3] border-b-2 border-[#C1785A]/40 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-6">
-          <div className="w-16 h-16 rounded-2xl bg-[#C1785A] text-[#FAF6F0] flex items-center justify-center font-serif text-3xl font-extrabold shadow-warm">
-            R
+          <div className="w-16 h-16 rounded-2xl bg-white border-2 border-[#C1785A] overflow-hidden flex items-center justify-center p-1 shadow-warm">
+            <img
+              src="/logo.png"
+              alt="Rose & Rogue Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <div className="flex items-center gap-4">

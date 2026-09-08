@@ -89,8 +89,12 @@ function LoginForm() {
         <div className="bg-white dark:bg-[#1C1816] rounded-3xl border border-[#EAE3DA] dark:border-[#382E28] p-6 sm:p-7 shadow-xl shadow-[#C1785A]/5 space-y-5">
           {/* Header */}
           <div className="text-center space-y-1">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#C1785A] to-[#8C462C] text-[#FAF6F0] flex items-center justify-center font-serif text-lg font-bold mx-auto shadow-warm">
-              R
+            <div className="w-12 h-12 rounded-2xl bg-white border-2 border-[#C1785A] overflow-hidden flex items-center justify-center p-1 mx-auto shadow-warm">
+              <img
+                src="/logo.png"
+                alt="Rose & Rogue Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <h1 className="font-serif text-2xl font-extrabold text-[#2C2725] dark:text-[#FAF6F0]">
               Sign In to Rose & Rogue

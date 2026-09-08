@@ -106,8 +106,12 @@ export const Navbar: React.FC = () => {
         {/* 1. BRAND & LIVE ATMOSPHERE */}
         <div className="flex items-center gap-3 sm:gap-4 shrink-0">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#C1785A] to-[#8C462C] text-[#FAF6F0] flex items-center justify-center font-serif text-xl font-extrabold shadow-warm transition-transform duration-300 group-hover:scale-105">
-              R
+            <div className="w-10 h-10 rounded-full overflow-hidden border border-[#C1785A] shadow-warm transition-transform duration-300 group-hover:scale-105 bg-white flex items-center justify-center">
+              <img
+                src="/logo.png"
+                alt="Rose & Rogue Logo"
+                className="w-full h-full object-contain p-0.5"
+              />
             </div>
             <div>
               <span className="font-serif text-lg sm:text-xl font-extrabold tracking-tight block leading-none text-[#2C2725] dark:text-[#FAF6F0]">

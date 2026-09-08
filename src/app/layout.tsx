@@ -10,7 +10,13 @@ export const metadata: Metadata = {
   description:
     'Commercial-grade, real-time salon management and queue engine with Parisian luxury editorial design, dynamic ETAs, and Smart Overlap chair optimization.',
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/logo.png', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/logo.png',
   },
 };
 
