@@ -1,4 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
+import { 
+  fetchBookingsFromSupabase, 
+  upsertBookingToSupabase, 
+  subscribeToSupabaseRealtime, 
+  isSupabaseConfigured 
+} from './supabaseClient';
+import { 
+  cacheLiveQueueInRedis, 
+  acquireQueueLock, 
+  releaseQueueLock, 
+  isRedisConfigured 
+} from './redisClient';
 
 // Aura Salon Curated Services
 export const SERVICES = [
@@ -205,7 +217,7 @@ export function useSalonStore() {
 
   const [toasts, setToasts] = useState([]);
 
-  // Save to localStorage & Broadcast to other tabs/windows
+  // Save to localStorage, Supabase DB, Redis & Broadcast across tabs
   const updateStateAndBroadcast = useCallback((newBookings, toastMessage = null) => {
     setBookings(newBookings);
     try {
@@ -213,6 +225,15 @@ export function useSalonStore() {
       localStorage.setItem(SYNC_EVENT_KEY, JSON.stringify({ timestamp: Date.now(), toast: toastMessage }));
     } catch (e) {
       console.error('Error persisting state:', e);
+    }
+
+    // Sync to Supabase PostgreSQL DB & Upstash Redis Queue Cache
+    if (isSupabaseConfigured()) {
+      newBookings.forEach(b => upsertBookingToSupabase(b));
+    }
+    if (isRedisConfigured()) {
+      const waitingList = newBookings.filter(b => b.status === 'waiting');
+      cacheLiveQueueInRedis(waitingList);
     }
 
     if (toastMessage) {
@@ -227,6 +248,26 @@ export function useSalonStore() {
       setToasts(prev => prev.filter(t => t.id !== id));
     }, 4000);
   };
+
+  // Initial fetch & Realtime Listener for Supabase & Redis
+  useEffect(() => {
+    if (isSupabaseConfigured()) {
+      fetchBookingsFromSupabase().then(remoteBookings => {
+        if (remoteBookings && remoteBookings.length > 0) {
+          setBookings(remoteBookings);
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(remoteBookings));
+          addToast('Connected to Supabase PostgreSQL DB', 'success');
+        }
+      });
+
+      const unsubscribe = subscribeToSupabaseRealtime((payload) => {
+        if (payload.new) {
+          addToast(`⚡ Supabase DB Realtime Event`, 'info');
+        }
+      });
+      return () => unsubscribe();
+    }
+  }, []);
 
   // Real-time synchronization across browser tabs
   useEffect(() => {
