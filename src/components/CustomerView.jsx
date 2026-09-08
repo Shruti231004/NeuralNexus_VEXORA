@@ -247,8 +247,9 @@ export default function CustomerView({ store }) {
 
       {/* Active Booking Tracker Card */}
       {primaryBooking && (
-        <section className="max-w-[1360px] mx-auto px-4 md:px-8 w-full">
+        <section id="my-appointments-section" className="max-w-[1360px] mx-auto px-4 md:px-8 w-full">
           <div className="bg-white border border-[#b50060]/30 rounded-3xl p-6 shadow-xl relative overflow-hidden space-y-4">
+
             
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f2eaff] pb-4">
               <div>
@@ -375,7 +376,8 @@ export default function CustomerView({ store }) {
         <div className="lg:col-span-8 flex flex-col gap-10">
           
           {/* Step 01 • Select Rituals */}
-          <section className="flex flex-col gap-6">
+          <section id="services-section" className="flex flex-col gap-6">
+
             <div className="flex items-end justify-between">
               <div>
                 <span className="font-body text-xs font-bold uppercase text-[#ae3115] tracking-widest">
@@ -625,7 +627,8 @@ export default function CustomerView({ store }) {
         </div>
 
         {/* Right Column: Sticky Reservation Cart & Guarantee (4 cols) */}
-        <aside className="lg:col-span-4 lg:sticky lg:top-28 w-full">
+        <aside id="booking-section" className="lg:col-span-4 lg:sticky lg:top-28 w-full">
+
           <div className="rounded-3xl p-6 bg-white border border-[#f2eaff] shadow-xl flex flex-col gap-5">
             
             {/* Header */}
