@@ -136,18 +136,14 @@ export const Navbar: React.FC = () => {
         <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
           {navLinks.map((link) => {
             const Icon = link.icon;
+            const isStaffRestricted = link.href.includes('dashboard') || link.href.includes('analytics');
+            const showPinLock = isStaffRestricted && (!user || !isStaff);
+
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 target={link.external ? '_blank' : undefined}
-                onClick={(e) => {
-                  if (!user) {
-                    e.preventDefault();
-                    setGoogleTargetRole(link.href.includes('dashboard') || link.href.includes('tv') ? 'staff' : 'customer');
-                    setIsGoogleModalOpen(true);
-                  }
-                }}
                 className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold uppercase tracking-[0.12em] transition-all ${
                   link.active
                     ? 'bg-[#C1785A] text-[#FAF6F0] shadow-warm'
@@ -160,8 +156,10 @@ export const Navbar: React.FC = () => {
                   }`}
                 />
                 <span>{link.label}</span>
-                {!user && (
-                  <Lock className="w-2.5 h-2.5 text-[#A89F91] ml-0.5 opacity-75" />
+                {showPinLock && (
+                  <span className="text-[9px] bg-[#F5E6DF] dark:bg-[#38251E] text-[#8C462C] dark:text-[#F2A585] px-1.5 py-0.2 rounded-full font-mono font-bold flex items-center gap-0.5 ml-0.5">
+                    <Lock className="w-2.5 h-2.5" /> PIN
+                  </span>
                 )}
               </Link>
             );
@@ -242,15 +240,20 @@ export const Navbar: React.FC = () => {
                 </div>
 
                 <div className="p-1 space-y-1 mt-1 text-xs">
-                  {isStaff && (
-                    <Link
-                      href="/dashboard"
-                      className="w-full flex items-center gap-2 p-2.5 rounded-2xl hover:bg-[#F3ECE3] dark:hover:bg-[#241E1C] text-[#2C2725] dark:text-[#FAF6F0] font-bold"
-                    >
+                  <Link
+                    href="/dashboard"
+                    className="w-full flex items-center justify-between p-2.5 rounded-2xl hover:bg-[#F3ECE3] dark:hover:bg-[#241E1C] text-[#2C2725] dark:text-[#FAF6F0] font-bold"
+                  >
+                    <div className="flex items-center gap-2">
                       <LayoutDashboard className="w-4 h-4 text-[#C1785A]" />
-                      <span>Manager Kiosk</span>
-                    </Link>
-                  )}
+                      <span>Staff &amp; Admin Terminal</span>
+                    </div>
+                    {!isStaff && (
+                      <span className="text-[9px] bg-[#F5E6DF] dark:bg-[#38251E] text-[#8C462C] dark:text-[#F2A585] px-2 py-0.5 rounded-full font-mono font-bold flex items-center gap-1">
+                        <Lock className="w-2.5 h-2.5" /> PIN
+                      </span>
+                    )}
+                  </Link>
 
                   <Link
                     href="/profile"
