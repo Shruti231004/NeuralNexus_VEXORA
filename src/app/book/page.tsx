@@ -358,7 +358,7 @@ function BookPageContent() {
                         ? 'Decoding Salon QR...'
                         : isInstantBooking
                         ? 'Booking Confirmed!...'
-                        : 'Styliq QR Ready'}
+                        : 'Rose & Rogue QR Ready'}
                     </p>
                     <p className="text-[11px] text-[#DDD3C6] mt-0.5">
                       Aim at Salon QR or tap button below
@@ -771,7 +771,7 @@ export default function BookPage() {
         <div className="min-h-screen bg-[#FAF6F0] flex items-center justify-center">
           <div className="flex items-center gap-3 text-sm text-[#6E6663] uppercase tracking-widest font-bold">
             <Loader2 className="w-5 h-5 text-[#C1785A] animate-spin" />
-            <span>Loading Styliq Booking Portal...</span>
+            <span>Loading Rose &amp; Rogue Booking Portal...</span>
           </div>
         </div>
       }

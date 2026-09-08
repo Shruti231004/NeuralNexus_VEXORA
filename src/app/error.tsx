@@ -24,7 +24,7 @@ export default function Error({
 
         <div className="space-y-2">
           <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#8C462C] bg-[#F5E6DF] px-3 py-1 rounded-full border border-[#E8D0C5] inline-block">
-            Styliq Notice
+            Rose &amp; Rogue Notice
           </span>
           <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#2C2725]">
             Session Refresh Needed

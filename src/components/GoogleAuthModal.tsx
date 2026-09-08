@@ -40,7 +40,7 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
     },
     {
       name: 'Antoine Dubois',
-      email: 'antoine@styliqparis.com',
+      email: 'antoine@roseandrogue.com',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400',
       role: 'staff' as const,
       badge: 'Artistic Director',
@@ -132,7 +132,7 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
             Sign in with Google
           </h3>
           <p className="text-xs text-[#6E6663] dark:text-[#B5ABA2]">
-            Choose an account to continue to <strong className="text-[#2C2725] dark:text-[#FAF6F0]">STYLIQ Paris</strong>
+            Choose an account to continue to <strong className="text-[#2C2725] dark:text-[#FAF6F0]">Rose &amp; Rogue Paris</strong>
           </p>
         </div>
 
@@ -253,7 +253,7 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
         {/* Google Consent & Privacy Notice */}
         <div className="pt-3 border-t border-[#EAE3DA] dark:border-[#332A26] space-y-1 text-center">
           <p className="text-[10px] text-[#6E6663] dark:text-[#B5ABA2] leading-tight">
-            To continue, Google will share your name, email address, language preference, and profile picture with STYLIQ Paris.
+            To continue, Google will share your name, email address, language preference, and profile picture with Rose &amp; Rogue Paris.
           </p>
           <div className="flex items-center justify-center gap-2 text-[10px] text-emerald-600 dark:text-emerald-400 font-medium pt-1">
             <ShieldCheck className="w-3.5 h-3.5" />

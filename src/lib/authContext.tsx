@@ -167,7 +167,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     name?: string,
     avatar?: string
   ): Promise<boolean> => {
-    const userEmail = email || (targetRole === 'staff' ? 'antoine@styliqparis.com' : 'vip.natasha@gmail.com');
+    const userEmail = email || (targetRole === 'staff' ? 'antoine@roseandrogue.com' : 'vip.natasha@gmail.com');
     const userName = name || (targetRole === 'staff' ? 'Antoine Dubois' : 'Natasha Kapoor');
     const userAvatar =
       avatar ||

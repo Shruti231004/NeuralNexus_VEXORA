@@ -287,7 +287,7 @@ function ScanPageContent() {
                       ? 'Decoding Salon QR...'
                       : isBooking
                       ? 'Booking Confirmed!...'
-                      : 'Styliq QR Ready'}
+                      : 'Rose & Rogue QR Ready'}
                   </p>
                   <p className="text-[11px] text-[#DDD3C6] mt-0.5">
                     Point camera at TV Flight Board or tap below
@@ -460,7 +460,7 @@ function ScanPageContent() {
               <div className="p-6 bg-white rounded-3xl border-2 border-[#C1785A] shadow-md max-w-[240px] mx-auto flex flex-col items-center justify-center">
                 <QrCode className="w-40 h-40 text-[#2C2725]" />
                 <span className="text-[11px] font-mono font-bold text-[#8C462C] mt-2">
-                  STYLIQ-PARIS-01
+                  ROSE-ROGUE-PARIS-01
                 </span>
               </div>
 
@@ -512,7 +512,7 @@ export default function ScanPage() {
         <div className="min-h-screen bg-[#FAF6F0] flex items-center justify-center">
           <div className="flex items-center gap-3 text-sm text-[#6E6663] uppercase tracking-widest font-bold">
             <RefreshCw className="w-5 h-5 text-[#C1785A] animate-spin" />
-            <span>Loading Styliq QR Scanner...</span>
+            <span>Loading Rose &amp; Rogue QR Scanner...</span>
           </div>
         </div>
       }

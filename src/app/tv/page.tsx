@@ -76,12 +76,12 @@ export default function SmartTvBoardPage() {
       <header className="px-10 py-7 bg-[#F3ECE3] border-b-2 border-[#C1785A]/40 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-6">
           <div className="w-16 h-16 rounded-2xl bg-[#C1785A] text-[#FAF6F0] flex items-center justify-center font-serif text-3xl font-extrabold shadow-warm">
-            S
+            R
           </div>
           <div>
             <div className="flex items-center gap-4">
               <h1 className="font-serif text-3xl sm:text-4xl font-extrabold tracking-tight text-[#2C2725]">
-                STYLIQ SALON FLIGHT BOARD
+                ROSE &amp; ROGUE SALON FLIGHT BOARD
               </h1>
               <span className="px-3.5 py-1.5 rounded-full bg-[#F5E6DF] text-[#8C462C] border border-[#E8D0C5] text-xs font-mono font-bold tracking-widest uppercase animate-pulse">
                 ● Live Lounge Engine
@@ -304,7 +304,7 @@ export default function SmartTvBoardPage() {
       <footer className="bg-[#F3ECE3] border-t-2 border-[#C1785A]/30 py-4 px-8 overflow-hidden">
         <div className="flex items-center gap-5 text-sm tracking-wider uppercase font-semibold text-[#6E6663]">
           <span className="px-4 py-1.5 rounded-full bg-[#C1785A] text-white shrink-0 font-bold text-xs shadow-warm">
-            STYLIQ LIVE
+            ROSE &amp; ROGUE LIVE
           </span>
           <div className="overflow-hidden whitespace-nowrap w-full">
             <div className="inline-block animate-marquee space-x-12">

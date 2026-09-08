@@ -74,7 +74,7 @@ export const RazorpayModal: React.FC<RazorpayModalProps> = ({
                   256-Bit SSL
                 </span>
               </div>
-              <p className="text-xs text-[#6E6663]">Styliq Salon • Advance Slot Lock-In</p>
+              <p className="text-xs text-[#6E6663]">Rose &amp; Rogue Salon • Advance Slot Lock-In</p>
             </div>
           </div>
           <button

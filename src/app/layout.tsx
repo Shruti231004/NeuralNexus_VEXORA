@@ -6,7 +6,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/lib/authContext';
 
 export const metadata: Metadata = {
-  title: 'STYLIQ — Haute Coiffure Paris & Real-Time Queue Engine',
+  title: 'Rose & Rogue — Haute Coiffure Paris & Real-Time Queue Engine',
   description:
     'Commercial-grade, real-time salon management and queue engine with Parisian luxury editorial design, dynamic ETAs, and Smart Overlap chair optimization.',
   icons: {

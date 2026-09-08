@@ -21,7 +21,7 @@ export default function StaffLoginPage() {
   const router = useRouter();
   const { user, loginStaff, switchDemoUser } = useAuth();
 
-  const [staffEmail, setStaffEmail] = useState('antoine@styliqparis.com');
+  const [staffEmail, setStaffEmail] = useState('antoine@roseandrogue.com');
   const [staffPin, setStaffPin] = useState('1234');
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -101,7 +101,7 @@ export default function StaffLoginPage() {
                 required
                 value={staffEmail}
                 onChange={(e) => setStaffEmail(e.target.value)}
-                placeholder="antoine@styliqparis.com"
+                placeholder="antoine@roseandrogue.com"
                 className="w-full px-4 py-2.5 rounded-xl border border-[#EAE3DA] dark:border-[#3A302A] bg-[#FAF6F0] dark:bg-[#241E1C] text-xs font-mono text-[#2C2725] dark:text-[#FAF6F0] font-bold focus:outline-none focus:border-[#C1785A]"
               />
             </div>

@@ -4,7 +4,7 @@ import { INITIAL_STYLISTS, INITIAL_SALON } from './mockData';
 export const INITIAL_STAFF_USERS: UserProfile[] = [
   {
     id: 'e0000000-0000-0000-0000-000000000001',
-    email: 'antoine@styliqparis.com',
+    email: 'antoine@roseandrogue.com',
     role: 'staff',
     full_name: 'Antoine Dubois',
     phone: '+91 98201 11111',
@@ -23,7 +23,7 @@ export const INITIAL_STAFF_USERS: UserProfile[] = [
   },
   {
     id: 'e0000000-0000-0000-0000-000000000002',
-    email: 'camille@styliqparis.com',
+    email: 'camille@roseandrogue.com',
     role: 'staff',
     full_name: 'Camille Laurent',
     phone: '+91 98201 22222',
@@ -42,7 +42,7 @@ export const INITIAL_STAFF_USERS: UserProfile[] = [
   },
   {
     id: 'e0000000-0000-0000-0000-000000000003',
-    email: 'manager@styliqparis.com',
+    email: 'manager@roseandrogue.com',
     role: 'manager',
     full_name: 'Isabelle Marchand',
     phone: '+91 98201 99999',

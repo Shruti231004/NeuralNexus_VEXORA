@@ -103,7 +103,7 @@ export const QueueTokenModal: React.FC<QueueTokenModalProps> = ({
             <div className="flex items-center justify-center gap-2">
               <Sparkles className="w-4 h-4 text-[#FAF6F0]" />
               <span className="text-[11px] font-mono uppercase tracking-[0.25em] font-extrabold">
-                Styliq Haute Coiffure • Paris
+                Rose &amp; Rogue Haute Coiffure • Paris
               </span>
               <Sparkles className="w-4 h-4 text-[#FAF6F0]" />
             </div>

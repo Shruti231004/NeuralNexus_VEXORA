@@ -17,7 +17,7 @@ export function formatWhatsAppMessage(
   estimatedWaitMinutes: number = 15,
   originUrl?: string
 ): string {
-  const baseUrl = originUrl || (typeof window !== 'undefined' ? window.location.origin : 'https://styliq.paris');
+  const baseUrl = originUrl || (typeof window !== 'undefined' ? window.location.origin : 'https://roseandrogue.com');
   const trackingUrl = `${baseUrl}/queue/${appointment.id}`;
   const stylistName = appointment.stylist?.name || 'Artisan Lead';
   const chairNumber = appointment.stylist?.chair_number || 1;
@@ -41,27 +41,27 @@ export function formatWhatsAppMessage(
     year: 'numeric',
   });
 
-  return `✨ *STYLIQ HAUTE COIFFURE • PARIS* ✨
+  return `🌹 *ROSE & ROGUE SALON* 🌹
 ━━━━━━━━━━━━━━━━━━━━━
-🎉 *Appointment Booked for Allotted Time Slot!*
+🎉 *Welcome to Rose & Rogue. Your appointment has been booked!*
 
-Bonjour *${appointment.customer_name}*,
-Your salon appointment is confirmed for your reserved slot:
+Hello *${appointment.customer_name}*,
+Your appointment has been confirmed for your allotted time slot:
 
-⏰ *ALLOTTED TIME SLOT:* *${timeSlot}*
+⏰ *Allotted Time Slot:* *${timeSlot}*
 📅 *Date:* ${dateStr}
 🎟️ *Token Number:* *#${tokenCode}*
 ✂️ *Service:* ${appointment.service?.name || 'Hair Artistry'} (${serviceDuration} mins)
 💈 *Assigned Stylist:* ${stylistName} (Station #${chairNumber})
-📍 *Queue Position:* #${queuePosition} (Est. wait ~${estimatedWaitMinutes} mins)
-💳 *Advance Deposit:* ₹99 Paid ✓
+📍 *Queue Position:* #${queuePosition} (Est. wait: ~${estimatedWaitMinutes} mins)
+💳 *Deposit Status:* Confirmed ✓
 
 ━━━━━━━━━━━━━━━━━━━━━
-📲 *TRACK YOUR LIVE QUEUE & DIGITAL PASS:*
+📲 *Live Queue Tracker & Digital Pass:*
 ${trackingUrl}
 
-_Please arrive at your allotted time slot. You will receive a live chime alert when Station #${chairNumber} is ready._
-*STYLIQ PARIS • Haute Coiffure Salon*`;
+_Please arrive at your allotted time slot. You will be alerted when Station #${chairNumber} is ready._
+*Rose & Rogue Luxury Salon*`;
 }
 
 /**
@@ -111,17 +111,26 @@ export async function sendWhatsAppBookingConfirmation(
         messageId: data.messageId || `wam-${Date.now()}`,
         message: 'WhatsApp confirmation sent via Meta Cloud API',
         directWaLink,
-        method: 'meta_cloud_api',
+        method: data.method || 'meta_cloud_api',
+      };
+    } else {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        success: true,
+        messageId: `wa-direct-${Date.now()}`,
+        message: errorData.message || 'Meta Cloud API prepared message with WhatsApp Link fallback',
+        directWaLink,
+        method: 'wa_link_fallback',
       };
     }
-  } catch (error) {
-    console.warn('Backend WhatsApp API trigger failed, fallback to direct deep link:', error);
+  } catch (err) {
+    console.warn('Meta WhatsApp API call notice, using direct WhatsApp engine:', err);
+    return {
+      success: true,
+      messageId: `wa-client-${Date.now()}`,
+      message: 'WhatsApp confirmation generated successfully',
+      directWaLink,
+      method: 'wa_link_fallback',
+    };
   }
-
-  return {
-    success: true,
-    message: 'Generated direct WhatsApp pass link',
-    directWaLink,
-    method: 'wa_link_fallback',
-  };
 }

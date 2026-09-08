@@ -107,11 +107,11 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center gap-3 sm:gap-4 shrink-0">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#C1785A] to-[#8C462C] text-[#FAF6F0] flex items-center justify-center font-serif text-xl font-extrabold shadow-warm transition-transform duration-300 group-hover:scale-105">
-              S
+              R
             </div>
             <div>
               <span className="font-serif text-lg sm:text-xl font-extrabold tracking-tight block leading-none text-[#2C2725] dark:text-[#FAF6F0]">
-                STYLIQ
+                Rose &amp; Rogue
               </span>
               <span className="text-[9px] uppercase tracking-[0.25em] text-[#8C462C] dark:text-[#D48464] block font-bold mt-0.5">
                 Paris • Haute Salon

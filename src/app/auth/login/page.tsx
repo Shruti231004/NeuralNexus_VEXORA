@@ -42,7 +42,7 @@ function LoginForm() {
   const [googleTargetRole, setGoogleTargetRole] = useState<'customer' | 'staff'>(initialRole);
 
   // Staff Form
-  const [staffEmail, setStaffEmail] = useState('antoine@styliqparis.com');
+  const [staffEmail, setStaffEmail] = useState('antoine@roseandrogue.com');
   const [staffPin, setStaffPin] = useState('1234');
 
   // Customer Form
@@ -90,10 +90,10 @@ function LoginForm() {
           {/* Header */}
           <div className="text-center space-y-1">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#C1785A] to-[#8C462C] text-[#FAF6F0] flex items-center justify-center font-serif text-lg font-bold mx-auto shadow-warm">
-              S
+              R
             </div>
             <h1 className="font-serif text-2xl font-extrabold text-[#2C2725] dark:text-[#FAF6F0]">
-              Sign In to Styliq
+              Sign In to Rose & Rogue
             </h1>
             <p className="text-xs text-[#6E6663] dark:text-[#B5ABA2]">
               Choose your portal to continue
@@ -207,7 +207,7 @@ function LoginForm() {
                   required
                   value={staffEmail}
                   onChange={(e) => setStaffEmail(e.target.value)}
-                  placeholder="antoine@styliqparis.com"
+                  placeholder="antoine@roseandrogue.com"
                   className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAE3DA] dark:border-[#3A302A] bg-[#FAF6F0]/60 dark:bg-[#241E1C] text-xs text-[#2C2725] dark:text-[#FAF6F0] focus:outline-none focus:border-[#C1785A]"
                 />
               </div>

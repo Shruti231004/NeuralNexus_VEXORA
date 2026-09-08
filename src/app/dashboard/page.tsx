@@ -141,7 +141,7 @@ export default function DashboardPage() {
                 </span>
               </div>
               <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#2C2725] mt-0.5">
-                Styliq Live Floor & Queue Engine
+                Rose &amp; Rogue Live Floor &amp; Queue Engine
               </h1>
             </div>
           </div>

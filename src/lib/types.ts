@@ -63,38 +63,72 @@ export interface Appointment {
   actual_start_time?: string;
   processing_start_time?: string;
   completed_at?: string;
+  notes?: string;
   created_at: string;
   updated_at: string;
-  notes?: string;
+  
+  // Customer Rating & Review
+  customer_rating?: number; // 1 to 5 stars
+  customer_review?: string;
+  customer_tags?: string[];
+  rated_at?: string;
+
+  // Joined relational data
   service?: Service;
   stylist?: Stylist;
 }
 
-export interface QueuePrediction {
-  appointment_id: string;
-  predicted_start_time: string;
-  confidence_score: number;
-  delay_minutes: number;
-  overlap_available: boolean;
-  overlap_stylist_id?: string;
+export interface OverlapAlert {
+  stylistId: string;
+  stylistName: string;
+  chairNumber: number;
+  processingAppointmentId: string;
+  processingCustomerName: string;
+  windowMinutes: number;
+  overlapCandidateAppointmentId?: string;
+  overlapCandidateCustomerName?: string;
+  overlapCandidateService?: string;
 }
 
-export interface SalonSettings {
+// -------------------------------------------------------------
+// AUTH & MULTI-TENANT ROLES
+// -------------------------------------------------------------
+export type UserRole = 'customer' | 'staff' | 'manager' | 'admin';
+
+export interface UserProfile {
   id: string;
-  salon_id: string;
-  avg_cut_duration: number;
-  avg_color_duration: number;
-  avg_treatment_duration: number;
-  deposit_amount_inr: number;
-  overlap_optimization_enabled: boolean;
-  allow_walk_ins: boolean;
-  auto_notify_customer_lead_minutes: number;
-  daily_opening_time: string; // e.g. "10:00"
-  daily_closing_time: string; // e.g. "21:00"
+  email: string;
+  role: UserRole;
+  full_name: string;
+  phone?: string;
+  avatar_url?: string;
+  auth_provider?: 'google' | 'phone' | 'pin' | 'email';
+  created_at: string;
+  
+  // Specific profile links
+  staff_profile?: StaffProfile;
+  customer_profile?: CustomerProfile;
 }
 
-export interface OverlapOpportunity {
-  color_appointment: Appointment;
-  available_window_minutes: number;
-  eligible_waiting_appointments: Appointment[];
+export interface StaffProfile {
+  id: string;
+  profile_id: string;
+  salon_id: string;
+  stylist_id?: string;
+  role_title: string; // e.g. 'Artistic Director', 'Master Colorist'
+  pin_code: string;
+  access_level: 'stylist' | 'receptionist' | 'manager' | 'owner';
+  shift_status: 'on_duty' | 'break' | 'off_duty';
+}
+
+export interface CustomerProfile {
+  id: string;
+  profile_id: string;
+  phone: string;
+  vip_tier: 'Classic' | 'Gold VIP' | 'Platinum VIP';
+  loyalty_points: number;
+  preferred_stylist_id?: string;
+  hair_type: string;
+  allergies_notes?: string;
+  total_bookings_count: number;
 }

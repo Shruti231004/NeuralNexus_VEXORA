@@ -2,12 +2,12 @@ import { Salon, Stylist, Service, Appointment } from './types';
 
 export const INITIAL_SALON: Salon = {
   id: 'a0000000-0000-0000-0000-000000000001',
-  name: 'Styliq Haute Coiffure',
+  name: 'Rose & Rogue Haute Coiffure',
   tagline: 'Parisian Luxury Editorial Hair & Beauty Lounge',
   address: '34 Rue de la Paix / Bandra West Luxury Arcade',
   city: 'Mumbai',
   phone: '+91 98200 12345',
-  email: 'concierge@styliqparis.com',
+  email: 'concierge@roseandrogue.com',
   chairs_count: 6,
 };
 
