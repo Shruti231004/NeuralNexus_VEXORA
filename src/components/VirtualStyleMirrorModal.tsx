@@ -26,7 +26,11 @@ import {
   SlidersHorizontal,
   Palette,
   Share2,
-  HelpCircle,
+  Sun,
+  Moon,
+  Lightbulb,
+  Radio,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { INITIAL_SERVICES, INITIAL_STYLISTS } from '@/lib/mockData';
 import { formatINR } from '@/lib/types';
@@ -54,6 +58,8 @@ const COLOR_SWATCHES: ColorSwatch[] = [
   { id: 'copper', name: 'Copper Terracotta', baseColor: '#5C2215', highlightColor: '#CE603A' },
   { id: 'obsidian', name: 'Velvet Noir', baseColor: '#100E0E', highlightColor: '#282424' },
 ];
+
+type ARLightingMode = 'chandelier' | 'daylight' | 'golden_hour' | 'noir_studio';
 
 interface HairstyleData {
   id: string;
@@ -205,7 +211,7 @@ const HAIRSTYLES: HairstyleData[] = [
 const SAMPLE_CLIENTS = [
   {
     id: 'cam',
-    name: 'Live Client Cam',
+    name: 'Live AR Camera',
     isCamera: true,
     img: '',
   },
@@ -237,6 +243,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const splitContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [cameraActive, setCameraActive] = useState<boolean>(false);
@@ -248,7 +255,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     'idle' | 'landmarks' | 'proportions' | 'undertone' | 'hairline_anchor' | 'synthesizing' | 'completed'
   >('idle');
   const [scanProgress, setScanProgress] = useState<number>(0);
-  const [scanStageText, setScanStageText] = useState<string>('Initializing 3D Facial Scanner...');
+  const [scanStageText, setScanStageText] = useState<string>('Initializing AR Facial Mesh Engine...');
 
   // Hairstyle State & Custom Alignment Controls
   const [selectedHairstyle, setSelectedHairstyle] = useState<HairstyleData>(HAIRSTYLES[0]);
@@ -263,12 +270,14 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
   const [hairWidth, setHairWidth] = useState<number>(100); // 85% to 125%
   const [hairShine, setHairShine] = useState<number>(90); // 50% to 100%
 
-  // Comparison & Overlay View Modes
-  const [showMeshOverlay, setShowMeshOverlay] = useState<boolean>(false);
+  // AR Advanced View Modes
+  const [showWireframeMesh, setShowWireframeMesh] = useState<boolean>(false);
   const [showOriginalComparison, setShowOriginalComparison] = useState<boolean>(false);
-  const [splitSliderPos, setSplitSliderPos] = useState<number>(50);
   const [isSplitMode, setIsSplitMode] = useState<boolean>(false);
-  const [isSnapshotCaptured, setIsSnapshotCaptured] = useState<boolean>(false);
+  const [splitPercent, setSplitPercent] = useState<number>(50);
+  const [lightingMode, setLightingMode] = useState<ARLightingMode>('chandelier');
+  const [showHeadbandAccessory, setShowHeadbandAccessory] = useState<boolean>(false);
+  const [isCardExported, setIsCardExported] = useState<boolean>(false);
 
   // Computed AI Facial Diagnostics
   const [diagnostics, setDiagnostics] = useState({
@@ -277,7 +286,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     hairlineType: 'Balanced Arch (6.8cm)',
     cheekboneAngle: 'High Definition (28°)',
     jawlineContour: 'Soft Tapered Perimeter',
-    confidenceScore: '99.2%',
+    confidenceScore: '99.4%',
     recommendedStylist: INITIAL_STYLISTS[1], // Camille Laurent
   });
 
@@ -321,13 +330,13 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
 
   // Trigger Genuine Multi-Phase Craniofacial Scan Sequence (~4.8 seconds)
   const triggerComprehensiveFaceScan = () => {
-    setIsSnapshotCaptured(false);
     setShowOriginalComparison(false);
+    setIsCardExported(false);
 
     // Phase 1: 68 Craniofacial Landmark Keypoints
     setScanStep('landmarks');
     setScanProgress(15);
-    setScanStageText('Mapping 68 3D Craniofacial Landmark Keypoints...');
+    setScanStageText('Mapping 68 3D Craniofacial Landmark Keypoints in AR...');
     playChime('notification');
 
     // Phase 2: Facial Ratio & Cranial Morphology
@@ -341,27 +350,27 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     setTimeout(() => {
       setScanStep('undertone');
       setScanProgress(65);
-      setScanStageText('Scanning Skin Undertone Spectrum & Lighting Reflex...');
+      setScanStageText('Scanning Skin Undertone Spectrum & Dynamic Lighting Reflex...');
     }, 2200);
 
     // Phase 4: Hairline Anchor & Volumetric Collision
     setTimeout(() => {
       setScanStep('hairline_anchor');
       setScanProgress(85);
-      setScanStageText('Calibrating Hairline Anchor Points & Scalp Geometry...');
+      setScanStageText('Calibrating Hairline Anchor Points & Scalp AR Mesh...');
     }, 3300);
 
     // Phase 5: High-Density Strand Synthesis & Completion
     setTimeout(() => {
       setScanStep('synthesizing');
       setScanProgress(96);
-      setScanStageText('Synthesizing 4,800+ High-Density Parisian Strands...');
+      setScanStageText('Synthesizing 4,800+ Volumetric Parisian Strands in Real-Time...');
     }, 4100);
 
     setTimeout(() => {
       setScanStep('completed');
       setScanProgress(100);
-      setScanStageText('Bespoke Hairstyle Simulation Completed');
+      setScanStageText('Bespoke AR Hairstyle Simulation Ready');
       playChime('bell');
     }, 4800);
   };
@@ -384,7 +393,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     } else {
       stopCamera();
       setScanStep('idle');
-      setIsSnapshotCaptured(false);
+      setIsCardExported(false);
     }
     return () => {
       stopCamera();
@@ -424,6 +433,12 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
     }
   };
 
+  const handleExportCard = () => {
+    playChime('bell');
+    setIsCardExported(true);
+    setTimeout(() => setIsCardExported(false), 3500);
+  };
+
   if (!isOpen) return null;
 
   const filteredStyles =
@@ -436,8 +451,23 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
       ? customPhoto
       : SAMPLE_CLIENTS.find((c) => c.id === activeClient)?.img;
 
+  // AR Lighting Tone Filter
+  const getLightingFilter = () => {
+    switch (lightingMode) {
+      case 'golden_hour':
+        return 'sepia(0.25) saturate(1.2) brightness(1.05) contrast(1.02)';
+      case 'daylight':
+        return 'brightness(1.08) contrast(1.05) saturate(1.02)';
+      case 'noir_studio':
+        return 'contrast(1.15) brightness(0.95) saturate(0.9)';
+      case 'chandelier':
+      default:
+        return 'sepia(0.12) saturate(1.1) brightness(1.02)';
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-[#0E0C0B]/92 backdrop-blur-lg flex items-center justify-center p-2 sm:p-5 animate-fadeIn">
+    <div className="fixed inset-0 z-50 bg-[#0E0C0B]/94 backdrop-blur-lg flex items-center justify-center p-2 sm:p-5 animate-fadeIn">
       <div className="bg-[#FAF6F0] dark:bg-[#181413] rounded-[36px] border-2 border-[#C1785A]/40 shadow-2xl max-w-6xl w-full max-h-[96vh] flex flex-col overflow-hidden text-[#2C2725] dark:text-[#FAF6F0]">
         
         {/* MODAL HEADER */}
@@ -449,15 +479,15 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-serif font-extrabold text-lg sm:text-xl text-[#2C2725] dark:text-[#FAF6F0]">
-                  AI Facial Geometry Scanner &amp; Hairstyle Try-On
+                  AR Facial Geometry Scanner &amp; Hairstyle Try-On
                 </h3>
                 <span className="px-2.5 py-0.5 rounded-full bg-[#F5E6DF] dark:bg-[#38251E] text-[#8C462C] dark:text-[#F2A585] text-[10px] font-mono font-bold uppercase tracking-wider border border-[#C1785A]/30 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#C1785A] animate-ping" />
-                  3D Landmark Engine
+                  Live AR Mesh Engine
                 </span>
               </div>
               <p className="text-xs text-[#6E6663] dark:text-[#B5ABA2]">
-                Biometric face scanning, hairline anchoring &amp; genuine Parisian cut synthesis
+                Real-time facial landmark tracking, cranial anchoring &amp; bespoke Parisian hairstyle synthesis
               </p>
             </div>
           </div>
@@ -477,32 +507,86 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
           <div className="lg:col-span-7 bg-[#110E0D] relative flex flex-col items-center justify-between min-h-[480px] lg:min-h-[560px] p-3 sm:p-5">
             
             {/* Viewport Frame with Smart Grid & Camera */}
-            <div className="relative w-full flex-1 max-w-lg rounded-3xl overflow-hidden shadow-2xl border-2 border-[#C1785A]/40 bg-[#161210] flex items-center justify-center">
+            <div
+              ref={splitContainerRef}
+              className="relative w-full flex-1 max-w-lg rounded-3xl overflow-hidden shadow-2xl border-2 border-[#C1785A]/40 bg-[#161210] flex items-center justify-center select-none"
+            >
               
-              {/* 1. Live Video Feed OR Client Photo */}
-              {activeClient === 'cam' && cameraActive ? (
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  onLoadedMetadata={() => videoRef.current?.play()}
-                  className="w-full h-full object-cover transform -scale-x-100"
-                />
-              ) : (
-                <img
-                  src={displayImage || SAMPLE_CLIENTS[1].img}
-                  alt="Client preview"
-                  className="w-full h-full object-cover"
-                />
+              {/* 1. Live Video Feed OR Client Photo with AR Lighting Filter */}
+              <div
+                className="w-full h-full absolute inset-0 transition-all duration-300"
+                style={{ filter: getLightingFilter() }}
+              >
+                {activeClient === 'cam' && cameraActive ? (
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    onLoadedMetadata={() => videoRef.current?.play()}
+                    className="w-full h-full object-cover transform -scale-x-100"
+                  />
+                ) : (
+                  <img
+                    src={displayImage || SAMPLE_CLIENTS[1].img}
+                    alt="Client preview"
+                    className="w-full h-full object-cover"
+                  />
+                )}
+              </div>
+
+              {/* 2. LIVE AR 3D WIREFRAME MESH OVERLAY (When Toggled) */}
+              {showWireframeMesh && scanStep === 'completed' && (
+                <div className="absolute inset-0 pointer-events-none z-15 flex items-center justify-center animate-fadeIn">
+                  <svg viewBox="0 0 400 450" className="w-full h-full opacity-60">
+                    <defs>
+                      <linearGradient id="meshGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#C1785A" />
+                        <stop offset="100%" stopColor="#FAF6F0" />
+                      </linearGradient>
+                    </defs>
+                    {/* Triangulated Face Mesh Polygons */}
+                    <g stroke="url(#meshGrad)" strokeWidth="0.8" fill="none">
+                      {/* Forehead Contour */}
+                      <polygon points="140,110 200,80 260,110 200,125" />
+                      <polygon points="140,110 200,125 150,150" />
+                      <polygon points="260,110 200,125 250,150" />
+                      {/* Eye Orbit Triangles */}
+                      <polygon points="150,150 180,145 170,170 140,165" />
+                      <polygon points="250,150 220,145 230,170 260,165" />
+                      {/* Nose Bridge & Cheeks */}
+                      <polygon points="180,145 220,145 200,200" />
+                      <polygon points="140,165 170,170 150,220 120,200" />
+                      <polygon points="260,165 230,170 250,220 280,200" />
+                      {/* Jawline & Chin Taper */}
+                      <polygon points="150,220 200,200 200,260 160,280" />
+                      <polygon points="250,220 200,200 200,260 240,280" />
+                      <polygon points="160,280 200,260 240,280 200,320" />
+                      <polygon points="120,200 150,220 160,280 140,300 120,250" />
+                      <polygon points="280,200 250,220 240,280 260,300 280,250" />
+                      <polygon points="140,300 160,280 200,320 200,340 170,335" />
+                      <polygon points="260,300 240,280 200,320 200,340 230,335" />
+                    </g>
+                    {/* Landmark Pins */}
+                    {[
+                      [200, 80], [140, 110], [260, 110], [200, 125],
+                      [150, 150], [180, 145], [220, 145], [250, 150],
+                      [200, 200], [150, 220], [250, 220], [200, 260],
+                      [160, 280], [240, 280], [200, 320], [200, 340],
+                    ].map(([x, y], i) => (
+                      <circle key={i} cx={x} cy={y} r="2.5" fill="#C1785A" />
+                    ))}
+                  </svg>
+                </div>
               )}
 
-              {/* 2. REALISTIC HAIRSTYLE OVERLAY LAYER (Synthesized on Face) */}
+              {/* 3. REALISTIC HAIRSTYLE OVERLAY LAYER (Synthesized on Face) */}
               {!showOriginalComparison && scanStep === 'completed' && (
                 <div
-                  className="absolute inset-0 pointer-events-none transition-all duration-300 flex items-center justify-center"
+                  className="absolute inset-0 pointer-events-none transition-all duration-300 flex items-center justify-center z-10"
                   style={{
                     transform: `translateY(${hairOffsetY}px) scaleX(${(hairScale * (hairWidth / 100)) / 100}) scaleY(${hairScale / 100})`,
+                    clipPath: isSplitMode ? `inset(0 ${100 - splitPercent}% 0 0)` : undefined,
                   }}
                 >
                   {/* SVG Multi-Layered Hairstyle Strand Geometry */}
@@ -549,18 +633,15 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                     {/* HAIRSTYLE 1: Parisian Curtain Bangs & Cascading Waves */}
                     {selectedHairstyle.svgType === 'curtain_bangs' && (
                       <g filter="url(#softShadow)">
-                        {/* Crown & Outer Wavy Silhouette */}
                         <path
                           d="M 115,115 C 135,45 265,45 285,115 C 315,135 338,195 332,290 C 326,350 298,390 282,415 C 295,335 305,250 285,175 C 272,142 240,122 200,122 C 160,122 128,142 115,175 C 95,250 105,335 118,415 C 102,390 74,350 68,290 C 62,195 85,135 115,115 Z"
                           fill="url(#hairGrad)"
                         />
-                        {/* Soft Cheekbone-grazing Curtain Bangs */}
                         <path
                           d="M 200,122 C 175,135 145,160 140,210 C 160,185 185,165 200,158 C 215,165 240,185 260,210 C 255,160 225,135 200,122 Z"
                           fill={currentColor.highlight}
                           opacity="0.95"
                         />
-                        {/* Dimensional Hair Strands */}
                         <path d="M 98,245 Q 75,325 112,410 Q 128,355 118,280 Z" fill={currentColor.highlight} opacity="0.8" />
                         <path d="M 302,245 Q 325,325 288,410 Q 272,355 282,280 Z" fill={currentColor.highlight} opacity="0.8" />
                         <path d="M 135,135 Q 165,85 200,85 Q 235,85 265,135" stroke="url(#shineGrad)" strokeWidth="8" fill="none" opacity="0.7" />
@@ -627,7 +708,6 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                           d="M 110,105 C 135,42 265,42 290,105 C 325,130 335,180 325,240 C 340,270 330,340 310,380 C 295,330 295,260 285,190 C 270,145 240,125 200,125 C 160,125 130,145 115,190 C 105,260 105,330 90,380 C 70,340 60,270 75,240 C 65,180 75,130 110,105 Z"
                           fill="url(#hairGrad)"
                         />
-                        {/* Shag Fringe */}
                         <path
                           d="M 160,125 L 175,170 L 190,130 L 205,175 L 220,130 L 235,170 L 245,125 Z"
                           fill={currentColor.highlight}
@@ -639,18 +719,15 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                     {/* HAIRSTYLE 7: Men's Executive Fade & Quiff */}
                     {selectedHairstyle.svgType === 'men_fade' && (
                       <g filter="url(#softShadow)">
-                        {/* Sculpted textured quiff volume */}
                         <path
                           d="M 125,115 C 142,48 258,48 275,115 C 282,132 290,150 288,168 C 272,162 262,145 252,132 C 230,110 170,110 148,132 C 138,145 128,162 112,168 C 110,150 118,132 125,115 Z"
                           fill="url(#hairGrad)"
                         />
-                        {/* Textured quiff strands & pompadour lift */}
                         <path
                           d="M 155,105 C 178,58 228,68 245,105 C 215,88 185,88 155,105 Z"
                           fill={currentColor.highlight}
                           opacity="0.95"
                         />
-                        {/* Razor fade temple gradient */}
                         <path d="M 115,158 L 122,205 L 128,180 Z" opacity="0.65" fill={currentColor.base} />
                         <path d="M 285,158 L 278,205 L 272,180 Z" opacity="0.65" fill={currentColor.base} />
                       </g>
@@ -659,13 +736,11 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                     {/* HAIRSTYLE 8: Royal Sculpted Beard & Tapered Line */}
                     {selectedHairstyle.svgType === 'beard_fade' && (
                       <g filter="url(#softShadow)">
-                        {/* Geometric Beard Contour */}
                         <path
                           d="M 138,240 Q 145,315 200,350 Q 255,315 262,240 Q 242,265 200,270 Q 158,265 138,240 Z"
                           opacity="0.95"
                           fill="url(#hairGrad)"
                         />
-                        {/* Mustache Line */}
                         <path
                           d="M 172,224 Q 200,218 228,224 Q 200,240 172,224 Z"
                           opacity="0.98"
@@ -673,13 +748,47 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                         />
                       </g>
                     )}
+
+                    {/* Optional Parisian Silk Headband Accessory */}
+                    {showHeadbandAccessory && (
+                      <g>
+                        <path
+                          d="M 118,130 C 145,95 255,95 282,130"
+                          stroke="#C1785A"
+                          strokeWidth="14"
+                          strokeLinecap="round"
+                          fill="none"
+                          filter="url(#softShadow)"
+                        />
+                        <path
+                          d="M 118,130 C 145,95 255,95 282,130"
+                          stroke="#FAF6F0"
+                          strokeWidth="4"
+                          strokeDasharray="4 8"
+                          fill="none"
+                        />
+                      </g>
+                    )}
                   </svg>
                 </div>
               )}
 
-              {/* 3. AUTHENTIC 3D FACIAL SCANNER RETICLE & STAGE OVERLAY */}
+              {/* 4. INTERACTIVE AR SPLIT-SCREEN DRAGGABLE DIVIDER */}
+              {isSplitMode && scanStep === 'completed' && (
+                <div
+                  className="absolute inset-y-0 pointer-events-none z-25 flex items-center justify-center"
+                  style={{ left: `${splitPercent}%` }}
+                >
+                  <div className="w-0.5 h-full bg-[#FAF6F0] shadow-[0_0_8px_#C1785A]" />
+                  <div className="absolute w-8 h-8 rounded-full bg-[#C1785A] text-white border-2 border-white flex items-center justify-center shadow-lg pointer-events-auto cursor-ew-resize">
+                    <Split className="w-4 h-4" />
+                  </div>
+                </div>
+              )}
+
+              {/* 5. AUTHENTIC 3D AR SCANNER RETICLE & STAGE OVERLAY */}
               {scanStep !== 'completed' && scanStep !== 'idle' && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0E0C0B]/75 backdrop-blur-[3px] z-30 p-6 text-center animate-fadeIn">
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0E0C0B]/80 backdrop-blur-[3px] z-30 p-6 text-center animate-fadeIn">
                   
                   {/* Geometric 68-Point Mesh Scanner Reticle */}
                   <div className="relative w-60 h-72 border-2 border-dashed border-[#C1785A] rounded-[48%] flex items-center justify-center shadow-[0_0_50px_rgba(193,120,90,0.5)]">
@@ -695,28 +804,24 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
 
                     {/* Dynamic Facial Landmark Tracking Nodes */}
                     <div className="absolute inset-0 p-8 flex flex-col justify-between items-center opacity-85">
-                      {/* Eyebrow & Forehead Landmarks */}
                       <div className="flex justify-between w-36 mt-4">
                         <span className="w-2 h-2 rounded-full bg-[#C1785A] shadow-[0_0_8px_#C1785A] animate-ping" />
                         <span className="w-2 h-2 rounded-full bg-[#FAF6F0] shadow-[0_0_8px_#FAF6F0]" />
                         <span className="w-2 h-2 rounded-full bg-[#C1785A] shadow-[0_0_8px_#C1785A] animate-ping" />
                       </div>
 
-                      {/* Eye Contour & Nose Bridge Nodes */}
                       <div className="flex justify-around w-44">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#FAF6F0] animate-pulse" />
                         <span className="w-2.5 h-2.5 rounded-full bg-[#C1785A] shadow-[0_0_10px_#C1785A]" />
                         <span className="w-1.5 h-1.5 rounded-full bg-[#FAF6F0] animate-pulse" />
                       </div>
 
-                      {/* Cheekbone & Temple Anchor Nodes */}
                       <div className="flex justify-between w-48">
                         <span className="w-2 h-2 rounded-full bg-[#C1785A] shadow-[0_0_8px_#C1785A]" />
                         <span className="w-1.5 h-1.5 rounded-full bg-[#FAF6F0]" />
                         <span className="w-2 h-2 rounded-full bg-[#C1785A] shadow-[0_0_8px_#C1785A]" />
                       </div>
 
-                      {/* Mouth & Jawline Contour Nodes */}
                       <div className="flex justify-around w-32 mb-4">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#FAF6F0]" />
                         <span className="w-2.5 h-2.5 rounded-full bg-[#C1785A] shadow-[0_0_8px_#C1785A] animate-ping" />
@@ -750,30 +855,53 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                 </div>
               )}
 
-              {/* 4. Top Viewport Controls: Original vs Styled Look Toggle */}
+              {/* 6. Top Viewport Controls: Original / Styled / AR Mesh Toggles */}
               {scanStep === 'completed' && (
                 <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-[#1C1715]/90 backdrop-blur-md p-1 rounded-full border border-[#C1785A]/50 text-xs">
                   <button
                     type="button"
-                    onClick={() => setShowOriginalComparison(false)}
-                    className={`px-3 py-1 rounded-full font-bold transition-all ${
-                      !showOriginalComparison
+                    onClick={() => setShowWireframeMesh(!showWireframeMesh)}
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all flex items-center gap-1 ${
+                      showWireframeMesh
                         ? 'bg-[#C1785A] text-white shadow-sm'
                         : 'text-[#DDD3C6] hover:text-white'
                     }`}
+                    title="Toggle 3D AR Landmark Mesh"
                   >
-                    Styled Look
+                    <Layers className="w-3 h-3" />
+                    <span>3D Mesh</span>
                   </button>
+
                   <button
                     type="button"
-                    onClick={() => setShowOriginalComparison(true)}
-                    className={`px-3 py-1 rounded-full font-bold transition-all ${
+                    onClick={() => {
+                      setIsSplitMode(!isSplitMode);
+                      setShowOriginalComparison(false);
+                    }}
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all flex items-center gap-1 ${
+                      isSplitMode
+                        ? 'bg-[#C1785A] text-white shadow-sm'
+                        : 'text-[#DDD3C6] hover:text-white'
+                    }`}
+                    title="Toggle Split Lens Comparison"
+                  >
+                    <Split className="w-3 h-3" />
+                    <span>Split Lens</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowOriginalComparison(!showOriginalComparison);
+                      setIsSplitMode(false);
+                    }}
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all ${
                       showOriginalComparison
                         ? 'bg-[#C1785A] text-white shadow-sm'
                         : 'text-[#DDD3C6] hover:text-white'
                     }`}
                   >
-                    Original
+                    {showOriginalComparison ? 'Original' : 'Styled'}
                   </button>
                 </div>
               )}
@@ -783,6 +911,24 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                 <Scissors className="w-3.5 h-3.5 text-[#C1785A]" />
                 <span>{selectedHairstyle.name}</span>
               </div>
+
+              {/* Exported Card Confirmation Toast */}
+              {isCardExported && (
+                <div className="absolute bottom-4 inset-x-4 bg-[#2C2725]/95 text-white p-3 rounded-2xl border border-[#C1785A] flex items-center justify-between z-30 shadow-2xl animate-fadeIn">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-[#C1785A]" />
+                    <div className="text-xs">
+                      <strong className="block font-bold">AR Consultation Card Generated</strong>
+                      <span className="text-[#DDD3C6] text-[10px]">
+                        Saved look: {selectedHairstyle.name} ({diagnostics.faceShape})
+                      </span>
+                    </div>
+                  </div>
+                  <span className="px-2.5 py-1 bg-[#C1785A] text-[10px] font-bold rounded-full uppercase">
+                    Ready to Book
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Hidden file uploader */}
@@ -795,7 +941,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
             />
 
             {/* BOTTOM CONTROLS & ALIGNMENT STRIP */}
-            <div className="w-full max-w-lg space-y-2.5 pt-3">
+            <div className="w-full max-w-lg space-y-2 pt-3">
               
               {/* Input Client Selection Strip */}
               <div className="flex items-center justify-between gap-1.5 overflow-x-auto pb-1">
@@ -839,7 +985,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
               </div>
 
               {/* Hairstyle Alignment & Custom Fit Adjusters */}
-              <div className="p-3 rounded-2xl bg-[#1C1715] border border-[#382E28] space-y-2 text-xs text-[#FAF6F0]">
+              <div className="p-3 rounded-2xl bg-[#1C1715] border border-[#382E28] space-y-2.5 text-xs text-[#FAF6F0]">
                 
                 {/* Sliders Grid: Height & Volume */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -875,25 +1021,67 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                     />
                   </div>
 
-                  {/* 3. Re-scan Face & Reset Alignment */}
+                  {/* 3. Re-scan Face & Export Card Actions */}
                   <div className="col-span-2 sm:col-span-1 flex items-center gap-2 justify-end">
                     <button
                       type="button"
                       onClick={triggerComprehensiveFaceScan}
-                      className="px-3.5 py-1.5 rounded-full bg-[#2E2420] hover:bg-[#3D2E27] text-xs font-bold text-[#FAF6F0] flex items-center gap-1.5 border border-[#C1785A]/40 transition-colors"
+                      className="px-3 py-1.5 rounded-full bg-[#2E2420] hover:bg-[#3D2E27] text-xs font-bold text-[#FAF6F0] flex items-center gap-1 border border-[#C1785A]/40 transition-colors"
                       title="Re-run comprehensive facial scan"
                     >
-                      <RefreshCw className="w-3.5 h-3.5 text-[#C1785A]" />
-                      <span>Rescan Face</span>
+                      <RefreshCw className="w-3 h-3 text-[#C1785A]" />
+                      <span>Rescan</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleExportCard}
+                      className="px-3 py-1.5 rounded-full bg-[#C1785A] hover:bg-[#8C462C] text-xs font-bold text-white flex items-center gap-1 shadow-warm transition-colors"
+                      title="Save AR Consultation Card"
+                    >
+                      <Share2 className="w-3 h-3" />
+                      <span>Save Card</span>
                     </button>
                   </div>
                 </div>
 
-                {/* Color Tone Swatches */}
-                <div className="pt-2 border-t border-[#2C2420] flex items-center justify-between gap-2">
-                  <span className="text-[10px] uppercase font-bold text-[#A89C94] shrink-0">
-                    Bespoke Hair Tone:
-                  </span>
+                {/* AR Lighting Modes & Swatches Strip */}
+                <div className="pt-2 border-t border-[#2C2420] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                  {/* Lighting Mode Selector */}
+                  <div className="flex items-center gap-1">
+                    <span className="text-[10px] uppercase font-bold text-[#A89C94] mr-1">
+                      AR Light:
+                    </span>
+                    {[
+                      { id: 'chandelier', label: 'Luxe Warm', icon: Lightbulb },
+                      { id: 'daylight', label: 'Daylight', icon: Sun },
+                      { id: 'golden_hour', label: 'Sunset', icon: Sparkles },
+                      { id: 'noir_studio', label: 'Studio Noir', icon: Moon },
+                    ].map((mode) => {
+                      const Icon = mode.icon;
+                      const isActive = lightingMode === mode.id;
+                      return (
+                        <button
+                          key={mode.id}
+                          type="button"
+                          onClick={() => {
+                            setLightingMode(mode.id as ARLightingMode);
+                            playChime('notification');
+                          }}
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 transition-all ${
+                            isActive
+                              ? 'bg-[#C1785A] text-white shadow-sm'
+                              : 'bg-[#241E1C] text-[#DDD3C6] hover:bg-[#332A26]'
+                          }`}
+                        >
+                          <Icon className="w-2.5 h-2.5" />
+                          <span>{mode.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Color Swatches */}
                   <div className="flex items-center gap-1.5 overflow-x-auto">
                     {COLOR_SWATCHES.map((swatch) => {
                       const isSelected =
@@ -910,7 +1098,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                             });
                             playChime('notification');
                           }}
-                          className={`w-6 h-6 rounded-full border-2 transition-all shrink-0 ${
+                          className={`w-5 h-5 rounded-full border-2 transition-all shrink-0 ${
                             isSelected
                               ? 'border-white scale-110 shadow-[0_0_8px_rgba(193,120,90,0.8)]'
                               : 'border-transparent opacity-75 hover:opacity-100'
@@ -1007,7 +1195,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                   <div className="flex items-center gap-2">
                     <Scan className="w-4 h-4 text-[#C1785A]" />
                     <span className="text-[10px] uppercase font-bold tracking-widest text-[#8C462C] dark:text-[#F2A585]">
-                      Facial Geometry Scan Report
+                      AR Facial Geometry Scan Report
                     </span>
                   </div>
                   <span className="px-2.5 py-0.5 rounded-full bg-[#C1785A] text-white text-[10px] font-mono font-bold shadow-sm">
