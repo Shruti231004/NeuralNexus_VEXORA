@@ -439,6 +439,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
   // AR Advanced View Modes
   const [showWireframeMesh, setShowWireframeMesh] = useState<boolean>(false);
   const [showOriginalComparison, setShowOriginalComparison] = useState<boolean>(false);
+  const [viewSourceMode, setViewSourceMode] = useState<'client_photo' | 'editorial_reference'>('client_photo');
   const [isSplitMode, setIsSplitMode] = useState<boolean>(true);
   const [splitPercent, setSplitPercent] = useState<number>(50);
   const [isDraggingSplit, setIsDraggingSplit] = useState<boolean>(false);
@@ -760,7 +761,7 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
               {/* 2. PHOTOREALISTIC EDITORIAL SALON TRANSFORMATION (Replaces clipart AR sticker) */}
               {!showOriginalComparison && scanStep === 'completed' && (
                 <>
-                  {/* Mode 1 & 2: Photographic Salon Transformation (Split view or Full Studio Transformation) */}
+                  {/* Mode 1 & 2: Photographic Salon Transformation on Client's Photo or Editorial Reference */}
                   {tryOnMode === 'full_cut_volume' && (
                     <div
                       className="absolute inset-0 transition-all duration-75 overflow-hidden z-15 pointer-events-none"
@@ -769,23 +770,257 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                         filter: getLightingFilter(),
                       }}
                     >
-                      <img
-                        src={selectedHairstyle.editorialLook}
-                        alt={selectedHairstyle.name}
-                        className="w-full h-full object-cover transition-transform duration-300"
-                        style={{
-                          transform: `translateY(${hairOffsetY}px) scale(${hairScale / 100})`,
-                        }}
-                      />
-                      {/* Organic Swatch Tone Infusion Glaze */}
-                      <div
-                        className="absolute inset-0 pointer-events-none"
-                        style={{
-                          background: `linear-gradient(180deg, ${currentSwatch.rootColor}25 0%, ${currentSwatch.baseColor}30 40%, ${currentSwatch.highlightColor}20 100%)`,
-                          mixBlendMode: 'soft-light',
-                          opacity: hairShine / 100,
-                        }}
-                      />
+                      {viewSourceMode === 'editorial_reference' ? (
+                        /* Studio Editorial Reference Look on Runway Model */
+                        <div className="w-full h-full relative">
+                          <img
+                            src={selectedHairstyle.editorialLook}
+                            alt={selectedHairstyle.name}
+                            className="w-full h-full object-cover transition-transform duration-300"
+                            style={{
+                              transform: `translateY(${hairOffsetY}px) scale(${hairScale / 100})`,
+                            }}
+                          />
+                          <div
+                            className="absolute inset-0 pointer-events-none"
+                            style={{
+                              background: `linear-gradient(180deg, ${currentSwatch.rootColor}25 0%, ${currentSwatch.baseColor}30 40%, ${currentSwatch.highlightColor}20 100%)`,
+                              mixBlendMode: 'soft-light',
+                              opacity: hairShine / 100,
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        /* High-Definition Photographic Hair Synthesis ON CLIENT'S ACTUAL PHOTO */
+                        <div className="w-full h-full relative">
+                          {/* Client's identical base portrait */}
+                          <img
+                            src={displayImage || SAMPLE_CLIENTS[0].img}
+                            alt="Client styled"
+                            className="w-full h-full object-cover"
+                          />
+
+                          {/* Scalp & Hairline Contact Feathering (mix-blend-mode: multiply to erase any sticker effect) */}
+                          <div
+                            className="absolute inset-0 pointer-events-none"
+                            style={{
+                              background: `radial-gradient(ellipse at 50% 24%, rgba(14, 10, 8, 0.8) 0%, rgba(14, 10, 8, 0.45) 30%, transparent 62%)`,
+                              mixBlendMode: 'multiply',
+                              filter: 'blur(3px)',
+                              transform: `translate(${hairOffsetX}px, ${hairOffsetY}px)`,
+                            }}
+                          />
+
+                          {/* Tone Harmonizer Glaze on Client's Existing Hair */}
+                          <div
+                            className="absolute inset-0 pointer-events-none"
+                            style={{
+                              background: `radial-gradient(ellipse at 50% 23%, ${currentSwatch.highlightColor}66 0%, ${currentSwatch.baseColor}55 35%, ${currentSwatch.rootColor}44 65%, transparent 85%)`,
+                              mixBlendMode: 'soft-light',
+                              opacity: hairShine / 100,
+                            }}
+                          />
+
+                          {/* Anatomical Hair Synthesis Engine */}
+                          <div
+                            className="absolute inset-0 pointer-events-none transition-all duration-300 flex items-center justify-center"
+                            style={{
+                              transform: `translate(${hairOffsetX}px, ${hairOffsetY}px) scaleX(${(hairScale * (hairWidth / 100)) / 100}) scaleY(${hairScale / 100})`,
+                              opacity: hairShine / 100,
+                            }}
+                          >
+                            <svg
+                              viewBox="0 0 400 450"
+                              className="w-full h-full drop-shadow-[0_14px_36px_rgba(0,0,0,0.65)]"
+                            >
+                              <defs>
+                                {/* Multi-Stop Realistic Hair Tone Gradient */}
+                                <linearGradient id="photoHairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                  <stop offset="0%" stopColor={currentSwatch.rootColor} stopOpacity="0.98" />
+                                  <stop offset="18%" stopColor={currentSwatch.baseColor} stopOpacity="0.96" />
+                                  <stop offset="48%" stopColor={currentSwatch.midColor} stopOpacity="0.96" />
+                                  <stop offset="78%" stopColor={currentSwatch.highlightColor} stopOpacity="0.98" />
+                                  <stop offset="100%" stopColor={currentSwatch.baseColor} stopOpacity="0.94" />
+                                </linearGradient>
+
+                                {/* Deep Scalp Occlusion Gradient */}
+                                <linearGradient id="scalpShadowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                  <stop offset="0%" stopColor="#0B0908" stopOpacity="0.88" />
+                                  <stop offset="65%" stopColor={currentSwatch.rootColor} stopOpacity="0.35" />
+                                  <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+                                </linearGradient>
+
+                                {/* Hair Micro-Filament Fiber Shader (Vertical directional turbulence) */}
+                                <filter id="hairFiberShader" x="-10%" y="-10%" width="120%" height="120%">
+                                  <feTurbulence type="fractalNoise" baseFrequency="0.014 0.38" numOctaves="4" result="hairNoise" />
+                                  <feColorMatrix type="matrix" values="
+                                    0.33 0.33 0.33 0 0
+                                    0.33 0.33 0.33 0 0
+                                    0.33 0.33 0.33 0 0
+                                    0    0    0    0.35 0" in="hairNoise" result="alphaNoise" />
+                                  <feComposite in="SourceGraphic" in2="alphaNoise" operator="arithmetic" k1="0.25" k2="0.85" k3="0.18" k4="0" result="textured" />
+                                  <feDropShadow dx="0" dy="5" stdDeviation="5" floodColor="#080605" floodOpacity="0.45" />
+                                </filter>
+
+                                {/* Specular Hair Sheen Ribbon */}
+                                <linearGradient id="specularShine" x1="20%" y1="0%" x2="80%" y2="100%">
+                                  <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.65" />
+                                  <stop offset="40%" stopColor="#FFFFFF" stopOpacity="0.05" />
+                                  <stop offset="75%" stopColor="#FFFFFF" stopOpacity="0.5" />
+                                  <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.0" />
+                                </linearGradient>
+                              </defs>
+
+                              {/* 1. CURTAIN BANGS CASCADE */}
+                              {selectedHairstyle.svgType === 'curtain_bangs' && (
+                                <g>
+                                  {/* Hair Volume Body with Fiber Texture */}
+                                  <path
+                                    d="M 116,118 C 136,44 264,44 284,118 C 318,136 340,195 334,292 C 328,360 298,405 284,435 C 298,345 308,255 288,175 C 275,142 242,122 200,122 C 158,122 125,142 112,175 C 92,255 102,345 116,435 C 102,405 72,360 66,292 C 60,195 82,136 116,118 Z"
+                                    fill="url(#photoHairGrad)"
+                                    filter="url(#hairFiberShader)"
+                                  />
+                                  {/* Scalp Root Feathering */}
+                                  <path
+                                    d="M 125,125 Q 200,108 275,125 Q 200,128 125,125 Z"
+                                    fill="url(#scalpShadowGrad)"
+                                    opacity="0.9"
+                                  />
+                                  {/* Wispy Curtain Bangs Parted Naturally at Forehead */}
+                                  <path
+                                    d="M 200,122 C 172,135 142,168 138,218 C 156,192 182,170 200,162 C 218,170 244,192 262,218 C 258,168 228,135 200,122 Z"
+                                    fill="url(#photoHairGrad)"
+                                    opacity="0.96"
+                                  />
+                                  {/* Dimensional Balayage Wave Ribbons */}
+                                  <path d="M 96,245 Q 70,335 110,425 Q 128,360 116,285 Z" fill={currentSwatch.highlightColor} opacity="0.85" />
+                                  <path d="M 304,245 Q 330,335 290,425 Q 272,360 284,285 Z" fill={currentSwatch.highlightColor} opacity="0.85" />
+                                  {/* Specular Crown Halo Sheen */}
+                                  <path d="M 132,132 Q 200,82 268,132" stroke="url(#specularShine)" strokeWidth="10" strokeLinecap="round" fill="none" opacity="0.8" />
+                                  {/* Natural Perimeter Micro-Strands and Flyaways */}
+                                  <path d="M 140,215 Q 134,260 138,300" stroke={currentSwatch.highlightColor} strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.7" />
+                                  <path d="M 260,215 Q 266,260 262,300" stroke={currentSwatch.highlightColor} strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.7" />
+                                  <path d="M 108,350 Q 112,410 115,440" stroke={currentSwatch.baseColor} strokeWidth="1.2" strokeLinecap="round" fill="none" opacity="0.8" />
+                                  <path d="M 292,350 Q 288,410 285,440" stroke={currentSwatch.baseColor} strokeWidth="1.2" strokeLinecap="round" fill="none" opacity="0.8" />
+                                </g>
+                              )}
+
+                              {/* 2. FRENCH TEXTURED JAWLINE BOB */}
+                              {selectedHairstyle.svgType === 'french_bob' && (
+                                <g>
+                                  <path
+                                    d="M 112,110 C 138,48 262,48 288,110 C 322,136 338,195 328,280 C 318,328 280,340 268,326 C 290,268 288,192 272,150 C 252,122 225,118 200,118 C 175,118 148,122 128,150 C 112,192 110,268 132,326 C 120,340 82,328 72,280 C 62,195 78,136 112,110 Z"
+                                    fill="url(#photoHairGrad)"
+                                    filter="url(#hairFiberShader)"
+                                  />
+                                  <path d="M 125,122 Q 200,106 275,122 Q 200,126 125,122 Z" fill="url(#scalpShadowGrad)" opacity="0.9" />
+                                  <path d="M 126,150 Q 152,245 136,318 Q 116,258 126,150 Z" fill={currentSwatch.highlightColor} opacity="0.9" />
+                                  <path d="M 274,150 Q 248,245 264,318 Q 284,258 274,150 Z" fill={currentSwatch.highlightColor} opacity="0.9" />
+                                  {/* French Brow Fringe Wisps */}
+                                  <path d="M 160,118 Q 170,148 165,160" stroke={currentSwatch.midColor} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.85" />
+                                  <path d="M 180,118 Q 185,152 182,164" stroke={currentSwatch.highlightColor} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.9" />
+                                  <path d="M 200,118 Q 200,154 200,165" stroke={currentSwatch.midColor} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.85" />
+                                  <path d="M 220,118 Q 215,152 218,164" stroke={currentSwatch.highlightColor} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.9" />
+                                  <path d="M 240,118 Q 230,148 235,160" stroke={currentSwatch.midColor} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.85" />
+                                  <path d="M 132,122 Q 200,75 268,122" stroke="url(#specularShine)" strokeWidth="8" strokeLinecap="round" fill="none" opacity="0.75" />
+                                </g>
+                              )}
+
+                              {/* 3. HONEY BALAYAGE WAVES */}
+                              {selectedHairstyle.svgType === 'balayage_waves' && (
+                                <g>
+                                  <path
+                                    d="M 108,102 C 135,36 265,36 292,102 C 332,132 352,210 346,318 C 340,395 310,438 292,452 C 316,368 322,260 298,178 C 282,138 245,118 200,118 C 155,118 118,138 102,178 C 78,260 84,368 108,452 C 90,438 60,395 54,318 C 48,210 68,132 108,102 Z"
+                                    fill="url(#photoHairGrad)"
+                                    filter="url(#hairFiberShader)"
+                                  />
+                                  <path d="M 125,120 Q 200,105 275,120 Q 200,124 125,120 Z" fill="url(#scalpShadowGrad)" opacity="0.9" />
+                                  <path d="M 85,260 Q 52,365 98,445 Q 116,370 102,290 Z" fill={currentSwatch.highlightColor} opacity="0.95" />
+                                  <path d="M 315,260 Q 348,365 302,445 Q 284,370 298,290 Z" fill={currentSwatch.highlightColor} opacity="0.95" />
+                                  <path d="M 125,170 Q 95,280 135,380" stroke={currentSwatch.highlightColor} strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.8" />
+                                  <path d="M 275,170 Q 305,280 265,380" stroke={currentSwatch.highlightColor} strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.8" />
+                                  <path d="M 125,115 Q 200,68 275,115" stroke="url(#specularShine)" strokeWidth="9" strokeLinecap="round" fill="none" opacity="0.85" />
+                                </g>
+                              )}
+
+                              {/* 4. PLATINUM ICY LAYERS */}
+                              {selectedHairstyle.svgType === 'platinum_layers' && (
+                                <g>
+                                  <path
+                                    d="M 112,98 C 138,34 262,34 288,98 C 326,128 348,200 342,308 C 336,380 306,425 288,445 C 310,358 316,250 295,168 C 278,132 242,112 200,112 C 158,112 122,132 105,168 C 84,250 90,358 112,445 C 94,425 64,380 58,308 C 52,200 74,128 112,98 Z"
+                                    fill="url(#photoHairGrad)"
+                                    filter="url(#hairFiberShader)"
+                                  />
+                                  <path d="M 125,118 Q 200,104 275,118 Q 200,122 125,118 Z" fill="url(#scalpShadowGrad)" opacity="0.9" />
+                                  <path d="M 175,112 Q 145,185 135,270 Q 160,225 180,160 Z" fill="#FFFFFF" opacity="0.8" />
+                                  <path d="M 225,112 Q 255,185 265,270 Q 240,225 220,160 Z" fill="#FFFFFF" opacity="0.8" />
+                                  <path d="M 105,280 Q 80,380 115,440" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.85" />
+                                  <path d="M 295,280 Q 320,380 285,440" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.85" />
+                                </g>
+                              )}
+
+                              {/* 5. ESPRESSO GLASS HAIR */}
+                              {selectedHairstyle.svgType === 'espresso_gloss' && (
+                                <g>
+                                  <path
+                                    d="M 116,105 C 140,42 260,42 284,105 C 320,132 338,195 332,298 C 326,372 302,415 284,435 C 304,352 308,250 290,172 C 274,135 238,115 200,115 C 162,115 126,135 110,172 C 92,250 96,352 116,435 C 98,415 74,372 68,298 C 62,195 80,132 116,105 Z"
+                                    fill="url(#photoHairGrad)"
+                                    filter="url(#hairFiberShader)"
+                                  />
+                                  <path d="M 125,120 Q 200,105 275,120 Q 200,124 125,120 Z" fill="url(#scalpShadowGrad)" opacity="0.95" />
+                                  <path d="M 128,118 Q 200,68 272,118" stroke="url(#specularShine)" strokeWidth="12" strokeLinecap="round" fill="none" opacity="0.9" />
+                                  <path d="M 115,220 Q 200,180 285,220" stroke="url(#specularShine)" strokeWidth="6" strokeLinecap="round" fill="none" opacity="0.75" />
+                                </g>
+                              )}
+
+                              {/* 6. PARISIAN WOLF SHAG */}
+                              {selectedHairstyle.svgType === 'wolf_cut' && (
+                                <g>
+                                  <path
+                                    d="M 110,105 C 135,40 265,40 290,105 C 326,130 338,180 326,245 C 342,275 332,345 312,385 C 296,335 296,260 286,190 C 270,145 240,125 200,125 C 160,125 130,145 114,190 C 104,260 104,335 88,385 C 68,345 58,275 74,245 C 62,180 74,130 110,105 Z"
+                                    fill="url(#photoHairGrad)"
+                                    filter="url(#hairFiberShader)"
+                                  />
+                                  <path d="M 125,120 Q 200,106 275,120 Q 200,124 125,120 Z" fill="url(#scalpShadowGrad)" opacity="0.9" />
+                                  <path d="M 158,125 L 175,172 L 190,132 L 205,178 L 220,132 L 235,172 L 245,125 Z" fill={currentSwatch.highlightColor} opacity="0.95" />
+                                  <path d="M 75,340 Q 60,370 70,390" stroke={currentSwatch.highlightColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.8" />
+                                  <path d="M 325,340 Q 340,370 330,390" stroke={currentSwatch.highlightColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.8" />
+                                </g>
+                              )}
+
+                              {/* 7. MEN'S EXECUTIVE FADE */}
+                              {selectedHairstyle.svgType === 'men_fade' && (
+                                <g>
+                                  <path
+                                    d="M 125,115 C 142,46 258,46 275,115 C 284,132 292,150 290,168 C 274,162 264,145 254,132 C 232,110 168,110 146,132 C 136,145 126,162 110,168 C 108,150 116,132 125,115 Z"
+                                    fill="url(#photoHairGrad)"
+                                    filter="url(#hairFiberShader)"
+                                  />
+                                  <path d="M 152,105 C 176,55 226,65 248,105 C 218,86 182,86 152,105 Z" fill={currentSwatch.highlightColor} opacity="0.95" />
+                                  <path d="M 170,85 Q 185,55 200,60" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.75" />
+                                  <path d="M 195,80 Q 210,50 225,58" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.75" />
+                                  <path d="M 112,158 L 120,208 L 128,180 Z" opacity="0.55" fill={currentSwatch.baseColor} />
+                                  <path d="M 288,158 L 280,208 L 272,180 Z" opacity="0.55" fill={currentSwatch.baseColor} />
+                                </g>
+                              )}
+
+                              {/* 8. BEARD CONTOUR */}
+                              {selectedHairstyle.svgType === 'beard_fade' && (
+                                <g>
+                                  <path
+                                    d="M 136,238 Q 144,318 200,355 Q 256,318 264,238 Q 244,268 200,274 Q 156,268 136,238 Z"
+                                    opacity="0.95"
+                                    fill="url(#photoHairGrad)"
+                                    filter="url(#hairFiberShader)"
+                                  />
+                                  <path d="M 170,222 Q 200,215 230,222 Q 200,242 170,222 Z" opacity="0.98" fill={currentSwatch.baseColor} />
+                                </g>
+                              )}
+                            </svg>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Floating After Badge in Split View */}
                       {isSplitMode && (
                         <div className="absolute top-4 right-4 z-20 px-3 py-1 rounded-full bg-[#1C1715]/90 backdrop-blur-md border border-[#C1785A] text-[#FAF6F0] text-[10px] font-mono font-bold tracking-wider shadow-lg flex items-center gap-1.5 pointer-events-auto">
@@ -916,6 +1151,23 @@ export const VirtualStyleMirrorModal: React.FC<VirtualStyleMirrorModalProps> = (
                   >
                     <Wand2 className="w-3 h-3" />
                     <span>AI Auto-Fit</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setViewSourceMode(viewSourceMode === 'client_photo' ? 'editorial_reference' : 'client_photo');
+                      playChime('tap');
+                    }}
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all flex items-center gap-1 ${
+                      viewSourceMode === 'editorial_reference'
+                        ? 'bg-[#C1785A] text-white shadow-sm'
+                        : 'text-[#DDD3C6] hover:text-white'
+                    }`}
+                    title="Toggle between Client Photo Fit and Studio Model Look"
+                  >
+                    <ImageIcon className="w-3 h-3" />
+                    <span>{viewSourceMode === 'editorial_reference' ? 'Studio Model' : 'On Client Photo'}</span>
                   </button>
 
                   <button
