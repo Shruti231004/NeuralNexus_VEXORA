@@ -100,19 +100,21 @@ export default function CustomerView({ store }) {
       
       {/* 1. Hero Banner */}
       <section className="max-w-[1360px] mx-auto px-4 md:px-8 w-full pt-4">
-        <div className="relative rounded-3xl p-6 md:p-12 bg-white border border-[#f2eaff] shadow-xl overflow-hidden">
-          <div className="relative z-10 max-w-3xl flex flex-col items-start gap-4">
+        <div className="relative rounded-3xl p-6 md:p-10 bg-white border border-[#f2eaff] shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          {/* Left Details */}
+          <div className="lg:col-span-7 relative z-10 flex flex-col items-start gap-4">
             
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#b50060] text-white shadow-sm text-xs font-semibold uppercase tracking-wider">
               <span className="material-symbols-outlined text-sm">auto_awesome</span>
               <span>Atelier Collection • For Every Texture & Identity</span>
             </div>
 
-            <h1 className="font-headline text-4xl md:text-6xl text-[#1e1831] tracking-tight font-extrabold leading-tight">
+            <h1 className="font-headline text-3xl sm:text-4xl lg:text-5xl text-[#1e1831] tracking-tight font-extrabold leading-tight">
               Crafted Hair & Scalp <span className="text-[#b50060]">Artistry</span>
             </h1>
 
-            <p className="font-body text-sm md:text-lg text-[#594047] max-w-2xl leading-relaxed">
+            <p className="font-body text-xs sm:text-sm lg:text-base text-[#594047] max-w-2xl leading-relaxed">
               Immerse yourself in sensory luxury. Precision cutting, restorative scalp spas, and customized color tone rituals tailored for all genders and hair textures.
             </p>
 
@@ -219,6 +221,34 @@ export default function CustomerView({ store }) {
             </div>
 
           </div>
+
+          {/* Right Hero Showcase Image Card */}
+          <div className="lg:col-span-5 relative w-full h-[380px] sm:h-[440px] rounded-3xl overflow-hidden shadow-2xl border-2 border-[#f2eaff] group">
+            <img 
+              src="/hero_salon_interior.png" 
+              alt="Aura Salon Atelier Interior" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1e1831]/80 via-transparent to-black/10"></div>
+            
+            {/* Floating Luxury Badges */}
+            <div className="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-white/60 text-[#1e1831] text-xs font-bold flex items-center gap-1.5 shadow-md">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#059669] animate-pulse"></span>
+              <span>Sanctuary Suite • Active Floor</span>
+            </div>
+
+            <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-[#e8ddff] shadow-xl flex items-center justify-between">
+              <div>
+                <div className="text-[11px] font-extrabold text-[#b50060] uppercase tracking-wider">Aura Salon & Spa Sanctuary</div>
+                <div className="text-xs font-headline font-bold text-[#1e1831]">Illuminated Petal Booths & Scalp Spa</div>
+              </div>
+              <div className="w-9 h-9 rounded-full bg-[#f8f1ff] text-[#b50060] flex items-center justify-center shadow-inner">
+                <span className="material-symbols-outlined text-xl">spa</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
