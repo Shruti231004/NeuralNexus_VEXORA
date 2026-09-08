@@ -33,7 +33,7 @@ export default function Header({ currentRoute, onNavigate, waitingCount }) {
             </div>
             <div className="flex flex-col">
               <span className="font-headline font-bold text-2xl text-[#b50060] tracking-tight flex items-center gap-1.5">
-                Vexora <span className="hidden sm:inline-block font-body text-[10px] uppercase text-[#594047] tracking-widest pl-1 font-semibold">Salon Atelier</span>
+                Aura <span className="hidden sm:inline-block font-body text-[10px] uppercase text-[#594047] tracking-widest pl-1 font-semibold">Salon Atelier</span>
               </span>
             </div>
           </button>

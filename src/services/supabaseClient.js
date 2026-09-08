@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 /**
  * ==============================================================================
- * VEXORA SALON — SUPABASE RELATIONAL DATABASE & REALTIME PUBSUB ENGINE
+ * AURA SALON — SUPABASE RELATIONAL DATABASE & REALTIME PUBSUB ENGINE
  * ==============================================================================
  * 
  * To set up Supabase in Production, run the following SQL schema in your Supabase SQL Editor:
@@ -31,14 +31,14 @@ import { createClient } from '@supabase/supabase-js';
  * ALTER PUBLICATION supabase_realtime ADD TABLE public.bookings;
  */
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://demo-vexora-salon.supabase.co';
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://demo-aura-salon.supabase.co';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo-key';
 
 export const isSupabaseConfigured = () => {
   return (
     import.meta.env.VITE_SUPABASE_URL && 
     import.meta.env.VITE_SUPABASE_ANON_KEY &&
-    !import.meta.env.VITE_SUPABASE_URL.includes('demo-vexora')
+    !import.meta.env.VITE_SUPABASE_URL.includes('demo-aura')
   );
 };
 
@@ -49,7 +49,7 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
  */
 export async function fetchBookingsFromSupabase() {
   if (!isSupabaseConfigured()) {
-    console.warn('[Vexora Supabase] Operating in local-first mode (VITE_SUPABASE_URL env variable not provided)');
+    console.warn('[Aura Supabase] Operating in local-first mode (VITE_SUPABASE_URL env variable not provided)');
     return null;
   }
 
@@ -60,7 +60,7 @@ export async function fetchBookingsFromSupabase() {
       .order('created_at', { ascending: true });
 
     if (error) {
-      console.error('[Vexora Supabase] Error fetching bookings:', error);
+      console.error('[Aura Supabase] Error fetching bookings:', error);
       return null;
     }
 
@@ -84,7 +84,7 @@ export async function fetchBookingsFromSupabase() {
       feedback: b.feedback
     }));
   } catch (err) {
-    console.error('[Vexora Supabase] Exception fetching bookings:', err);
+    console.error('[Aura Supabase] Exception fetching bookings:', err);
     return null;
   }
 }
@@ -121,10 +121,10 @@ export async function upsertBookingToSupabase(booking) {
       .upsert(row, { onConflict: 'id' });
 
     if (error) {
-      console.error('[Vexora Supabase] Error upserting booking:', error);
+      console.error('[Aura Supabase] Error upserting booking:', error);
     }
   } catch (err) {
-    console.error('[Vexora Supabase] Exception during upsert:', err);
+    console.error('[Aura Supabase] Exception during upsert:', err);
   }
 }
 
@@ -140,7 +140,7 @@ export function subscribeToSupabaseRealtime(onPayload) {
       'postgres_changes',
       { event: '*', schema: 'public', table: 'bookings' },
       (payload) => {
-        console.log('[Vexora Supabase Realtime Event]:', payload);
+        console.log('[Aura Supabase Realtime Event]:', payload);
         if (onPayload) onPayload(payload);
       }
     )

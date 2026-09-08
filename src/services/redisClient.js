@@ -2,7 +2,7 @@ import { Redis } from '@upstash/redis';
 
 /**
  * ==============================================================================
- * VEXORA SALON — UPSTASH REDIS QUEUE LOCK & CACHING ENGINE
+ * AURA SALON — UPSTASH REDIS QUEUE LOCK & CACHING ENGINE
  * ==============================================================================
  * 
  * Configured via environment variables:
@@ -35,10 +35,10 @@ export async function cacheLiveQueueInRedis(waitingQueueList) {
   }
 
   try {
-    const key = 'vexora:live_queue';
+    const key = 'aura:live_queue';
     await redis.set(key, JSON.stringify(waitingQueueList), { ex: 3600 }); // 1 hr TTL
   } catch (err) {
-    console.error('[Vexora Redis] Error caching live queue:', err);
+    console.error('[Aura Redis] Error caching live queue:', err);
   }
 }
 
@@ -51,11 +51,11 @@ export async function acquireQueueLock(bookingId) {
   }
 
   try {
-    const lockKey = `vexora:lock:${bookingId}`;
+    const lockKey = `aura:lock:${bookingId}`;
     const acquired = await redis.set(lockKey, 'locked', { nx: true, ex: 10 }); // 10s mutex lock
     return !!acquired;
   } catch (err) {
-    console.error('[Vexora Redis] Lock acquisition error:', err);
+    console.error('[Aura Redis] Lock acquisition error:', err);
     return true;
   }
 }
@@ -67,9 +67,9 @@ export async function releaseQueueLock(bookingId) {
   if (!isRedisConfigured()) return;
 
   try {
-    const lockKey = `vexora:lock:${bookingId}`;
+    const lockKey = `aura:lock:${bookingId}`;
     await redis.del(lockKey);
   } catch (err) {
-    console.error('[Vexora Redis] Lock release error:', err);
+    console.error('[Aura Redis] Lock release error:', err);
   }
 }
