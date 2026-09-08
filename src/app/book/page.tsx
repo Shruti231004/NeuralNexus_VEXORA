@@ -25,6 +25,9 @@ import {
   CheckCircle2,
   Star,
   Ticket,
+  Home,
+  CheckCheck,
+  CalendarDays,
 } from 'lucide-react';
 import { INITIAL_SERVICES, INITIAL_STYLISTS, INITIAL_SALON } from '@/lib/mockData';
 import { Service, Stylist, Appointment } from '@/lib/types';
@@ -39,7 +42,12 @@ import { playChime } from '@/lib/soundEffects';
 import { sendWhatsAppBookingConfirmation } from '@/lib/whatsappService';
 import { VirtualStyleMirrorModal } from '@/components/VirtualStyleMirrorModal';
 import { AtHomeServiceModal } from '@/components/AtHomeServiceModal';
-import { Home } from 'lucide-react';
+import {
+  ALL_TIME_SLOTS,
+  getAvailableStylistsForSlot,
+  getTodayDateString,
+  TimeSlotOption,
+} from '@/lib/stylistAvailability';
 import confetti from 'canvas-confetti';
 
 function BookPageContent() {
@@ -54,7 +62,13 @@ function BookPageContent() {
   const [selectedService, setSelectedService] = useState<Service>(
     INITIAL_SERVICES.find((s) => s.id === preselectedServiceId) || INITIAL_SERVICES[0]
   );
+
+  // Time-Wise Appointment Scheduling State
+  const [selectedDate, setSelectedDate] = useState<string>(getTodayDateString());
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('11:00 AM');
+  const [availableStylists, setAvailableStylists] = useState<Stylist[]>([]);
   const [selectedStylist, setSelectedStylist] = useState<Stylist | null>(null);
+
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
@@ -75,6 +89,28 @@ function BookPageContent() {
   const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
 
+  // Dynamic Stylist Availability Calculation based on Chosen Time Slot
+  const updateAvailableStylists = () => {
+    const artisans = getAvailableStylistsForSlot(selectedDate, selectedTimeSlot);
+    setAvailableStylists(artisans);
+
+    // If selected stylist is no longer available at this time slot, switch smoothly to Any Available
+    if (selectedStylist && !artisans.some((a) => a.id === selectedStylist.id)) {
+      setSelectedStylist(null);
+    }
+  };
+
+  useEffect(() => {
+    updateAvailableStylists();
+
+    // Listen to real-time staff schedule updates
+    const handleScheduleUpdate = () => updateAvailableStylists();
+    window.addEventListener('stylist-availability-updated', handleScheduleUpdate);
+    return () => {
+      window.removeEventListener('stylist-availability-updated', handleScheduleUpdate);
+    };
+  }, [selectedDate, selectedTimeSlot]);
+
   useEffect(() => {
     const unsubscribe = subscribeToAppointments((appointments: Appointment[]) => {
       const waiting = appointments.filter((a) => a.status === 'waiting').length;
@@ -90,6 +126,16 @@ function BookPageContent() {
       ? INITIAL_SERVICES
       : INITIAL_SERVICES.filter((s) => s.category === selectedCategory);
 
+  // Date selection options (Next 7 days)
+  const dateOptions = Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+    const dateStr = d.toISOString().split('T')[0];
+    const dayLabel = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : d.toLocaleDateString('en-US', { weekday: 'short' });
+    const formattedDate = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return { dateStr, dayLabel, formattedDate };
+  });
+
   const handleOpenPayment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!customerName.trim() || !customerPhone.trim()) {
@@ -102,12 +148,15 @@ function BookPageContent() {
   const handlePaymentSuccess = async (paymentId: string) => {
     setIsSubmitting(true);
     const now = new Date();
-    const estStart = new Date(now.getTime() + (queueCount + 1) * 20 * 60000).toISOString();
+
+    // Calculate targeted start time from date + time slot
+    const assignedStylist = selectedStylist || (availableStylists.length > 0 ? availableStylists[0] : INITIAL_STYLISTS[0]);
+    const slotNotes = `[SCHEDULED SLOT: ${selectedDate} at ${selectedTimeSlot}] ${notes.trim() || ''}`.trim();
 
     const newApt = await createAppointment({
       salon_id: INITIAL_SALON.id,
       service_id: selectedService.id,
-      stylist_id: selectedStylist ? selectedStylist.id : INITIAL_STYLISTS[0].id,
+      stylist_id: assignedStylist.id,
       customer_name: customerName.trim(),
       customer_phone: customerPhone.trim(),
       customer_email: customerEmail.trim() || undefined,
@@ -117,10 +166,10 @@ function BookPageContent() {
       deposit_paid: true,
       deposit_amount_inr: 99,
       razorpay_payment_id: paymentId,
-      estimated_start_time: estStart,
-      notes: notes.trim() || undefined,
+      estimated_start_time: new Date(now.getTime() + 15 * 60000).toISOString(),
+      notes: slotNotes,
       service: selectedService,
-      stylist: selectedStylist || INITIAL_STYLISTS[0],
+      stylist: assignedStylist,
     });
 
     setIsSubmitting(false);
@@ -129,7 +178,6 @@ function BookPageContent() {
     setIsTokenModalOpen(true);
     playChime('bell');
 
-    // Trigger WhatsApp Cloud API automated dispatch
     if (newApt && newApt.customer_phone) {
       sendWhatsAppBookingConfirmation(newApt, queueCount + 1, (queueCount + 1) * 20);
     }
@@ -157,10 +205,12 @@ function BookPageContent() {
       customerName.trim() ||
       `Express Guest #${Math.floor(100 + Math.random() * 900)}`;
 
+    const assignedStylist = selectedStylist || (availableStylists.length > 0 ? availableStylists[0] : INITIAL_STYLISTS[0]);
+
     const newApt = await createAppointment({
       salon_id: INITIAL_SALON.id,
       service_id: selectedService.id,
-      stylist_id: selectedStylist ? selectedStylist.id : INITIAL_STYLISTS[0].id,
+      stylist_id: assignedStylist.id,
       customer_name: chosenName,
       customer_phone: customerPhone.trim() || '+91 98000 00000',
       customer_email: customerEmail.trim() || undefined,
@@ -170,22 +220,21 @@ function BookPageContent() {
       deposit_paid: true,
       deposit_amount_inr: 0,
       estimated_start_time: estStart,
-      notes: 'Booked via Book Module QR Scanner',
+      notes: `[QR EXPRESS WALK-IN] Scheduled for ${selectedTimeSlot}`,
       service: selectedService,
-      stylist: selectedStylist || INITIAL_STYLISTS[0],
+      stylist: assignedStylist,
     });
 
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((t) => t.stop());
     }
-
+    setCameraActive(false);
+    setIsScanning(false);
     setIsInstantBooking(false);
-    setCreatedTokenAppointment(newApt);
-    setIsTokenModalOpen(true);
 
-    // Trigger WhatsApp Cloud API automated dispatch
-    if (newApt && newApt.customer_phone) {
-      sendWhatsAppBookingConfirmation(newApt, queueCount + 1, (queueCount + 1) * 15);
+    if (newApt) {
+      setCreatedTokenAppointment(newApt);
+      setIsTokenModalOpen(true);
     }
   };
 
@@ -203,7 +252,6 @@ function BookPageContent() {
         }
         setCameraActive(true);
 
-        // Auto-decode detection simulation
         setTimeout(() => {
           setIsScanning(false);
           executeScanAndBook();
@@ -238,21 +286,23 @@ function BookPageContent() {
   return (
     <div className="min-h-screen bg-[#FAF6F0] text-[#2C2725] py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-10">
+        
         {/* Header Title */}
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F5E6DF] border border-[#E8D8CE] text-[#8C462C]">
             <Sparkles className="w-4 h-4 text-[#C1785A]" />
             <span className="text-xs uppercase font-extrabold tracking-[0.25em]">
-              Online Queue Reservation
+              Bespoke Time-Slot Reservation
             </span>
           </div>
           <h1 className="font-serif text-3xl sm:text-5xl font-extrabold text-[#2C2725]">
             Reserve Your Styling Session
           </h1>
           <p className="text-sm sm:text-base text-[#6E6663] max-w-xl mx-auto">
-            Lock in your chair with a ₹99 advance deposit or use our instant QR scanner for fast-track walk-in booking.
+            Book appointments by exact time slot with real-time available master artisans, or use our instant QR scanner.
           </p>
-          {/* Quick-Switch Booking Modes & Innovations */}
+
+          {/* Quick-Switch Booking Modes */}
           <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
             <button
               type="button"
@@ -264,7 +314,7 @@ function BookPageContent() {
               }`}
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span>Standard (In-Salon)</span>
+              <span>Time-Wise Booking</span>
             </button>
 
             <button
@@ -273,7 +323,7 @@ function BookPageContent() {
               className="px-4 sm:px-5 py-2.5 rounded-full text-xs font-extrabold uppercase tracking-wider transition-all flex items-center gap-2 bg-white hover:bg-[#F5E6DF] border-2 border-[#C1785A] text-[#8C462C] shadow-sm"
             >
               <Camera className="w-3.5 h-3.5 text-[#C1785A]" />
-              <span>Virtual Style Try-On</span>
+              <span>Virtual AR Style Try-On</span>
               <span className="w-2 h-2 rounded-full bg-[#C1785A] animate-ping" />
             </button>
 
@@ -301,38 +351,7 @@ function BookPageContent() {
           </div>
         </div>
 
-        {/* FAST SCAN-TO-BOOK PROMO BANNER (Always available in Book module) */}
-        {bookingMode === 'standard' && (
-          <div className="bg-[#F5E6DF] rounded-3xl border border-[#E8D0C5] p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-4 text-center sm:text-left">
-              <div className="w-14 h-14 rounded-2xl bg-white p-2.5 flex items-center justify-center shrink-0 border border-[#E8D0C5] shadow-sm">
-                <QrCode className="w-full h-full text-[#C1785A]" />
-              </div>
-              <div>
-                <span className="text-[10px] uppercase tracking-[0.2em] font-extrabold text-[#8C462C] bg-white px-2 py-0.5 rounded-full border border-[#E8D0C5] inline-block mb-1">
-                  Express Fast-Track
-                </span>
-                <h3 className="font-serif font-bold text-lg text-[#2C2725]">
-                  Already in the Salon or Lounge?
-                </h3>
-                <p className="text-xs text-[#6E6663]">
-                  Scan the salon QR code with your camera to skip payment and join the queue instantly.
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setBookingMode('scanner')}
-              className="px-6 py-3 rounded-full bg-[#C1785A] hover:bg-[#A86347] text-[#FAF6F0] text-xs font-bold uppercase tracking-wider shadow-warm transition-all flex items-center gap-2 shrink-0"
-            >
-              <Zap className="w-4 h-4" />
-              <span>Open QR Scanner</span>
-            </button>
-          </div>
-        )}
-
-        {/* 1. SCANNER MODE (Directly inside /book) */}
+        {/* 1. SCANNER MODE (QR Express) */}
         {bookingMode === 'scanner' && (
           <div className="bg-[#F3ECE3] p-6 sm:p-8 rounded-3xl border border-[#EAE3DA] shadow-card space-y-8 animate-fadeIn">
             <div className="text-center space-y-2">
@@ -347,7 +366,6 @@ function BookPageContent() {
               </p>
             </div>
 
-            {/* Viewfinder Frame */}
             <div className="relative w-full max-w-sm mx-auto aspect-square bg-[#2C2725] rounded-3xl border-4 border-[#C1785A] overflow-hidden shadow-warm-lg flex flex-col items-center justify-center p-6 text-center text-white">
               {cameraActive && (
                 <video
@@ -359,13 +377,11 @@ function BookPageContent() {
                 />
               )}
 
-              {/* Viewfinder Corners */}
               <div className="absolute top-4 left-4 w-8 h-8 border-t-4 border-l-4 border-[#C1785A] rounded-tl-lg z-20" />
               <div className="absolute top-4 right-4 w-8 h-8 border-t-4 border-r-4 border-[#C1785A] rounded-tr-lg z-20" />
               <div className="absolute bottom-4 left-4 w-8 h-8 border-b-4 border-l-4 border-[#C1785A] rounded-bl-lg z-20" />
               <div className="absolute bottom-4 right-4 w-8 h-8 border-b-4 border-r-4 border-[#C1785A] rounded-br-lg z-20" />
 
-              {/* Scanning Laser */}
               {isScanning && (
                 <div className="absolute left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#C1785A] to-transparent shadow-[0_0_20px_#C1785A] animate-bounce z-20" />
               )}
@@ -390,7 +406,6 @@ function BookPageContent() {
                 </div>
               )}
 
-              {/* Camera Action Pill */}
               <div className="absolute bottom-3 z-20">
                 {!cameraActive ? (
                   <button
@@ -414,7 +429,6 @@ function BookPageContent() {
               </div>
             </div>
 
-            {/* Service & Guest Details for Express Scan */}
             <div className="bg-[#FAF6F0] p-6 rounded-3xl border border-[#EAE3DA] space-y-4 max-w-lg mx-auto">
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-[#4A423D] flex items-center gap-1.5 mb-1">
@@ -451,7 +465,6 @@ function BookPageContent() {
                 </select>
               </div>
 
-              {/* Trigger Button */}
               <button
                 type="button"
                 onClick={triggerSimulatedScan}
@@ -481,15 +494,16 @@ function BookPageContent() {
                 onClick={() => setBookingMode('standard')}
                 className="w-full py-2 text-center text-xs font-bold text-[#6E6663] hover:text-[#2C2725]"
               >
-                Switch to Standard ₹99 Advance Reservation Form
+                Switch to Standard Time-Slot Reservation Form
               </button>
             </div>
           </div>
         )}
 
-        {/* 2. STANDARD FORM MODE */}
+        {/* 2. TIME-WISE STANDARD FORM MODE */}
         {bookingMode === 'standard' && (
           <form onSubmit={handleOpenPayment} className="space-y-10">
+            
             {/* STEP 1: Select Service */}
             <div className="bg-[#F3ECE3] p-6 sm:p-8 rounded-3xl border border-[#EAE3DA] shadow-card space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#EAE3DA] pb-5">
@@ -500,7 +514,6 @@ function BookPageContent() {
                   <h2 className="font-serif text-2xl font-bold text-[#2C2725] mt-0.5">Select Service</h2>
                 </div>
 
-                {/* Category Filter Pills */}
                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
                   {categories.map((cat) => (
                     <button
@@ -519,14 +532,16 @@ function BookPageContent() {
                 </div>
               </div>
 
-              {/* Service Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredServices.map((service) => {
                   const isSelected = selectedService.id === service.id;
                   return (
                     <div
                       key={service.id}
-                      onClick={() => setSelectedService(service)}
+                      onClick={() => {
+                        setSelectedService(service);
+                        playChime('tap');
+                      }}
                       className={`cursor-pointer p-5 rounded-2xl border transition-all flex flex-col justify-between ${
                         isSelected
                           ? 'bg-[#FAF6F0] border-[#C1785A] shadow-warm ring-2 ring-[#C1785A]/25'
@@ -565,23 +580,125 @@ function BookPageContent() {
               </div>
             </div>
 
-            {/* STEP 2: Select Stylist */}
+            {/* STEP 2: Pick Appointment Date & Time Slot */}
             <div className="bg-[#F3ECE3] p-6 sm:p-8 rounded-3xl border border-[#EAE3DA] shadow-card space-y-6">
               <div className="border-b border-[#EAE3DA] pb-5">
-                <span className="text-xs font-mono uppercase tracking-wider text-[#C1785A] font-bold block">
-                  Step 02
-                </span>
-                <h2 className="font-serif text-2xl font-bold text-[#2C2725] mt-0.5">Choose Master Stylist</h2>
-                <p className="text-xs text-[#6E6663] mt-0.5">
-                  Select your preferred artist or choose "First Available" for shortest wait.
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-mono uppercase tracking-wider text-[#C1785A] font-bold block">
+                      Step 02
+                    </span>
+                    <h2 className="font-serif text-2xl font-bold text-[#2C2725] mt-0.5">
+                      Choose Date &amp; Time Slot
+                    </h2>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-[#FAF6F0] text-[#8C462C] border border-[#E8D0C5] text-xs font-mono font-bold">
+                    {selectedTimeSlot} on {selectedDate}
+                  </span>
+                </div>
+                <p className="text-xs text-[#6E6663] mt-1">
+                  Artisans working on this date and time will be dynamically highlighted below.
                 </p>
               </div>
 
+              {/* Date Selector Pills */}
+              <div className="space-y-2">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-[#4A423D] flex items-center gap-1.5">
+                  <CalendarDays className="w-3.5 h-3.5 text-[#C1785A]" />
+                  <span>Select Date:</span>
+                </label>
+                <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                  {dateOptions.map((opt) => {
+                    const isSelected = selectedDate === opt.dateStr;
+                    return (
+                      <button
+                        key={opt.dateStr}
+                        type="button"
+                        onClick={() => {
+                          setSelectedDate(opt.dateStr);
+                          playChime('tap');
+                        }}
+                        className={`px-4 py-2.5 rounded-2xl border text-xs font-bold transition-all flex flex-col items-center shrink-0 min-w-[90px] ${
+                          isSelected
+                            ? 'bg-[#C1785A] text-white shadow-warm border-[#C1785A]'
+                            : 'bg-white text-[#6E6663] hover:text-[#2C2725] border-[#EAE3DA] hover:bg-[#FAF6F0]'
+                        }`}
+                      >
+                        <span className="text-xs">{opt.dayLabel}</span>
+                        <span className="text-[10px] opacity-80">{opt.formattedDate}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Time Slots Grid */}
+              <div className="space-y-2 pt-2">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-[#4A423D] flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-[#C1785A]" />
+                  <span>Available Time Slots:</span>
+                </label>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
+                  {ALL_TIME_SLOTS.map((slotObj) => {
+                    const isSelected = selectedTimeSlot === slotObj.time;
+                    const artisansForSlot = getAvailableStylistsForSlot(selectedDate, slotObj.time);
+                    const isAvailable = artisansForSlot.length > 0;
+
+                    return (
+                      <button
+                        key={slotObj.time}
+                        type="button"
+                        disabled={!isAvailable}
+                        onClick={() => {
+                          setSelectedTimeSlot(slotObj.time);
+                          playChime('tap');
+                        }}
+                        className={`p-2.5 rounded-2xl border text-xs font-bold transition-all flex flex-col items-center justify-center gap-0.5 ${
+                          isSelected
+                            ? 'bg-[#C1785A] text-white shadow-warm border-[#C1785A] ring-2 ring-[#C1785A]/30'
+                            : isAvailable
+                            ? 'bg-white text-[#2C2725] border-[#EAE3DA] hover:border-[#C1785A]'
+                            : 'bg-[#EAE3DA]/40 text-[#A89C94] border-transparent opacity-40 cursor-not-allowed'
+                        }`}
+                      >
+                        <span className="font-mono text-xs">{slotObj.time}</span>
+                        <span className={`text-[9px] font-normal ${
+                          isSelected ? 'text-white/90' : isAvailable ? 'text-[#8C462C]' : 'text-gray-400'
+                        }`}>
+                          {isAvailable ? `${artisansForSlot.length} available` : 'Full'}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* STEP 3: Choose Available Master Stylist */}
+            <div className="bg-[#F3ECE3] p-6 sm:p-8 rounded-3xl border border-[#EAE3DA] shadow-card space-y-6">
+              <div className="border-b border-[#EAE3DA] pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <span className="text-xs font-mono uppercase tracking-wider text-[#C1785A] font-bold block">
+                    Step 03
+                  </span>
+                  <h2 className="font-serif text-2xl font-bold text-[#2C2725] mt-0.5">
+                    Available Master Artisans ({selectedTimeSlot})
+                  </h2>
+                </div>
+                <div className="flex items-center gap-1.5 px-3 py-1 bg-[#FAF6F0] rounded-full border border-[#E8D0C5] text-xs text-[#8C462C] font-bold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>{availableStylists.length} Artisans Available</span>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-3.5">
-                {/* First Available Option */}
+                {/* Any Available Artisan Option */}
                 <div
-                  onClick={() => setSelectedStylist(null)}
-                  className={`cursor-pointer p-4 rounded-2xl border text-center transition-all flex flex-col items-center justify-center ${
+                  onClick={() => {
+                    setSelectedStylist(null);
+                    playChime('tap');
+                  }}
+                  className={`cursor-pointer p-4 rounded-2xl border text-center transition-all flex flex-col items-center justify-between ${
                     selectedStylist === null
                       ? 'bg-[#FAF6F0] border-[#C1785A] shadow-warm ring-2 ring-[#C1785A]/25'
                       : 'bg-white/70 border-[#EAE3DA] hover:border-[#DDD3C6]'
@@ -590,56 +707,79 @@ function BookPageContent() {
                   <div className="w-12 h-12 rounded-full bg-[#F5E6DF] text-[#8C462C] flex items-center justify-center font-bold mb-2 shadow-inner">
                     <Sparkles className="w-5 h-5 text-[#C1785A]" />
                   </div>
-                  <h4 className="font-serif font-bold text-xs text-[#2C2725]">First Available</h4>
-                  <p className="text-[10px] text-[#8C462C] font-extrabold mt-0.5">Fastest Turn</p>
+                  <div>
+                    <h4 className="font-serif font-bold text-xs text-[#2C2725]">Any Available</h4>
+                    <p className="text-[10px] text-[#8C462C] font-extrabold mt-0.5">Fastest Turn</p>
+                  </div>
+                  <span className="text-[9px] text-[#6E6663] mt-2 bg-[#EAE3DA] px-2 py-0.5 rounded-full font-bold">
+                    Auto-Matched
+                  </span>
                 </div>
 
-                {/* Stylists List */}
-                {INITIAL_STYLISTS.map((stylist) => {
+                {/* ONLY Artisans Actually Available at this Slot */}
+                {availableStylists.map((stylist) => {
                   const isSelected = selectedStylist?.id === stylist.id;
                   return (
                     <div
                       key={stylist.id}
-                      onClick={() => setSelectedStylist(stylist)}
-                      className={`cursor-pointer p-4 rounded-2xl border text-center transition-all flex flex-col items-center justify-center ${
+                      onClick={() => {
+                        setSelectedStylist(stylist);
+                        playChime('tap');
+                      }}
+                      className={`cursor-pointer p-4 rounded-2xl border text-center transition-all flex flex-col items-center justify-between relative overflow-hidden ${
                         isSelected
                           ? 'bg-[#FAF6F0] border-[#C1785A] shadow-warm ring-2 ring-[#C1785A]/25'
                           : 'bg-white/70 border-[#EAE3DA] hover:border-[#DDD3C6]'
                       }`}
                     >
-                      <img
-                        src={stylist.avatar_url}
-                        alt={stylist.name}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-[#C1785A] mb-2 shadow-sm"
-                      />
-                      <h4 className="font-serif font-bold text-xs text-[#2C2725] line-clamp-1">
-                        {stylist.name}
-                      </h4>
-                      <p className="text-[10px] text-[#6E6663] line-clamp-1">{stylist.title}</p>
-                      
-                      <div className="flex items-center justify-center gap-1 mt-1">
-                        <Star className="w-3 h-3 text-[#C98A2C] fill-[#C98A2C]" />
-                        <span className="text-[10px] font-bold text-[#2C2725]">
-                          {stylist.rating || 4.95}
-                        </span>
+                      <div className="relative">
+                        <img
+                          src={stylist.avatar_url}
+                          alt={stylist.name}
+                          className="w-12 h-12 rounded-full object-cover border-2 border-[#C1785A] mb-2 shadow-sm"
+                        />
+                        <span className="absolute bottom-1 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />
                       </div>
-                      <p className="text-[9px] text-[#8C462C] font-bold mt-0.5">Station #{stylist.chair_number}</p>
+
+                      <div>
+                        <h4 className="font-serif font-bold text-xs text-[#2C2725] line-clamp-1">
+                          {stylist.name}
+                        </h4>
+                        <p className="text-[10px] text-[#6E6663] line-clamp-1">{stylist.title}</p>
+                        
+                        <div className="flex items-center justify-center gap-1 mt-1">
+                          <Star className="w-3 h-3 text-[#C98A2C] fill-[#C98A2C]" />
+                          <span className="text-[10px] font-bold text-[#2C2725]">
+                            {stylist.rating || 4.95}
+                          </span>
+                        </div>
+                      </div>
+
+                      <span className="text-[9px] text-emerald-800 bg-emerald-100 font-bold px-2 py-0.5 rounded-full mt-2">
+                        Available at {selectedTimeSlot}
+                      </span>
                     </div>
                   );
                 })}
               </div>
+
+              {availableStylists.length === 0 && (
+                <div className="p-4 rounded-2xl bg-[#F5E6DF] border border-[#E8D0C5] text-center text-xs text-[#8C462C] font-medium">
+                  All artisans are currently booked for {selectedTimeSlot}. Please select an adjacent time slot above.
+                </div>
+              )}
             </div>
 
-            {/* STEP 3: Customer Information */}
+            {/* STEP 4: Customer Information */}
             <div className="bg-[#F3ECE3] p-6 sm:p-8 rounded-3xl border border-[#EAE3DA] shadow-card space-y-6">
               <div className="border-b border-[#EAE3DA] pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <span className="text-xs font-mono uppercase tracking-wider text-[#C1785A] font-bold block">
-                    Step 03
+                    Step 04
                   </span>
-                  <h2 className="font-serif text-2xl font-bold text-[#2C2725] mt-0.5">Customer & Alert Coordinates</h2>
+                  <h2 className="font-serif text-2xl font-bold text-[#2C2725] mt-0.5">Guest &amp; Notification Details</h2>
                   <p className="text-xs text-[#6E6663] mt-0.5">
-                    We send live SMS & audio pings when your chair is ready.
+                    We dispatch automated WhatsApp confirmations and SMS reminders before your slot.
                   </p>
                 </div>
 
@@ -672,7 +812,7 @@ function BookPageContent() {
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase tracking-[0.15em] text-[#4A423D] flex items-center gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-[#C1785A]" />
-                    Mobile Number (for Live Queue SMS) *
+                    WhatsApp Mobile Number *
                   </label>
                   <input
                     type="tel"
@@ -687,7 +827,7 @@ function BookPageContent() {
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase tracking-[0.15em] text-[#4A423D] flex items-center gap-1.5">
                     <Mail className="w-3.5 h-3.5 text-[#C1785A]" />
-                    Email (for booking receipt)
+                    Email (for VIP receipt)
                   </label>
                   <input
                     type="email"
@@ -722,8 +862,10 @@ function BookPageContent() {
                 </span>
                 <h3 className="font-serif text-2xl font-extrabold text-[#2C2725]">{selectedService.name}</h3>
                 <p className="text-xs sm:text-sm text-[#6E6663]">
-                  Total: {formatINR(selectedService.price_inr)} • Advance Deposit:{' '}
-                  <strong className="text-[#8C462C] font-bold text-base">₹99.00</strong> (credited on final bill)
+                  Scheduled for <strong className="text-[#2C2725]">{selectedTimeSlot} ({selectedDate})</strong> with{' '}
+                  <strong className="text-[#8C462C]">{selectedStylist ? selectedStylist.name : 'First Available Artisan'}</strong>
+                  {' '}• Total: {formatINR(selectedService.price_inr)} • Advance Deposit:{' '}
+                  <strong className="text-[#8C462C] font-bold text-base">₹99.00</strong>
                 </p>
               </div>
 
@@ -732,14 +874,14 @@ function BookPageContent() {
                 className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#C1785A] hover:bg-[#A86347] text-[#FAF6F0] text-xs sm:text-sm font-bold uppercase tracking-[0.18em] shadow-warm hover:shadow-warm-lg transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
               >
                 <Lock className="w-4 h-4" />
-                <span>Proceed to Razorpay (₹99)</span>
+                <span>Confirm Slot &amp; Deposit (₹99)</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </form>
         )}
 
-        {/* Razorpay Modal Trigger */}
+        {/* Razorpay Modal */}
         <RazorpayModal
           isOpen={isPaymentModalOpen}
           onClose={() => setIsPaymentModalOpen(false)}
@@ -750,53 +892,46 @@ function BookPageContent() {
           onSuccess={handlePaymentSuccess}
         />
 
-        {/* Digital Queue Token Modal */}
-        <QueueTokenModal
-          isOpen={isTokenModalOpen}
-          onClose={() => {
-            setIsTokenModalOpen(false);
-            if (createdTokenAppointment) {
-              router.push(`/queue/${createdTokenAppointment.id}`);
-            }
-          }}
-          appointment={createdTokenAppointment}
-          queuePosition={queueCount + 1}
-          estimatedWaitMinutes={(queueCount + 1) * 15}
-        />
-
-        {/* Google Authentication Modal for Auto-Fill */}
-        <GoogleAuthModal
-          isOpen={isGoogleModalOpen}
-          onClose={() => setIsGoogleModalOpen(false)}
-          targetRole="customer"
-          onSuccess={() => {
-            // Auto-populate customer information from session
-            const stored = localStorage.getItem('styliq_auth_user');
-            if (stored) {
-              try {
-                const u = JSON.parse(stored);
-                if (u.full_name) setCustomerName(u.full_name);
-                if (u.phone) setCustomerPhone(u.phone);
-                if (u.email) setCustomerEmail(u.email);
-              } catch (e) {}
-            }
-          }}
-        />
-
-        {/* AR Virtual Style Mirror Modal */}
+        {/* Virtual Style Mirror Modal */}
         <VirtualStyleMirrorModal
           isOpen={isVirtualMirrorOpen}
           onClose={() => setIsVirtualMirrorOpen(false)}
-          onSelectService={(servId) => {
-            const found = INITIAL_SERVICES.find((s) => s.id === servId);
+          onSelectService={(serviceId) => {
+            const found = INITIAL_SERVICES.find((s) => s.id === serviceId);
             if (found) setSelectedService(found);
+            setIsVirtualMirrorOpen(false);
           }}
         />
 
-        {/* Haute At-Home Concierge Modal */}
+        {/* Haute At-Home Service Modal */}
         <AtHomeServiceModal
           isOpen={isAtHomeModalOpen}
           onClose={() => setIsAtHomeModalOpen(false)}
+        />
+
+        {/* Token Pass Modal */}
+        {createdTokenAppointment && (
+          <QueueTokenModal
+            isOpen={isTokenModalOpen}
+            onClose={() => {
+              setIsTokenModalOpen(false);
+              router.push(`/track/${createdTokenAppointment.id}`);
+            }}
+            appointment={createdTokenAppointment}
+            queuePosition={queueCount + 1}
+            estimatedWaitMinutes={(queueCount + 1) * 20}
+          />
+        )}
+
+        {/* Google Authentication Modal */}
+        <GoogleAuthModal
+          isOpen={isGoogleModalOpen}
+          onClose={() => setIsGoogleModalOpen(false)}
+          onSuccess={(userData) => {
+            if (userData?.name) setCustomerName(userData.name);
+            if (userData?.email) setCustomerEmail(userData.email);
+            setIsGoogleModalOpen(false);
+          }}
         />
       </div>
     </div>
@@ -807,21 +942,17 @@ export default function BookPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#FAF6F0] flex items-center justify-center">
-          <div className="flex items-center gap-3 text-sm text-[#6E6663] uppercase tracking-widest font-bold">
-            <Loader2 className="w-5 h-5 text-[#C1785A] animate-spin" />
-            <span>Loading Rose &amp; Rogue Booking Portal...</span>
+        <div className="min-h-screen bg-[#FAF6F0] flex items-center justify-center p-6 text-center">
+          <div className="space-y-4">
+            <Loader2 className="w-10 h-10 text-[#C1785A] animate-spin mx-auto" />
+            <p className="text-xs uppercase tracking-widest text-[#8C462C] font-bold">
+              Loading Reservation Portal...
+            </p>
           </div>
         </div>
       }
     >
-      <GoogleSecurityGate
-        targetRole="customer"
-        title="VIP Booking & Token Security Gate"
-        subtitle="Please sign in with your Google account to lock in appointments, calculate real-time wait ETAs, and generate your digital token pass."
-      >
-        <BookPageContent />
-      </GoogleSecurityGate>
+      <BookPageContent />
     </Suspense>
   );
 }

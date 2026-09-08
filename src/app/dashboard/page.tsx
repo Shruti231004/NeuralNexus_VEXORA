@@ -44,13 +44,15 @@ import { INITIAL_STYLISTS } from '@/lib/mockData';
 import { GoogleSecurityGate } from '@/components/GoogleSecurityGate';
 import { VirtualStyleMirrorModal } from '@/components/VirtualStyleMirrorModal';
 import { AtHomeServiceModal } from '@/components/AtHomeServiceModal';
-import { Camera, Home } from 'lucide-react';
+import { StylistScheduleManagerModal } from '@/components/StylistScheduleManagerModal';
+import { Camera, Home, CalendarClock } from 'lucide-react';
 
 export default function DashboardPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isWalkInModalOpen, setIsWalkInModalOpen] = useState(false);
   const [isVirtualMirrorOpen, setIsVirtualMirrorOpen] = useState(false);
   const [isAtHomeModalOpen, setIsAtHomeModalOpen] = useState(false);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
 
   useEffect(() => {
@@ -177,6 +179,15 @@ export default function DashboardPage() {
           >
             <Home className="w-4 h-4 text-[#D48464]" />
             <span>Haute At-Home</span>
+          </button>
+
+          <button
+            onClick={() => setIsScheduleModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#FAF6F0] hover:bg-[#F5E6DF] border-2 border-[#C1785A] text-xs sm:text-sm font-extrabold uppercase tracking-[0.15em] text-[#8C462C] transition-all shadow-sm group"
+            title="Manage Artisan Availability & Shifts"
+          >
+            <CalendarClock className="w-4 h-4 text-[#C1785A] group-hover:rotate-12 transition-transform" />
+            <span>Staff Shift &amp; Availability</span>
           </button>
 
           <Link
@@ -698,6 +709,12 @@ export default function DashboardPage() {
       <AtHomeServiceModal
         isOpen={isAtHomeModalOpen}
         onClose={() => setIsAtHomeModalOpen(false)}
+      />
+
+      {/* Staff Shift & Availability Manager Modal */}
+      <StylistScheduleManagerModal
+        isOpen={isScheduleModalOpen}
+        onClose={() => setIsScheduleModalOpen(false)}
       />
       </div>
     </GoogleSecurityGate>

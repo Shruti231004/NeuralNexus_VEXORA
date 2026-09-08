@@ -11,7 +11,7 @@ interface GoogleAuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   targetRole?: 'customer' | 'staff';
-  onSuccess?: () => void;
+  onSuccess?: (userData?: { name: string; email: string }) => void;
 }
 
 export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
@@ -66,7 +66,7 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
     setTimeout(() => {
       setIsSigningIn(false);
       onClose();
-      if (onSuccess) onSuccess();
+      if (onSuccess) onSuccess({ name: acc.name, email: acc.email });
     }, 600);
   };
 
@@ -86,7 +86,7 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
     setTimeout(() => {
       setIsSigningIn(false);
       onClose();
-      if (onSuccess) onSuccess();
+      if (onSuccess) onSuccess({ name: displayName, email: customEmail.trim() });
     }, 600);
   };
 
