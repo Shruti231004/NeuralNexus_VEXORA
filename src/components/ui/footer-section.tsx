@@ -3,7 +3,7 @@
 import React from 'react';
 import type { ComponentProps, ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { FacebookIcon, Sparkles, InstagramIcon, LinkedinIcon, YoutubeIcon, Scissors } from 'lucide-react';
+import { FacebookIcon, InstagramIcon, LinkedinIcon, YoutubeIcon, Scissors } from 'lucide-react';
 import Link from 'next/link';
 
 interface FooterLink {
