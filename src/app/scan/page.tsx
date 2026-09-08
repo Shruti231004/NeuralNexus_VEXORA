@@ -27,9 +27,9 @@ import { INITIAL_SERVICES, INITIAL_STYLISTS, INITIAL_SALON } from '@/lib/mockDat
 import { createAppointment, subscribeToAppointments } from '@/lib/supabaseClient';
 import { playChime } from '@/lib/soundEffects';
 import confetti from 'canvas-confetti';
-import { formatINR } from '@/lib/queueEngine';
 import { QueueTokenModal } from '@/components/QueueTokenModal';
 import { GoogleSecurityGate } from '@/components/GoogleSecurityGate';
+import { sendWhatsAppBookingConfirmation } from '@/lib/whatsappService';
 import { Appointment } from '@/lib/types';
 
 function ScanPageContent() {
@@ -121,6 +121,11 @@ function ScanPageContent() {
     setIsBooking(false);
     setCreatedTokenApt(newApt);
     setIsTokenModalOpen(true);
+
+    // Auto-dispatch Meta WhatsApp confirmation pass
+    if (newApt && newApt.customer_phone) {
+      sendWhatsAppBookingConfirmation(newApt, queueCount + 1, (queueCount + 1) * 15);
+    }
   };
 
   // Auto-book if accessed via scanned URL (e.g., from TV Flight Board QR code)
@@ -336,6 +341,23 @@ function ScanPageContent() {
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   placeholder="e.g. Radhika / Walk-in Guest"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[#EAE3DA] bg-white text-xs sm:text-sm text-[#2C2725] focus:outline-none focus:border-[#C1785A]"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-[#4A423D] flex items-center justify-between gap-1.5 mb-1">
+                  <span className="flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-[#C1785A]" />
+                    WhatsApp Mobile Number
+                  </span>
+                  <span className="text-[10px] text-emerald-700 font-bold">Auto-Pass via WhatsApp ✓</span>
+                </label>
+                <input
+                  type="tel"
+                  value={guestPhone}
+                  onChange={(e) => setGuestPhone(e.target.value)}
+                  placeholder="+91 96377 75648"
                   className="w-full px-4 py-2.5 rounded-xl border border-[#EAE3DA] bg-white text-xs sm:text-sm text-[#2C2725] focus:outline-none focus:border-[#C1785A]"
                 />
               </div>
