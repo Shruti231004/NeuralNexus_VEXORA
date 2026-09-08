@@ -386,7 +386,7 @@ export default function StaffDashboard({ store }) {
 
 function MetricCard({ title, value, subtitle, icon, color, pulse, highlight }) {
   return (
-    <div className="bg-white rounded-3xl p-5 border border-[#f2eaff] shadow-lg relative overflow-hidden transition-all hover:scale-[1.01]">
+    <div className="motion-card animate-fade-in-up bg-white rounded-3xl p-5 border border-[#f2eaff] shadow-lg relative overflow-hidden transition-all hover:scale-[1.01]">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs font-medium text-[#594047]">{title}</span>
         <div className="p-2 bg-[#f8f1ff] rounded-xl border border-[#e8ddff]">

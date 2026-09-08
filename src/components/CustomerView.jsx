@@ -427,7 +427,7 @@ export default function CustomerView({ store }) {
                 return (
                   <div 
                     key={service.id}
-                    className="group relative rounded-2xl bg-white border border-[#f2eaff] p-5 flex flex-col justify-between shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+                    className="motion-card animate-fade-in-up group relative rounded-2xl bg-white border border-[#f2eaff] p-5 flex flex-col justify-between shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
                   >
                     <div>
                       {/* Image Thumbnail */}
@@ -502,7 +502,7 @@ export default function CustomerView({ store }) {
                   <div
                     key={stylist.id}
                     onClick={() => setSelectedStylistId(stylist.id)}
-                    className={`cursor-pointer group relative rounded-2xl p-5 border transition-all text-center flex flex-col items-center ${
+                    className={`motion-card animate-fade-in-up cursor-pointer group relative rounded-2xl p-5 border transition-all text-center flex flex-col items-center ${
                       isSelected
                         ? 'bg-[#f8f1ff] border-[#b50060] shadow-md ring-2 ring-[#b50060]'
                         : 'bg-white border-[#f2eaff] hover:bg-[#f8f1ff]'
@@ -659,7 +659,7 @@ export default function CustomerView({ store }) {
         {/* Right Column: Sticky Reservation Cart & Guarantee (4 cols) */}
         <aside id="booking-section" className="lg:col-span-4 lg:sticky lg:top-28 w-full">
 
-          <div className="rounded-3xl p-6 bg-white border border-[#f2eaff] shadow-xl flex flex-col gap-5">
+          <div className="motion-card animate-fade-in-scale rounded-3xl p-6 bg-white border border-[#f2eaff] shadow-xl flex flex-col gap-5">
             
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[#f2eaff] pb-4">
