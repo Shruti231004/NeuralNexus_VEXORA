@@ -32,6 +32,7 @@ import { formatINR } from '@/lib/queueEngine';
 import { RazorpayModal } from '@/components/RazorpayModal';
 import { QueueTokenModal } from '@/components/QueueTokenModal';
 import { GoogleIcon } from '@/components/GoogleIcon';
+import { GoogleAuthModal } from '@/components/GoogleAuthModal';
 import { GoogleSecurityGate } from '@/components/GoogleSecurityGate';
 import { createAppointment, subscribeToAppointments } from '@/lib/supabaseClient';
 import { playChime } from '@/lib/soundEffects';
