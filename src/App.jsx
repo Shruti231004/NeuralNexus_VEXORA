@@ -44,7 +44,6 @@ export default function App() {
         store.setCurrentStaffId('admin');
       } else if (path.includes('/staff') || hash.includes('#staff')) {
         setCurrentRoute('staff');
-        if (store.currentStaffId === 'admin') store.setCurrentStaffId('elena');
       } else if (path.includes('/split') || hash.includes('#split')) {
         setCurrentRoute('split');
       } else {
@@ -69,7 +68,6 @@ export default function App() {
       store.setCurrentStaffId('admin');
     } else if (route === 'staff') {
       window.history.pushState({}, '', '/staff');
-      if (store.currentStaffId === 'admin') store.setCurrentStaffId('elena');
     } else if (route === 'split') {
       window.history.pushState({}, '', '/split');
     } else {
@@ -108,49 +106,67 @@ export default function App() {
         {/* Route 2: Staff Portal ('/staff') */}
         {currentRoute === 'staff' && (
           <div className="space-y-4">
-            <div className="bg-[#f8f1ff] border border-[#e8ddff] p-4 rounded-3xl flex items-center justify-between shadow-sm">
-              <div className="flex items-center gap-3">
-                <img 
-                  src={activeStaff?.avatar || STYLISTS[0].avatar} 
-                  alt={activeStaff?.name} 
-                  className="w-10 h-10 rounded-full object-cover ring-2 ring-[#b50060]"
-                />
-                <div>
-                  <div className="text-xs font-bold text-[#b50060] uppercase tracking-wider">
-                    Staff Portal • {activeStaff?.name || 'Artisan Workstation'}
-                  </div>
-                  <div className="text-xs text-[#594047]">Logged in as {activeStaff?.name} ({activeStaff?.role})</div>
+            {!store.currentStaffId ? (
+              <div className="bg-[#f8f1ff] border border-[#e8ddff] p-12 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm min-h-[500px]">
+                <div className="w-16 h-16 bg-[#F0DCCF] rounded-2xl flex items-center justify-center text-[#C1785A] text-3xl font-bold shadow-sm mb-4">
+                  🔒
                 </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setShowWalkInModal(true)}
-                  className="px-4 py-1.5 bg-[#b50060] text-white hover:bg-[#8e004a] rounded-full text-xs font-bold shadow-md transition-all flex items-center gap-1"
-                >
-                  <span className="material-symbols-outlined text-sm">confirmation_number</span>
-                  <span>Walk-In Token Kiosk</span>
-                </button>
+                <h2 className="font-serif text-3xl font-extrabold text-[#2C2725] mb-2">Artisan Access Required</h2>
+                <p className="text-[#8A8078] max-w-md mb-6">Please sign in to access your personal sanctuary suite and daily client queue.</p>
                 <button
                   onClick={() => setShowStaffLoginModal(true)}
-                  className="px-4 py-1.5 bg-white hover:bg-[#ede4ff] text-[#1e1831] border border-[#e1bec6] rounded-full text-xs font-semibold shadow-sm transition-all"
+                  className="px-6 py-3 bg-[#C1785A] hover:bg-[#A8613F] text-[#FAF6F0] rounded-full text-sm font-bold uppercase tracking-[0.08em] shadow-sm transition-all"
                 >
-                  Switch Artisan Profile
-                </button>
-                <button
-                  onClick={() => navigateTo('customer')}
-                  className="px-3 py-1.5 bg-[#f8f1ff] text-[#594047] hover:text-[#1e1831] rounded-full text-xs font-semibold"
-                >
-                  Exit to Salon Home
+                  Sign In As Staff
                 </button>
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="bg-[#f8f1ff] border border-[#e8ddff] p-4 rounded-3xl flex items-center justify-between shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src={activeStaff?.avatar || STYLISTS[0].avatar} 
+                      alt={activeStaff?.name} 
+                      className="w-10 h-10 rounded-full object-cover ring-2 ring-[#b50060]"
+                    />
+                    <div>
+                      <div className="text-xs font-bold text-[#b50060] uppercase tracking-wider">
+                        Staff Portal • {activeStaff?.name || 'Artisan Workstation'}
+                      </div>
+                      <div className="text-xs text-[#594047]">Logged in as {activeStaff?.name} ({activeStaff?.role})</div>
+                    </div>
+                  </div>
 
-            <StylistPersonalDashboard
-              staffId={store.currentStaffId === 'admin' ? 'elena' : store.currentStaffId}
-              store={store}
-              onSwitchStaff={() => setShowStaffLoginModal(true)}
-            />
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setShowWalkInModal(true)}
+                      className="px-4 py-1.5 bg-[#b50060] text-white hover:bg-[#8e004a] rounded-full text-xs font-bold shadow-md transition-all flex items-center gap-1"
+                    >
+                      <span className="material-symbols-outlined text-sm">confirmation_number</span>
+                      <span>Walk-In Token Kiosk</span>
+                    </button>
+                    <button
+                      onClick={() => setShowStaffLoginModal(true)}
+                      className="px-4 py-1.5 bg-white hover:bg-[#ede4ff] text-[#1e1831] border border-[#e1bec6] rounded-full text-xs font-semibold shadow-sm transition-all"
+                    >
+                      Switch Artisan Profile
+                    </button>
+                    <button
+                      onClick={() => navigateTo('customer')}
+                      className="px-3 py-1.5 bg-[#f8f1ff] text-[#594047] hover:text-[#1e1831] rounded-full text-xs font-semibold"
+                    >
+                      Exit to Salon Home
+                    </button>
+                  </div>
+                </div>
+
+                <StylistPersonalDashboard
+                  staffId={store.currentStaffId === 'admin' ? 'elena' : store.currentStaffId}
+                  store={store}
+                  onSwitchStaff={() => setShowStaffLoginModal(true)}
+                />
+              </>
+            )}
           </div>
         )}
 

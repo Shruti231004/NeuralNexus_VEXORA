@@ -56,6 +56,43 @@ export default function VirtualTryOnStudio({ onSelectServiceAndBook, onClose }) 
   const [styleGoal, setStyleGoal] = useState('Volume & Shine');
   const [userPhoto, setUserPhoto] = useState(null);
 
+  const videoRef = React.useRef(null);
+  const streamRef = React.useRef(null);
+  const [isCameraActive, setIsCameraActive] = useState(false);
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      streamRef.current = stream;
+      setIsCameraActive(true);
+      setUserPhoto(null);
+    } catch (err) {
+      console.error("Error accessing camera:", err);
+      alert("Could not access camera. Please check permissions.");
+    }
+  };
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    setIsCameraActive(false);
+  };
+
+  React.useEffect(() => {
+    if (isCameraActive && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+    }
+  }, [isCameraActive]);
+
+  React.useEffect(() => {
+    return () => stopCamera();
+  }, []);
+
   // AI Recommendation Logic
   const getAIRecommendation = () => {
     if (faceShape === 'Oval' || styleGoal === 'Volume & Shine') {
@@ -87,6 +124,7 @@ export default function VirtualTryOnStudio({ onSelectServiceAndBook, onClose }) 
   const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      stopCamera();
       const reader = new FileReader();
       reader.onload = (uploadEvent) => {
         setUserPhoto(uploadEvent.target.result);
@@ -132,7 +170,14 @@ export default function VirtualTryOnStudio({ onSelectServiceAndBook, onClose }) 
             {/* Virtual Camera Mirror Frame */}
             <div className="relative w-full h-[380px] rounded-3xl bg-[#1F1B18] border-2 border-[#EAE3DA] overflow-hidden flex flex-col items-center justify-center shadow-warm-lg group">
               
-              {userPhoto ? (
+              {isCameraActive ? (
+                <video 
+                  ref={videoRef} 
+                  autoPlay 
+                  playsInline 
+                  className="w-full h-full object-cover transform scale-x-[-1]" 
+                />
+              ) : userPhoto ? (
                 <img src={userPhoto} alt="Virtual Camera Mirror" className="w-full h-full object-cover" />
               ) : (
                 <div className="text-center p-6 space-y-3">
@@ -141,14 +186,14 @@ export default function VirtualTryOnStudio({ onSelectServiceAndBook, onClose }) 
                   </div>
                   <div className="font-serif text-lg font-extrabold text-[#FAF6F0]">Virtual Mirror Active</div>
                   <p className="text-xs text-[#8A8078] max-w-xs mx-auto">
-                    Upload your portrait photo or tap hairstyles below to preview cut & color glaze overlays in real time.
+                    Activate camera or upload a photo to preview cut & color glaze overlays in real time.
                   </p>
                 </div>
               )}
 
               {/* Hairstyle & Color Glaze Overlay Bar */}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70 pointer-events-none flex flex-col justify-end p-4">
-                <div className="bg-[#FAF6F0]/95 backdrop-blur-md p-3.5 rounded-2xl border border-[#EAE3DA] shadow-lg flex items-center justify-between">
+                <div className="bg-[#FAF6F0]/95 backdrop-blur-md p-3.5 rounded-2xl border border-[#EAE3DA] shadow-lg flex items-center justify-between pointer-events-auto">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{selectedStyle.preview}</span>
                     <div>
@@ -167,11 +212,20 @@ export default function VirtualTryOnStudio({ onSelectServiceAndBook, onClose }) 
               </div>
 
               {/* Photo Upload Overlay Button */}
-              <label className="absolute top-4 right-4 bg-[#FAF6F0] hover:bg-[#F3EAE0] text-[#2C2725] text-xs font-bold px-4 py-2 rounded-full shadow-md cursor-pointer border border-[#EAE3DA] flex items-center gap-2 transition-all">
-                <span>📷</span>
-                <span>{userPhoto ? 'Change Photo' : 'Upload Photo'}</span>
-                <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
-              </label>
+              <div className="absolute top-4 right-4 flex gap-2">
+                <button 
+                  onClick={isCameraActive ? stopCamera : startCamera}
+                  className="bg-[#C1785A] hover:bg-[#A8613F] text-[#FAF6F0] text-xs font-bold px-4 py-2 rounded-full shadow-md flex items-center gap-2 transition-all"
+                >
+                  <span>🎥</span>
+                  <span>{isCameraActive ? 'Stop Camera' : 'Live Camera'}</span>
+                </button>
+                <label className="bg-[#FAF6F0] hover:bg-[#F3EAE0] text-[#2C2725] text-xs font-bold px-4 py-2 rounded-full shadow-md cursor-pointer border border-[#EAE3DA] flex items-center gap-2 transition-all">
+                  <span>📷</span>
+                  <span>Upload</span>
+                  <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+                </label>
+              </div>
 
             </div>
 

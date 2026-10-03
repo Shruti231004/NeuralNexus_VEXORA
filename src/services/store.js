@@ -204,7 +204,7 @@ const LOCAL_STORAGE_KEY = 'aura_salon_state_v2';
 const SYNC_EVENT_KEY = 'aura_salon_sync_event';
 
 export function useSalonStore() {
-  const [currentStaffId, setCurrentStaffId] = useState('elena');
+  const [currentStaffId, setCurrentStaffId] = useState(null);
   const [bookings, setBookings] = useState(() => {
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
