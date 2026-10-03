@@ -26,17 +26,37 @@ export default function StaffDashboard({ store }) {
   });
 
   return (
-    <div className="max-w-[1360px] mx-auto w-full space-y-6 pt-4 pb-12">
+    <div className="max-w-7xl mx-auto w-full space-y-8 pt-4 pb-16 px-4 sm:px-6 lg:px-8 bg-[#FAF6F0] text-[#2C2725]">
       
+      {/* Header Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-[#F3EAE0] border border-[#EAE3DA]">
+        <div>
+          <span className="text-[11px] uppercase font-bold tracking-[0.08em] text-[#C1785A]">
+            STAFF KIOSK & QUEUE MANAGER
+          </span>
+          <h1 className="font-serif text-3xl font-extrabold text-[#2C2725] mt-1">
+            Salon Floor Operations
+          </h1>
+          <p className="text-xs text-[#8A8078] mt-1">
+            Real-time station control, chair rotation, and guest queue management.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="px-3.5 py-1.5 rounded-full bg-[#FAF6F0] border border-[#EAE3DA] text-[#C1785A] text-xs font-bold">
+            Live Floor Sync Active
+          </span>
+        </div>
+      </div>
+
       {/* Top Metrics Cards Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        
         <MetricCard
           title="Total Bookings"
           value={metrics.totalBookingsToday}
           subtitle="Today's Appointments"
           icon="group"
-          color="text-[#3b82f6]"
+          color="text-[#2C2725]"
         />
 
         <MetricCard
@@ -44,7 +64,7 @@ export default function StaffDashboard({ store }) {
           value={metrics.waitingCount}
           subtitle="Guests Checked In"
           icon="schedule"
-          color="text-[#b50060]"
+          color="text-[#C1785A]"
           pulse={metrics.waitingCount > 0}
         />
 
@@ -53,7 +73,7 @@ export default function StaffDashboard({ store }) {
           value={metrics.inServiceCount}
           subtitle="Currently in Chairs"
           icon="play_arrow"
-          color="text-[#7d2dce]"
+          color="text-[#8C462C]"
           pulse={metrics.inServiceCount > 0}
         />
 
@@ -62,7 +82,7 @@ export default function StaffDashboard({ store }) {
           value={metrics.completedCount}
           subtitle="Finished Rituals"
           icon="check_circle"
-          color="text-emerald-600"
+          color="text-[#C1785A]"
         />
 
         <MetricCard
@@ -70,20 +90,19 @@ export default function StaffDashboard({ store }) {
           value={`₹${metrics.totalRevenue}`}
           subtitle="Settled Payments"
           icon="payments"
-          color="text-[#ae3115]"
+          color="text-[#2C2725]"
           highlight
         />
-
       </div>
 
       {/* Stylist Floor Activity Overview */}
-      <div className="bg-white rounded-3xl p-6 border border-[#f2eaff] space-y-4 shadow-xl">
+      <div className="bg-[#EFE6DA] rounded-3xl p-6 border border-[#EAE3DA] space-y-4 shadow-warm-soft">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#b50060]">auto_awesome</span>
-            <h3 className="font-headline text-lg font-bold text-[#1e1831]">Artisan Floor Activity</h3>
+            <span className="text-[#C1785A]">✦</span>
+            <h3 className="font-serif text-lg font-extrabold text-[#2C2725]">Artisan Floor Activity</h3>
           </div>
-          <span className="text-xs text-[#594047]">3 Active Sanctuary Suites</span>
+          <span className="text-xs text-[#8A8078] font-semibold">3 Active Sanctuary Suites</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -98,29 +117,39 @@ export default function StaffDashboard({ store }) {
             return (
               <div 
                 key={stylist.id} 
-                className="bg-[#f8f1ff] p-4 rounded-2xl border border-[#e8ddff] flex items-center justify-between"
+                className="p-5 rounded-2xl bg-[#FAF6F0] border border-[#EAE3DA] flex flex-col justify-between gap-3 shadow-sm"
               >
-                <div className="flex items-center gap-3">
-                  <img src={stylist.avatar} alt={stylist.name} className="w-11 h-11 rounded-full object-cover ring-2 ring-[#b50060]/40" />
-                  <div>
-                    <div className="text-sm font-bold text-[#1e1831]">{stylist.name}</div>
-                    <div className="text-xs text-[#ae3115]">{stylist.role}</div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src={stylist.avatar} 
+                      alt={stylist.name} 
+                      className="w-10 h-10 rounded-full object-cover border-2 border-[#C1785A]"
+                    />
+                    <div>
+                      <h4 className="font-serif font-bold text-sm text-[#2C2725]">{stylist.name}</h4>
+                      <span className="text-[10px] text-[#C1785A] font-bold block uppercase tracking-[0.08em]">{stylist.role}</span>
+                    </div>
                   </div>
+
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.08em] ${
+                    currentClient ? 'bg-[#C1785A] text-[#FAF6F0]' : 'bg-[#F0DCCF] text-[#C1785A]'
+                  }`}>
+                    {currentClient ? 'BUSY IN CHAIR' : 'AVAILABLE'}
+                  </span>
                 </div>
 
-                <div className="text-right">
+                <div className="pt-2 border-t border-[#EAE3DA] text-xs">
                   {currentClient ? (
-                    <div className="text-xs font-semibold text-[#7d2dce] bg-[#efdbff] border border-[#974ce9]/50 px-2.5 py-1 rounded-full flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-[#7d2dce] animate-ping"></span>
-                      <span>With {currentClient.customerName.split(' ')[0]}</span>
+                    <div className="flex items-center justify-between text-[#2C2725]">
+                      <span>In Chair: <strong>{currentClient.customerName}</strong></span>
+                      <span className="text-[10px] text-[#C1785A] font-bold">Active</span>
                     </div>
                   ) : (
-                    <div className="text-xs font-medium text-emerald-700 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-full">
-                      Suite Available
-                    </div>
+                    <span className="text-[#8A8078] italic">No active client in chair</span>
                   )}
-                  <div className="text-[11px] text-[#594047] mt-1">
-                    {waitingForStylist} waiting in line
+                  <div className="mt-1 text-[11px] text-[#8A8078]">
+                    Lounge Queue: <strong>{waitingForStylist} guests waiting</strong>
                   </div>
                 </div>
               </div>
@@ -129,245 +158,147 @@ export default function StaffDashboard({ store }) {
         </div>
       </div>
 
-      {/* Main Real-Time Queue & Bookings Control Table */}
-      <div className="bg-white rounded-3xl border border-[#f2eaff] overflow-hidden shadow-xl">
+      {/* Main Queue Management Section */}
+      <div className="bg-[#FAF6F0] rounded-3xl p-6 border border-[#EAE3DA] space-y-6 shadow-warm-soft">
         
-        {/* Table Filter Controls Header */}
-        <div className="p-5 border-b border-[#f2eaff] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#f8f1ff]">
-          <div>
-            <h3 className="font-headline text-lg font-bold text-[#1e1831] flex items-center gap-2">
-              <span>Live Queue & Operational Floor</span>
-              <span className="text-xs font-body font-normal text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-300">
-                Live Auto-Sync
-              </span>
-            </h3>
-            <p className="text-xs text-[#594047]">Execute status transitions, record payments, and manage sanctuary queue order.</p>
+        {/* Filter Controls Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <h3 className="font-serif text-xl font-extrabold text-[#2C2725]">Guest Ledger</h3>
+            <span className="px-2.5 py-0.5 rounded-full bg-[#F0DCCF] text-[#C1785A] text-xs font-bold">
+              {filteredBookings.length}
+            </span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
             {/* Search Input */}
-            <div className="relative">
-              <span className="material-symbols-outlined absolute left-3 top-2 text-[#594047] text-base">search</span>
+            <div className="relative flex-1 sm:w-64">
               <input
                 type="text"
-                placeholder="Search guest or phone..."
+                placeholder="Search guest name or ID..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-white border border-[#e1bec6] text-xs text-[#1e1831] rounded-full pl-8 pr-3 py-1.5 focus:outline-none focus:border-[#b50060] w-48"
+                className="w-full px-4 py-2 rounded-full bg-[#FAF6F0] border border-[#EAE3DA] text-xs text-[#2C2725] focus:outline-none focus:border-[#C1785A]"
               />
             </div>
 
-            {/* Status Filter */}
-            <div className="flex items-center gap-1 bg-[#ede4ff] p-1 rounded-full text-xs">
-              {['all', 'waiting', 'in-service', 'booked', 'completed'].map(st => (
-                <button
-                  key={st}
-                  onClick={() => setStatusFilter(st)}
-                  className={`px-3 py-1 rounded-full font-medium capitalize transition-all ${
-                    statusFilter === st 
-                      ? 'bg-[#b50060] text-white font-semibold shadow' 
-                      : 'text-[#594047] hover:text-[#1e1831]'
-                  }`}
-                >
-                  {st}
-                </button>
-              ))}
-            </div>
+            {/* Status Filter Tabs */}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-4 py-2 rounded-full bg-[#F3EAE0] border border-[#EAE3DA] text-xs font-bold text-[#2C2725] focus:outline-none focus:border-[#C1785A]"
+            >
+              <option value="all">All Statuses</option>
+              <option value="booked">Booked</option>
+              <option value="waiting">Waiting</option>
+              <option value="in-service">In Chair</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
           </div>
         </div>
 
-        {/* Data Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-[#f8f1ff] text-[#594047] uppercase font-semibold text-[11px] tracking-wider border-b border-[#f2eaff]">
+        {/* Bookings Table */}
+        <div className="overflow-x-auto rounded-2xl border border-[#EAE3DA] bg-[#FAF6F0]">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-[#F3EAE0] border-b border-[#EAE3DA] text-[#8A8078] uppercase text-[10px] font-bold tracking-[0.08em]">
               <tr>
-                <th className="py-3.5 px-4">Queue #</th>
-                <th className="py-3.5 px-4">Guest</th>
-                <th className="py-3.5 px-4">Ritual & Artisan</th>
-                <th className="py-3.5 px-4">Slot / Time</th>
-                <th className="py-3.5 px-4">Status</th>
-                <th className="py-3.5 px-4">Amount / Payment</th>
-                <th className="py-3.5 px-4 text-right">Floor Actions</th>
+                <th className="p-4">Pass ID / Guest</th>
+                <th className="p-4">Service Ritual</th>
+                <th className="p-4">Artisan</th>
+                <th className="p-4">Slot Time</th>
+                <th className="p-4">Status</th>
+                <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#f2eaff]">
-              {filteredBookings.length > 0 ? (
+            <tbody className="divide-y divide-[#EAE3DA]">
+              {filteredBookings.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="p-8 text-center text-[#8A8078] italic">
+                    No guest passes found matching your filter criteria.
+                  </td>
+                </tr>
+              ) : (
                 filteredBookings.map((b) => {
                   const service = SERVICES.find(s => s.id === b.serviceId);
                   const stylist = STYLISTS.find(s => s.id === b.stylistId);
-                  const noShowCount = getNoShowCount(b.customerPhone);
 
                   return (
-                    <tr key={b.id} className="hover:bg-[#f8f1ff]/60 transition-colors">
-                      
-                      {/* Queue # */}
-                      <td className="py-3.5 px-4 font-headline font-bold text-base text-[#b50060]">
-                        {b.status === 'waiting' ? `#${b.queueOrder}` : '-'}
+                    <tr key={b.id} className="hover:bg-[#F3EAE0]/50 transition-colors">
+                      <td className="p-4">
+                        <div className="font-bold text-[#2C2725]">{b.customerName}</div>
+                        <div className="text-[10px] text-[#8A8078] font-mono">{b.id} • {b.customerPhone}</div>
                       </td>
 
-                      {/* Customer Info & No-Show Warning Badge */}
-                      <td className="py-3.5 px-4">
-                        <div className="font-semibold text-[#1e1831] flex items-center gap-1.5">
-                          <span>{b.customerName}</span>
-                          {noShowCount >= 2 && (
-                            <span 
-                              className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-300 text-[10px] font-bold flex items-center gap-1"
-                              title={`Warning: Customer has ${noShowCount} recorded prior no-shows!`}
-                            >
-                              <span className="material-symbols-outlined text-xs text-rose-600">warning</span>
-                              <span>{noShowCount} No-Shows</span>
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-xs text-[#594047]">{b.customerPhone}</div>
+                      <td className="p-4">
+                        <div className="font-bold text-[#2C2725]">{service?.name || b.serviceId}</div>
+                        <div className="text-[10px] text-[#8A8078]">₹{service?.price} • {service?.duration}m</div>
                       </td>
 
-                      {/* Service & Stylist */}
-                      <td className="py-3.5 px-4">
-                        <div className="font-medium text-[#1e1831]">{service?.name || 'Ritual'}</div>
-                        <div className="text-xs text-[#ae3115]">{stylist?.name} • {service?.duration}m</div>
+                      <td className="p-4 font-semibold text-[#C1785A]">
+                        {stylist?.name || b.stylistId}
                       </td>
 
-                      {/* Slot / Time */}
-                      <td className="py-3.5 px-4">
-                        <div className="font-semibold text-[#1e1831]">{b.slot}</div>
-                        {b.checkedInAt && (
-                          <div className="text-[11px] text-emerald-700">Checked in {b.checkedInAt}</div>
-                        )}
+                      <td className="p-4 font-bold text-[#2C2725]">
+                        {b.slot}
                       </td>
 
-                      {/* Status Badge */}
-                      <td className="py-3.5 px-4">
+                      <td className="p-4">
                         <StatusBadge status={b.status} />
                       </td>
 
-                      {/* Amount & Payment */}
-                      <td className="py-3.5 px-4">
-                        <div className="font-headline font-bold text-[#b50060] text-base">₹{b.amount}</div>
-                        {b.paymentStatus === 'paid' ? (
-                          <span className="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full font-semibold">
-                            PAID ({b.paymentMethod})
-                          </span>
-                        ) : b.paymentStatus === 'refunded' ? (
-                          <span className="text-[10px] bg-rose-100 text-rose-800 border border-rose-300 px-2 py-0.5 rounded-full font-semibold">
-                            REFUNDED (₹{b.refundAmount})
-                          </span>
-                        ) : (
-                          <span className="text-[10px] bg-[#f8f1ff] text-[#594047] px-2 py-0.5 rounded-full">
-                            Pending Bill
-                          </span>
+                      <td className="p-4 text-right space-x-2">
+                        {b.status === 'booked' && (
+                          <button
+                            onClick={() => checkIn(b.id)}
+                            className="px-3 py-1.5 rounded-full bg-[#C1785A] hover:bg-[#A8613F] text-[#FAF6F0] text-[10px] font-bold uppercase tracking-[0.08em]"
+                          >
+                            Check In
+                          </button>
                         )}
-                        {b.feedback && (
-                          <div className="mt-1 text-[11px] text-[#ae3115] bg-[#ffdad2] border border-[#ae3115]/30 px-2 py-0.5 rounded-full font-medium">
-                            {'⭐'.repeat(b.feedback.rating)} {b.feedback.rating}/5 • Tip: ₹{b.feedback.tip}
-                          </div>
+
+                        {b.status === 'waiting' && (
+                          <button
+                            onClick={() => startService(b.id)}
+                            className="px-3 py-1.5 rounded-full bg-[#C1785A] hover:bg-[#A8613F] text-[#FAF6F0] text-[10px] font-bold uppercase tracking-[0.08em]"
+                          >
+                            Start Chair
+                          </button>
+                        )}
+
+                        {b.status === 'in-service' && (
+                          <button
+                            onClick={() => setPaymentTargetBooking(b)}
+                            className="px-3 py-1.5 rounded-full bg-[#2C2725] hover:bg-[#3D3532] text-[#FDF8F2] text-[10px] font-bold uppercase tracking-[0.08em]"
+                          >
+                            Settle & Complete
+                          </button>
+                        )}
+
+                        {b.status === 'completed' && (
+                          <button
+                            onClick={() => setRefundTargetBooking(b)}
+                            className="px-3 py-1.5 rounded-full bg-[#F0DCCF] text-[#C1785A] text-[10px] font-bold uppercase tracking-[0.08em]"
+                          >
+                            Refund
+                          </button>
                         )}
                       </td>
-
-                      {/* Actions */}
-                      <td className="py-3.5 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          
-                          {b.status === 'booked' && (
-                            <button
-                              onClick={() => checkIn(b.id)}
-                              className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-semibold shadow"
-                            >
-                              Check In
-                            </button>
-                          )}
-
-                          {b.status === 'waiting' && (
-                            <>
-                              <button
-                                onClick={() => startService(b.id)}
-                                className="px-3 py-1 bg-[#7d2dce] hover:bg-[#6600b7] text-white rounded-full text-xs font-semibold shadow"
-                              >
-                                Start Ritual
-                              </button>
-
-                              <button
-                                onClick={() => bumpQueueUp(b.id)}
-                                className="p-1.5 bg-[#f8f1ff] hover:bg-[#ede4ff] text-[#b50060] border border-[#b50060]/30 rounded-full text-xs transition-all"
-                                title="Bump customer up ahead in waiting queue"
-                              >
-                                <span className="material-symbols-outlined text-sm">arrow_upward</span>
-                              </button>
-
-                              <button
-                                onClick={() => markNoShow(b.id)}
-                                className="px-2.5 py-1 bg-[#f8f1ff] hover:bg-rose-100 text-[#594047] hover:text-rose-800 border border-[#e8ddff] rounded-full text-xs font-medium transition-all"
-                                title="Mark No-Show"
-                              >
-                                No-Show
-                              </button>
-                            </>
-                          )}
-
-                          {b.status === 'in-service' && (
-                            <button
-                              onClick={() => completeService(b.id)}
-                              className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-semibold shadow"
-                            >
-                              Complete
-                            </button>
-                          )}
-
-                          {b.status === 'completed' && b.paymentStatus !== 'paid' && (
-                            <button
-                              onClick={() => setPaymentTargetBooking(b)}
-                              className="px-3 py-1 bg-[#b50060] hover:bg-[#8e004a] text-white rounded-full text-xs font-semibold shadow"
-                            >
-                              Record Payment
-                            </button>
-                          )}
-
-                          {(b.paymentStatus === 'paid' || b.status === 'cancelled') && b.paymentStatus !== 'refunded' && (
-                            <button
-                              onClick={() => setRefundTargetBooking(b)}
-                              className="px-2.5 py-1 bg-[#f8f1ff] hover:bg-[#ede4ff] text-[#594047] hover:text-[#1e1831] border border-[#e8ddff] rounded-full text-xs font-medium transition-all"
-                            >
-                              Refund
-                            </button>
-                          )}
-
-                          {['booked', 'waiting'].includes(b.status) && (
-                            <button
-                              onClick={() => {
-                                if (window.confirm(`Cancel booking for ${b.customerName}?`)) {
-                                  cancelBooking(b.id, 'Staff cancelled booking');
-                                }
-                              }}
-                              className="p-1 text-[#594047] hover:text-rose-600 rounded-full transition-all"
-                              title="Cancel Booking"
-                            >
-                              <span className="material-symbols-outlined text-base">cancel</span>
-                            </button>
-                          )}
-
-                        </div>
-                      </td>
-
                     </tr>
                   );
                 })
-              ) : (
-                <tr>
-                  <td colSpan="7" className="py-8 text-center text-[#594047]">
-                    No bookings found matching filters.
-                  </td>
-                </tr>
               )}
             </tbody>
           </table>
         </div>
-
       </div>
 
+      {/* Modals */}
       {paymentTargetBooking && (
         <PaymentModal
           booking={paymentTargetBooking}
           onClose={() => setPaymentTargetBooking(null)}
+          onComplete={completeService}
           onProcessPayment={processPayment}
         />
       )}
@@ -376,7 +307,7 @@ export default function StaffDashboard({ store }) {
         <RefundModal
           booking={refundTargetBooking}
           onClose={() => setRefundTargetBooking(null)}
-          onProcessRefund={processRefund}
+          onRefund={processRefund}
         />
       )}
 
@@ -386,36 +317,36 @@ export default function StaffDashboard({ store }) {
 
 function MetricCard({ title, value, subtitle, icon, color, pulse, highlight }) {
   return (
-    <div className="motion-card animate-fade-in-up bg-white rounded-3xl p-5 border border-[#f2eaff] shadow-lg relative overflow-hidden transition-all hover:scale-[1.01]">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-[#594047]">{title}</span>
-        <div className="p-2 bg-[#f8f1ff] rounded-xl border border-[#e8ddff]">
-          <span className={`material-symbols-outlined text-lg ${color}`}>{icon}</span>
-        </div>
+    <div className={`p-5 rounded-3xl border transition-all ${
+      highlight 
+        ? 'bg-[#F3EAE0] border-[#C1785A] shadow-warm-soft' 
+        : 'bg-[#FAF6F0] border-[#EAE3DA]'
+    }`}>
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#8A8078]">{title}</span>
+        <span className={`material-symbols-outlined text-lg ${color}`}>{icon}</span>
       </div>
-      <div className="flex items-baseline gap-2">
-        <div className={`font-headline text-2xl sm:text-3xl font-bold text-[#1e1831] tracking-tight ${pulse ? 'animate-bounce' : ''}`}>
-          {value}
-        </div>
+      <div className="mt-2 font-serif text-2xl font-extrabold text-[#2C2725] flex items-center gap-1.5">
+        <span>{value}</span>
+        {pulse && <span className="w-2 h-2 rounded-full bg-[#C1785A] animate-pulse" />}
       </div>
-      <div className="text-[11px] text-[#594047] mt-1">{subtitle}</div>
+      <p className="text-[10px] text-[#8A8078] mt-1 font-semibold">{subtitle}</p>
     </div>
   );
 }
 
 function StatusBadge({ status }) {
-  let badgeStyle = 'bg-[#f8f1ff] text-[#594047] border-[#e8ddff]';
-  let label = status;
+  let badgeStyle = 'bg-[#F3EAE0] text-[#8A8078] border-[#EAE3DA]';
+  let label = status.toUpperCase();
 
-  if (status === 'booked') badgeStyle = 'bg-blue-100 text-blue-800 border-blue-300';
-  else if (status === 'waiting') badgeStyle = 'bg-[#ffd9e2] text-[#b50060] border-[#db2379]/40 animate-pulse';
-  else if (status === 'in-service') badgeStyle = 'bg-[#efdbff] text-[#7d2dce] border-[#974ce9]/40 animate-pulse';
-  else if (status === 'completed') badgeStyle = 'bg-emerald-100 text-emerald-800 border-emerald-300';
-  else if (status === 'cancelled') badgeStyle = 'bg-rose-100 text-rose-800 border-rose-300';
-  else if (status === 'no-show') badgeStyle = 'bg-gray-100 text-rose-800 border-rose-300';
+  if (status === 'booked') badgeStyle = 'bg-[#FAF6F0] text-[#2C2725] border-[#EAE3DA]';
+  else if (status === 'waiting') badgeStyle = 'bg-[#F0DCCF] text-[#C1785A] border-[#EAE3DA] animate-pulse';
+  else if (status === 'in-service') badgeStyle = 'bg-[#C1785A] text-[#FAF6F0] border-[#C1785A] animate-pulse';
+  else if (status === 'completed') badgeStyle = 'bg-[#F3EAE0] text-[#2C2725] border-[#EAE3DA]';
+  else if (status === 'cancelled') badgeStyle = 'bg-[#F3EAE0] text-[#8A8078] border-[#EAE3DA]';
 
   return (
-    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${badgeStyle}`}>
+    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.08em] border ${badgeStyle}`}>
       {label}
     </span>
   );

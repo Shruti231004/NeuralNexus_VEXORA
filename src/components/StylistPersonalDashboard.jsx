@@ -33,21 +33,21 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
     .reduce((sum, b) => sum + (b.amount || 0), 0);
 
   return (
-    <div className="max-w-[1360px] mx-auto w-full space-y-6 pt-4 pb-12">
+    <div className="max-w-7xl mx-auto w-full space-y-8 pt-4 pb-16 px-4 sm:px-6 lg:px-8 bg-[#FAF6F0] text-[#2C2725]">
       
       {/* Header Banner */}
-      <div className="bg-white rounded-3xl p-6 border border-[#f2eaff] relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+      <div className="bg-[#F3EAE0] rounded-3xl p-6 border border-[#EAE3DA] relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-warm-soft">
         <div className="flex items-center gap-4">
-          <img src={stylist?.avatar} alt={stylist?.name} className="w-16 h-16 rounded-full object-cover ring-2 ring-[#b50060]" />
+          <img src={stylist?.avatar} alt={stylist?.name} className="w-16 h-16 rounded-full object-cover border-2 border-[#C1785A]" />
           <div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#b50060] uppercase tracking-wider">
-              <span className="material-symbols-outlined text-sm">auto_awesome</span>
+            <div className="flex items-center gap-2 text-[11px] font-bold text-[#C1785A] uppercase tracking-[0.08em]">
+              <span>✦</span>
               <span>Artisan Personal Workstation</span>
             </div>
-            <h2 className="font-headline text-2xl sm:text-3xl font-bold text-[#1e1831]">
+            <h2 className="font-serif text-2xl sm:text-3xl font-extrabold text-[#2C2725]">
               {stylist?.name || 'Artisan Portal'}
             </h2>
-            <p className="text-xs sm:text-sm text-[#594047]">
+            <p className="text-xs text-[#8A8078] mt-0.5">
               {stylist?.role} • Viewing your personal appointments & sanctuary suite.
             </p>
           </div>
@@ -55,27 +55,27 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
 
         <button
           onClick={onSwitchStaff}
-          className="px-4 py-2 bg-[#f8f1ff] hover:bg-[#ede4ff] text-[#1e1831] border border-[#e8ddff] rounded-full text-xs font-semibold flex items-center gap-2 transition-all self-start sm:self-auto"
+          className="px-4 py-2 bg-[#FAF6F0] hover:bg-[#EFE6DA] text-[#2C2725] border border-[#EAE3DA] rounded-full text-xs font-bold uppercase tracking-[0.08em] flex items-center gap-2 transition-all self-start sm:self-auto"
         >
-          <span className="material-symbols-outlined text-sm text-[#b50060]">logout</span>
+          <span className="text-[#C1785A]">⇄</span>
           <span>Switch Artisan Profile</span>
         </button>
       </div>
 
       {/* Active Chair Monitor Card */}
-      <div className="bg-white border border-[#b50060]/30 rounded-3xl p-6 shadow-xl space-y-4">
-        <div className="flex items-center justify-between border-b border-[#f2eaff] pb-4">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#b50060] uppercase tracking-wider">
-            <span className="material-symbols-outlined text-base">spa</span>
+      <div className="bg-[#EFE6DA] border border-[#EAE3DA] rounded-3xl p-6 shadow-warm-soft space-y-4">
+        <div className="flex items-center justify-between border-b border-[#EAE3DA] pb-4">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#C1785A] uppercase tracking-[0.08em]">
+            <span>✦</span>
             <span>My Active Sanctuary Suite #1 Monitor</span>
           </div>
           {currentClientInChair ? (
-            <span className="px-3 py-1 rounded-full bg-[#efdbff] border border-[#974ce9]/50 text-[#7d2dce] text-xs font-bold animate-pulse flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#7d2dce] animate-ping"></span>
+            <span className="px-3 py-1 rounded-full bg-[#C1785A] text-[#FAF6F0] text-xs font-bold uppercase tracking-[0.08em] flex items-center gap-1.5 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-[#FAF6F0] animate-ping" />
               <span>Guest In Suite Now</span>
             </span>
           ) : (
-            <span className="px-3 py-1 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-bold">
+            <span className="px-3 py-1 rounded-full bg-[#F0DCCF] border border-[#EAE3DA] text-[#C1785A] text-xs font-bold uppercase tracking-[0.08em]">
               Suite Available
             </span>
           )}
@@ -84,23 +84,22 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
         {currentClientInChair ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
             <div className="md:col-span-2 space-y-1">
-              <div className="text-xs text-[#594047]">Current Guest</div>
-              <div className="text-2xl font-headline font-bold text-[#1e1831] flex items-center gap-2">
+              <div className="text-xs text-[#8A8078]">Current Guest</div>
+              <div className="text-2xl font-serif font-extrabold text-[#2C2725] flex items-center gap-2">
                 <span>{currentClientInChair.customerName}</span>
-                <span className="text-xs font-body text-[#594047] font-normal">({currentClientInChair.customerPhone})</span>
+                <span className="text-xs font-sans text-[#8A8078] font-normal">({currentClientInChair.customerPhone})</span>
               </div>
-              <div className="text-xs text-[#b50060] font-medium">
+              <div className="text-xs text-[#C1785A] font-bold">
                 Ritual: {SERVICES.find(s => s.id === currentClientInChair.serviceId)?.name} (₹{currentClientInChair.amount})
               </div>
-              <div className="text-[11px] text-[#594047]">Ritual Started At: {currentClientInChair.startedAt || 'Just Now'}</div>
+              <div className="text-[11px] text-[#8A8078]">Ritual Started At: {currentClientInChair.startedAt || 'Just Now'}</div>
             </div>
 
             <div className="flex justify-end">
               <button
                 onClick={() => completeService(currentClientInChair.id)}
-                className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-full shadow-lg flex items-center justify-center gap-2 transition-all hover:scale-[1.02]"
+                className="w-full sm:w-auto px-6 py-3 bg-[#C1785A] hover:bg-[#A8613F] text-[#FAF6F0] font-bold text-xs uppercase tracking-[0.08em] rounded-full shadow-md transition-all"
               >
-                <span className="material-symbols-outlined text-base">check_circle</span>
                 <span>Complete Ritual</span>
               </button>
             </div>
@@ -108,8 +107,8 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
         ) : (
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <div className="text-base font-semibold text-[#1e1831]">No guest currently in your sanctuary suite.</div>
-              <p className="text-xs text-[#594047]">
+              <div className="text-base font-bold text-[#2C2725]">No guest currently in your sanctuary suite.</div>
+              <p className="text-xs text-[#8A8078]">
                 {nextWaitingGuest 
                   ? `Next waiting in your line: ${nextWaitingGuest.customerName} (${nextWaitingGuest.slot})`
                   : 'No guests currently waiting in your line.'}
@@ -119,9 +118,8 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
             {nextWaitingGuest && (
               <button
                 onClick={() => startService(nextWaitingGuest.id)}
-                className="px-5 py-2.5 bg-[#7d2dce] hover:bg-[#6600b7] text-white font-semibold text-xs sm:text-sm rounded-full shadow-lg flex items-center gap-2 transition-all"
+                className="px-5 py-2.5 bg-[#C1785A] hover:bg-[#A8613F] text-[#FAF6F0] font-bold text-xs uppercase tracking-[0.08em] rounded-full shadow-md transition-all"
               >
-                <span className="material-symbols-outlined text-base">play_arrow</span>
                 <span>Call & Start Ritual for {nextWaitingGuest.customerName.split(' ')[0]}</span>
               </button>
             )}
@@ -131,40 +129,39 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
 
       {/* Metrics Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <MetricCard title="My Appointments" value={myTotalBookings} icon="person" color="text-[#3b82f6]" />
-        <MetricCard title="My Waiting Line" value={myWaitingCount} icon="schedule" color="text-[#b50060]" pulse={myWaitingCount > 0} />
-        <MetricCard title="Completed Today" value={myCompletedCount} icon="check_circle" color="text-emerald-600" />
-        <MetricCard title="My Revenue" value={`₹${myRevenue}`} icon="payments" color="text-[#ae3115]" />
+        <MetricCard title="My Appointments" value={myTotalBookings} icon="person" color="text-[#2C2725]" />
+        <MetricCard title="My Waiting Line" value={myWaitingCount} icon="schedule" color="text-[#C1785A]" pulse={myWaitingCount > 0} />
+        <MetricCard title="Completed Today" value={myCompletedCount} icon="check_circle" color="text-[#C1785A]" />
+        <MetricCard title="My Revenue" value={`₹${myRevenue}`} icon="payments" color="text-[#2C2725]" />
       </div>
 
       {/* Personal Queue Table */}
-      <div className="bg-white rounded-3xl border border-[#f2eaff] overflow-hidden shadow-xl">
-        <div className="p-4 border-b border-[#f2eaff] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#f8f1ff]">
+      <div className="bg-[#FAF6F0] rounded-3xl border border-[#EAE3DA] overflow-hidden shadow-warm-soft">
+        <div className="p-4 border-b border-[#EAE3DA] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#F3EAE0]">
           <div>
-            <h3 className="font-headline text-lg font-bold text-[#1e1831] flex items-center gap-2">
+            <h3 className="font-serif text-lg font-extrabold text-[#2C2725] flex items-center gap-2">
               <span>My Personal Appointments & Queue</span>
-              <span className="text-xs font-body text-[#b50060] bg-[#ffd9e2] px-3 py-0.5 rounded-full border border-[#db2379]/40">
+              <span className="text-xs font-sans text-[#C1785A] bg-[#F0DCCF] px-3 py-0.5 rounded-full font-bold">
                 {stylist?.name}'s Schedule
               </span>
             </h3>
-            <p className="text-xs text-[#594047]">Exclusive view of rituals assigned to you today.</p>
+            <p className="text-xs text-[#8A8078]">Exclusive view of rituals assigned to you today.</p>
           </div>
 
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-2 text-[#594047] text-base">search</span>
             <input
               type="text"
               placeholder="Search my guests..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-white border border-[#e1bec6] text-xs text-[#1e1831] rounded-full pl-8 pr-3 py-1.5 focus:outline-none focus:border-[#b50060] w-48"
+              className="bg-[#FAF6F0] border border-[#EAE3DA] text-xs text-[#2C2725] rounded-full px-4 py-1.5 focus:outline-none focus:border-[#C1785A] w-48"
             />
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-[#f8f1ff] text-[#594047] uppercase font-semibold text-[11px] tracking-wider border-b border-[#f2eaff]">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-[#F3EAE0] text-[#8A8078] uppercase font-bold text-[10px] tracking-[0.08em] border-b border-[#EAE3DA]">
               <tr>
                 <th className="py-3.5 px-4">Queue #</th>
                 <th className="py-3.5 px-4">Guest Name</th>
@@ -175,38 +172,37 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
                 <th className="py-3.5 px-4 text-right">My Suite Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#f2eaff]">
+            <tbody className="divide-y divide-[#EAE3DA]">
               {filteredMyBookings.length > 0 ? (
                 filteredMyBookings.map((b) => {
                   const service = SERVICES.find(s => s.id === b.serviceId);
                   const noShowCount = getNoShowCount(b.customerPhone);
 
                   return (
-                    <tr key={b.id} className="hover:bg-[#f8f1ff]/60 transition-colors">
+                    <tr key={b.id} className="hover:bg-[#F3EAE0]/50 transition-colors">
                       
-                      <td className="py-3.5 px-4 font-headline font-bold text-[#b50060]">
+                      <td className="py-3.5 px-4 font-serif font-bold text-[#C1785A]">
                         {b.status === 'waiting' ? `#${b.queueOrder}` : '-'}
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <div className="font-semibold text-[#1e1831] flex items-center gap-1.5">
+                        <div className="font-bold text-[#2C2725] flex items-center gap-1.5">
                           <span>{b.customerName}</span>
                           {noShowCount >= 2 && (
-                            <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-300 text-[10px] font-bold flex items-center gap-1">
-                              <span className="material-symbols-outlined text-xs text-rose-600">warning</span>
-                              <span>{noShowCount} No-Shows</span>
+                            <span className="px-2 py-0.5 rounded-full bg-[#F0DCCF] text-[#C1785A] text-[10px] font-bold">
+                              {noShowCount} No-Shows
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-[#594047]">{b.customerPhone}</div>
+                        <div className="text-[10px] text-[#8A8078]">{b.customerPhone}</div>
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <div className="font-medium text-[#1e1831]">{service?.name}</div>
-                        <div className="text-xs text-[#594047]">{service?.duration}m</div>
+                        <div className="font-bold text-[#2C2725]">{service?.name}</div>
+                        <div className="text-[10px] text-[#8A8078]">{service?.duration}m</div>
                       </td>
 
-                      <td className="py-3.5 px-4 font-medium text-[#1e1831]">
+                      <td className="py-3.5 px-4 font-bold text-[#2C2725]">
                         {b.slot}
                       </td>
 
@@ -215,13 +211,8 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <div className="font-headline font-bold text-[#b50060]">₹{b.amount}</div>
-                        <div className="text-[10px] text-[#594047]">{b.paymentStatus}</div>
-                        {b.feedback && (
-                          <div className="mt-1 text-[11px] text-[#ae3115] bg-[#ffdad2] border border-[#ae3115]/30 px-2 py-0.5 rounded-full font-medium">
-                            {'⭐'.repeat(b.feedback.rating)} {b.feedback.rating}/5 • Tip: ₹{b.feedback.tip}
-                          </div>
-                        )}
+                        <div className="font-serif font-bold text-[#C1785A]">₹{b.amount}</div>
+                        <div className="text-[10px] text-[#8A8078]">{b.paymentStatus}</div>
                       </td>
 
                       <td className="py-3.5 px-4 text-right">
@@ -230,7 +221,7 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
                           {b.status === 'booked' && (
                             <button
                               onClick={() => checkIn(b.id)}
-                              className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-semibold shadow"
+                              className="px-3 py-1 bg-[#C1785A] hover:bg-[#A8613F] text-[#FAF6F0] rounded-full text-[10px] font-bold uppercase tracking-[0.08em]"
                             >
                               Check In
                             </button>
@@ -239,7 +230,7 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
                           {b.status === 'waiting' && (
                             <button
                               onClick={() => startService(b.id)}
-                              className="px-3 py-1 bg-[#7d2dce] hover:bg-[#6600b7] text-white rounded-full text-xs font-semibold shadow"
+                              className="px-3 py-1 bg-[#C1785A] hover:bg-[#A8613F] text-[#FAF6F0] rounded-full text-[10px] font-bold uppercase tracking-[0.08em]"
                             >
                               Start Ritual
                             </button>
@@ -248,7 +239,7 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
                           {b.status === 'in-service' && (
                             <button
                               onClick={() => completeService(b.id)}
-                              className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-semibold shadow"
+                              className="px-3 py-1 bg-[#2C2725] hover:bg-[#3D3532] text-[#FDF8F2] rounded-full text-[10px] font-bold uppercase tracking-[0.08em]"
                             >
                               Complete
                             </button>
@@ -257,7 +248,7 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
                           {b.status === 'completed' && b.paymentStatus !== 'paid' && (
                             <button
                               onClick={() => setPaymentTargetBooking(b)}
-                              className="px-3 py-1 bg-[#b50060] hover:bg-[#8e004a] text-white rounded-full text-xs font-semibold shadow"
+                              className="px-3 py-1 bg-[#C1785A] hover:bg-[#A8613F] text-[#FAF6F0] rounded-full text-[10px] font-bold uppercase tracking-[0.08em]"
                             >
                               Collect ₹{b.amount}
                             </button>
@@ -271,7 +262,7 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
                 })
               ) : (
                 <tr>
-                  <td colSpan="7" className="py-8 text-center text-[#594047]">
+                  <td colSpan="7" className="py-8 text-center text-[#8A8078] italic">
                     No rituals assigned to {stylist?.name} today.
                   </td>
                 </tr>
@@ -295,12 +286,12 @@ export default function StylistPersonalDashboard({ staffId, store, onSwitchStaff
 
 function MetricCard({ title, value, icon, color, pulse }) {
   return (
-    <div className="bg-white p-4 rounded-3xl border border-[#f2eaff] shadow-md">
-      <div className="flex items-center justify-between text-xs text-[#594047] mb-1">
+    <div className="bg-[#FAF6F0] p-4 rounded-3xl border border-[#EAE3DA]">
+      <div className="flex items-center justify-between text-[10px] uppercase font-bold text-[#8A8078] mb-1 tracking-[0.08em]">
         <span>{title}</span>
-        <span className={`material-symbols-outlined text-lg ${color}`}>{icon}</span>
+        <span className={`material-symbols-outlined text-base ${color}`}>{icon}</span>
       </div>
-      <div className={`font-headline text-2xl font-bold text-[#1e1831] ${pulse ? 'animate-bounce' : ''}`}>
+      <div className={`font-serif text-2xl font-extrabold text-[#2C2725] ${pulse ? 'animate-bounce' : ''}`}>
         {value}
       </div>
     </div>
@@ -308,17 +299,17 @@ function MetricCard({ title, value, icon, color, pulse }) {
 }
 
 function StatusBadge({ status }) {
-  let badgeStyle = 'bg-[#f8f1ff] text-[#594047] border-[#e8ddff]';
-  let label = status;
+  let badgeStyle = 'bg-[#F3EAE0] text-[#8A8078] border-[#EAE3DA]';
+  let label = status.toUpperCase();
 
-  if (status === 'booked') badgeStyle = 'bg-blue-100 text-blue-800 border-blue-300';
-  else if (status === 'waiting') badgeStyle = 'bg-[#ffd9e2] text-[#b50060] border-[#db2379]/40 animate-pulse';
-  else if (status === 'in-service') badgeStyle = 'bg-[#efdbff] text-[#7d2dce] border-[#974ce9]/40 animate-pulse';
-  else if (status === 'completed') badgeStyle = 'bg-emerald-100 text-emerald-800 border-emerald-300';
-  else if (status === 'cancelled') badgeStyle = 'bg-rose-100 text-rose-800 border-rose-300';
+  if (status === 'booked') badgeStyle = 'bg-[#FAF6F0] text-[#2C2725] border-[#EAE3DA]';
+  else if (status === 'waiting') badgeStyle = 'bg-[#F0DCCF] text-[#C1785A] border-[#EAE3DA] animate-pulse';
+  else if (status === 'in-service') badgeStyle = 'bg-[#C1785A] text-[#FAF6F0] border-[#C1785A] animate-pulse';
+  else if (status === 'completed') badgeStyle = 'bg-[#F3EAE0] text-[#2C2725] border-[#EAE3DA]';
+  else if (status === 'cancelled') badgeStyle = 'bg-[#F3EAE0] text-[#8A8078] border-[#EAE3DA]';
 
   return (
-    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${badgeStyle}`}>
+    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.08em] border ${badgeStyle}`}>
       {label}
     </span>
   );

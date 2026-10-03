@@ -1,82 +1,80 @@
 import React, { useState } from 'react';
-import { X, RefreshCw, AlertTriangle, ShieldCheck } from 'lucide-react';
 
-export default function RefundModal({ booking, onClose, onProcessRefund }) {
+export default function RefundModal({ booking, onClose, onProcessRefund, onRefund }) {
   const [customAmount, setCustomAmount] = useState(booking ? booking.amount : 0);
   const [reason, setReason] = useState('Customer dissatisfaction / salon service adjustment');
 
   if (!booking) return null;
 
-  // Refund policy preview check
   const isCancelledBeforeCheckIn = booking.status === 'cancelled' && booking.refundStatus === 'full-refund';
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onProcessRefund(booking.id, customAmount, reason);
+    if (onProcessRefund) {
+      onProcessRefund(booking.id, customAmount, reason);
+    } else if (onRefund) {
+      onRefund(booking.id, customAmount, reason);
+    }
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-[#1E242C] border border-amber-600/30 rounded-2xl p-6 max-w-md w-full shadow-2xl relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1F1B18]/80 backdrop-blur-md animate-fade-in font-sans">
+      <div className="bg-[#FAF6F0] border border-[#EAE3DA] rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-warm-lg relative text-[#2C2725]">
         
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white p-1 rounded-lg hover:bg-gray-800 transition-colors"
+          className="absolute top-4 right-4 text-[#8A8078] hover:text-[#2C2725] p-1.5 rounded-full bg-[#F3EAE0] font-bold transition-colors"
         >
-          <X className="w-5 h-5" />
+          ✕
         </button>
 
-        <div className="w-10 h-10 bg-amber-950 border border-amber-700/50 rounded-xl flex items-center justify-center text-amber-400 mb-3">
-          <RefreshCw className="w-5 h-5" />
+        <div className="w-10 h-10 bg-[#F0DCCF] border border-[#EAE3DA] rounded-full flex items-center justify-center text-[#C1785A] text-lg font-bold mb-3">
+          ↩️
         </div>
-        <h3 className="font-serif text-xl font-bold text-white mb-1">Process Refund</h3>
-        <p className="text-xs text-gray-400 mb-4">Log refund details and policy compliance for customer.</p>
+        <h3 className="font-serif text-xl font-extrabold text-[#2C2725] mb-1">Process Salon Refund</h3>
+        <p className="text-xs text-[#8A8078] mb-4">Log refund details and policy compliance for guest pass.</p>
 
         {/* Policy Rule Banner */}
-        <div className="bg-amber-950/40 border border-amber-800/40 p-3 rounded-xl mb-4 text-xs text-amber-200 flex items-start gap-2">
-          <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-          <div>
-            <span className="font-semibold">Refund Policy Rule:</span>
-            {isCancelledBeforeCheckIn ? (
-              <span> Booking cancelled prior to check-in $\rightarrow$ 100% full refund eligible (₹{booking.amount}).</span>
-            ) : (
-              <span> Paid booking refund requested by staff $\rightarrow$ adjust amount below if partial.</span>
-            )}
-          </div>
+        <div className="bg-[#F3EAE0] border border-[#EAE3DA] p-3.5 rounded-2xl mb-4 text-xs text-[#2C2725] space-y-1">
+          <div className="font-bold text-[#C1785A]">Rose & Rogue Refund Policy Compliance:</div>
+          {isCancelledBeforeCheckIn ? (
+            <p className="text-[#8A8078]">Booking cancelled prior to check-in $\rightarrow$ 100% full refund eligible (₹{booking.amount}).</p>
+          ) : (
+            <p className="text-[#8A8078]">Paid booking refund requested by staff $\rightarrow$ adjust amount below if partial.</p>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Refund Amount (₹)</label>
+            <label className="block text-[10px] font-bold text-[#8A8078] uppercase tracking-[0.08em] mb-1">Refund Amount (₹)</label>
             <input
               type="number"
               min="0"
               max={booking.amount}
               value={customAmount}
               onChange={(e) => setCustomAmount(e.target.value)}
-              className="w-full bg-[#161A20] border border-gray-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-amber-500 text-sm font-semibold"
+              className="w-full bg-[#F3EAE0] border border-[#EAE3DA] rounded-2xl px-4 py-3 text-xs sm:text-sm text-[#2C2725] font-bold focus:outline-none focus:border-[#C1785A]"
               required
             />
-            <div className="text-[11px] text-gray-400 mt-1">Original Paid Amount: ₹{booking.amount}</div>
+            <div className="text-[10px] text-[#8A8078] mt-1">Original Paid Amount: ₹{booking.amount}</div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Refund Reason / Audit Note</label>
+            <label className="block text-[10px] font-bold text-[#8A8078] uppercase tracking-[0.08em] mb-1">Refund Reason / Audit Note</label>
             <textarea
               rows="3"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full bg-[#161A20] border border-gray-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-amber-500 text-xs"
+              className="w-full bg-[#F3EAE0] border border-[#EAE3DA] rounded-2xl px-4 py-2.5 text-xs text-[#2C2725] focus:outline-none focus:border-[#C1785A]"
               required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl shadow-lg shadow-amber-950/40 flex items-center justify-center gap-2 transition-all mt-4"
+            className="w-full py-4 rounded-full bg-[#C1785A] hover:bg-[#A8613F] text-[#FAF6F0] font-bold text-xs uppercase tracking-[0.08em] shadow-md transition-all mt-4"
           >
-            <ShieldCheck className="w-5 h-5" />
             <span>Confirm & Issue ₹{customAmount} Refund</span>
           </button>
         </form>

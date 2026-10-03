@@ -1,178 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-main: #FAF6F0;
+  --bg-secondary: #F3EAE0;
+  --card-fill: #EFE6DA;
+  --border-color: #EAE3DA;
+  --text-primary: #2C2725;
+  --text-muted: #8A8078;
+  --accent-primary: #C1785A;
+  --accent-hover: #A8613F;
+  --accent-tint: #F0DCCF;
+  --dark-panel: #1F1B18;
+  --dark-text: #FDF8F2;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
+    font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
   }
   body {
-    background-color: #fdf7ff;
-    color: #1e1831;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
     overflow-x: hidden;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, .font-serif {
+    font-family: 'Playfair Display', Georgia, serif;
   }
 }
 
-/* Material Symbols Icon Utility */
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased;
+/* Custom Arch Shapes for Hero & Cards */
+.arch-hero {
+  border-top-left-radius: 200px;
+  border-top-right-radius: 200px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  display: none;
+.arch-card {
+  border-top-left-radius: 120px;
+  border-top-right-radius: 120px;
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
 }
 
-/* Luxury Glassmorphism & Aesthetics */
-.aura-glass {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(232, 221, 255, 0.7);
+/* Pill utility */
+.pill-btn {
+  border-radius: 9999px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
 }
 
-.aura-glass-card {
-  background: #ffffff;
-  border: 1px solid #e8ddff;
-  box-shadow: 0 10px 30px -4px rgba(181, 0, 96, 0.06);
+/* Soft warm shadows */
+.shadow-warm-soft {
+  box-shadow: 0 12px 32px -6px rgba(193, 120, 90, 0.12), 0 4px 12px -2px rgba(44, 39, 37, 0.04);
 }
 
-.aura-glow-primary {
-  box-shadow: 0 8px 24px -4px rgba(219, 35, 121, 0.35);
+.shadow-warm-lg {
+  box-shadow: 0 20px 48px -10px rgba(193, 120, 90, 0.18), 0 8px 24px -4px rgba(44, 39, 37, 0.06);
 }
 
-.luxury-gradient-text {
-  background: linear-gradient(135deg, #b50060 0%, #db2379 50%, #7d2dce 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.luxury-glow-card {
-  box-shadow: 0 16px 40px -8px rgba(181, 0, 96, 0.12), 0 0 0 1px rgba(232, 221, 255, 0.8);
-}
-
-/* ==============================================================================
-   MOTION SITE ANIMATIONS & MICRO-INTERACTIONS
-   ============================================================================== */
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes floatSlow {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(181, 0, 96, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 12px rgba(181, 0, 96, 0);
-  }
-}
-
-@keyframes shimmerSweep {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-@keyframes highlightFlash {
-  0% { background-color: #ffd9e2; }
-  100% { background-color: transparent; }
-}
-
-/* Utility Motion Classes */
-.animate-fade-in-up {
-  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-fade-in-scale {
-  animation: fadeInScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-float {
-  animation: floatSlow 4s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 2.5s infinite;
-}
-
-.highlight-flash {
-  animation: highlightFlash 1.2s ease-out;
-}
-
-.shimmer-btn {
-  background-size: 200% auto;
-  background-image: linear-gradient(115deg, #b50060 0%, #db2379 40%, #fd6a49 60%, #b50060 100%);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.shimmer-btn:hover {
-  background-position: right center;
-  box-shadow: 0 8px 25px -4px rgba(219, 35, 121, 0.45);
-}
-
-/* Smooth Interactive Card Hover Motion */
+/* Smooth motion states */
 .motion-card {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .motion-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px -8px rgba(30, 24, 49, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -8px rgba(193, 120, 90, 0.16);
 }
 
-.motion-button {
-  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+/* Hide scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
-
-.motion-button:active {
-  transform: scale(0.95);
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
 }
-
-/* Stagger Animations */
-.stagger-1 { animation-delay: 0.08s; }
-.stagger-2 { animation-delay: 0.16s; }
-.stagger-3 { animation-delay: 0.24s; }
-.stagger-4 { animation-delay: 0.32s; }
+::-webkit-scrollbar-thumb {
+  background: #C1785A77;
+  border-radius: 3px;
+}
